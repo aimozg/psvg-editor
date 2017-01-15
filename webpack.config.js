@@ -25,7 +25,8 @@ module.exports = {
             "jquery": path.join(node_dir,'jquery/dist/jquery.min.js'),
             "tinycolor2": path.join(node_dir,'tinycolor2/dist/tinycolor-min.js'),
             "underscore": path.join(node_dir,'underscore/underscore-min.js'),
-            "jstree": path.join(__dirname,'libs/vakata-jstree/dist/jstree.js')
+            "jstree-css": path.join(node_dir,'jstree/dist/themes/default/style.css'),
+            "jstree": path.join(node_dir,'jstree/dist/jstree.js')
         }
     },
     plugins: [
@@ -37,12 +38,21 @@ module.exports = {
         loaders: [/*{
             test: /\.ts$/,
             loader: 'uglify'
-        }/**/,{ 
+        }/**/,{
+            test: /\.css$/,
+            loaders: [ 'style', 'css' ]
+        },{
             test: /\.ts$/, 
             loader: 'ts-loader' 
         },{
             test: /jquery\.min\.js|jstree\.js|underscore(-min)?\.js$/,
             loader: 'script-loader'
+        }, {
+            test: /\.png|\.gif$/,
+            loader: 'url-loader?limit=100000'
+        }, {
+            test: /\.jpg$/,
+            loader: 'file-loader'
         }]
     }
 };

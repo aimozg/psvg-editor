@@ -1,5 +1,6 @@
 import dom = require('./dom');
 import svg = require("./svg");
+require("jstree-css");
 
 import {NodePath} from "./svg";
 import {DisplayMode, Model, ModelPath, ModelNode, TModelItem} from "./svgedit/api";
