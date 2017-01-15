@@ -1,0 +1,9 @@
+{
+  "name": "tfgame",
+  "dependencies": {},
+  "globalDependencies": {
+    "jquery": "registry:dt/jquery#1.10.0+20160929162922",
+    "tinycolor": "registry:dt/tinycolor#1.1.1+20160317120654",
+    "underscore": "registry:dt/underscore#1.8.3+20161016154529"
+  }
+}

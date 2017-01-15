@@ -1,0 +1,12 @@
+Sloth: navigation to end of level +?
+Glutton: achievements, progress tracker
+Greed: passive bonus of stored potions
+Envy: copy abilities of different classes
+Wrath: combo and fatalities
+Lust: no helmet and boobplate armor bonus
+Pride: ??
+
+Might&Magic-like
+4 char team
+turn-based
+roguelike-like (random levels of dungeon)

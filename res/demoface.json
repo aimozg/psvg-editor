@@ -1,0 +1,95 @@
+{
+  "name"  : "demo_face",
+  "params": [
+    { "name": "noseSz" }
+  ],
+  "paths" : [
+    {
+      "name"  : "face",
+      "closed": true,
+      "nodes" : [
+        { "type": "autosmooth", "pos": [10, 44] },
+        { "type": "autosmooth", "pos": [-10, 44] },
+        { "type": "autosmooth", "pos": [-45, 0] },
+        { "type": "autosmooth", "pos": [-50, -22] },
+        { "type": "autosmooth", "pos": [-35, -70] },
+        { "type": "autosmooth", "pos": [35, -70] },
+        { "type": "autosmooth", "pos": [50, -22] },
+        { "type": "autosmooth", "pos": [45, 0] }
+      ]
+    }, {
+      "name"  : "nosefill",
+      "closed": true,
+      "nodes" : [
+        {
+          "type": "flow1",
+          "pos" : ["nosetop", 0, -3],
+          "h1ab": [0.8247422680412371, -0.14432989690721648],
+          "h2ab": [0, 0]
+        }, {
+          "type": "flow1",
+          "pos" : ["nosetip", 0, 19],
+          "h1ab": [0.8181818181818182, -0.09090909090909091],
+          "h2ab": [0.2, -0.1]
+        }, {
+          "type": "flow1",
+          "pos" : ["noseright", 8, 15],
+          "h1ab": [0.7, -0.1],
+          "h2ab": [0.09278350515463918, -0.041237113402061855]
+        }
+      ]
+    }, {
+      "name"  : "noseline",
+      "closed": false,
+      "nodes" : [
+        {
+          "type"   : "cusp",
+          "pos"    : "@nosetop",
+          "handle2": "@nosetop"
+        }, {
+          "type": "flow1",
+          "pos" : "@nosetip",
+          "h1ab": [0.8181818181818182, -0.09090909090909091],
+          "h2ab": [0.2, 0.1]
+        }, {
+          "type"   : "flow1",
+          "pos"    : {
+            "type" : "N",
+            "name" : "noseleft",
+            "xy"   : [-8, 15],
+            "pt0"  : "@noseright",
+            "pt1"  : {
+              "type": "PROJ",
+              "a"   : "@nosetop",
+              "b"   : "@nosetip",
+              "p"   : "@noseright"
+            },
+            "alpha": 2,
+            "beta" : 0
+          },
+          "h1ab"   : [0.7, 0.1],
+          "handle1": [-6, 17]
+        }
+      ]
+    }, {
+      "name"  : "mouth",
+      "closed": false,
+      "nodes" : [
+        {
+          "type"   : "cusp",
+          "pos"    : [-9, 28],
+          "handle2": [-9, 27]
+        }, {
+          "type"   : "cusp",
+          "pos"    : [0, 26],
+          "handle1": [-3, 26],
+          "handle2": [3, 26]
+        }, {
+          "type"   : "cusp",
+          "pos"    : [9, 28],
+          "handle1": [9, 27]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Hello...</title>
+	<link rel="stylesheet" href="libs/vakata-jstree/dist/themes/default/style.css">
+	<script type="text/javascript" src="js/vendor.js"></script>
+	<script type="text/javascript" src="js/svgedit.js"></script>
+	<style type="text/css">
+		body {
+			margin: 0;
+			overflow:hidden;
+			min-height: 100vh;
+		}
+		.frow, .frows, .fcol, .fcols {
+			display: flex;
+		}
+		.frows, .fcols {
+			flex-wrap: wrap;
+		}
+		.frow, .fcol {
+			flex-wrap: nowrap;
+		}
+		.fcol, .fcols {
+			flex-direction: column;
+		}
+		.frow, .frows {
+			flex-direction: row;
+		}
+		.fgrow {
+			flex-grow: 1;
+			flex-shrink: 0;
+		}
+		.fstretch {
+			flex-grow: 1;
+			flex-shrink: 1;
+		}
+		#main {
+			height: 100vh;
+		}
+		#svgCanvas {
+			overflow:scroll;
+			border: 1px solid red;
+			width:100%;
+			height:100%;
+			background:#cff;
+			box-sizing: border-box;
+		}
+		#svgCanvas svg {
+			display: block;
+			margin: 0 auto;
+			min-height: 100%;
+		}
+		#sidebar {
+			overflow:auto;
+		}
+		.viewport {
+			fill: #fff;
+		}
+		.path > path{
+			vector-effect:non-scaling-stroke;
+			stroke-width:4;
+			stroke-opacity:0.8;
+			stroke:#000000;
+			fill:none;
+		}
+		.path.-selected > path{
+			stroke:#ff0000;
+		}
+		line.handle1,line.handle2 {
+			stroke-width:2;
+			stroke-opacity: 1;
+			vector-effect:non-scaling-stroke;
+		}
+		.point * {
+			vector-effect:non-scaling-stroke;
+			stroke-opacity:1;
+			stroke-linecap: round;
+		}
+		.cusp_node .point *, .flow1_node .point *{
+			stroke-linecap: square;
+		}
+		.point .inner {
+			stroke-width:6;
+		}
+		.point.pt_node .inner {
+			stroke:#00ffff;
+		}
+		.point.pt_handle, .node line.handle1 {
+			stroke:#00a060;
+		}
+		.node line.handle2 {
+			stroke:#0060a0;
+		}
+		.node line.lineref {
+			stroke:#008080;
+			stroke-dasharray: 1 4;
+		}
+		.node.-selected line.handle1,.node.-selected line.handle2 {
+			stroke:#ff8080;
+		}
+		.point.-selected .outer {
+			stroke:#ff0000;
+		}
+		.point:hover .inner {
+			stroke:#ffff00;
+		}
+		.point.fixed_pt .outer {
+			stroke-width:10;
+			stroke:#000000;
+		}
+	</style>
+</head>
+<body>
+<div id="main" class="fcol">
+	<div id="toolbar frow">
+		<h2 id="name">name goes here</h2>
+		<button type="button" onclick="editor_load3()">Reset demo</button>
+		<button type="button" onclick="editor_save()">Save to localStorage</button>
+		<!--<button type="button" onclick="editor_load1()">Load from file</button>-->
+		<button type="button" onclick="editor_load2()">Load from localStorage</button>
+	</div>
+	<div class="frow">
+		<div id="svgCanvas" class="fstretch">
+		</div>
+		<div class="fcol" style="flex-basis:15%;">
+			<div id="sidebar">
+				<div id="treeview"></div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+<script type="text/javascript">
+    var editor;
+    var sourceLoaded = new $.Deferred();
+    $(function(){
+        var n = document.body.firstChild;
+        var purge = [];
+        do {
+            if (n.nodeType == Node.TEXT_NODE) purge.push(n);
+        } while (n = n.nextSibling);
+        for (var i = 0; i < purge.length; i++)document.body.removeChild(purge[i]);
+        var canvas = $('#svgCanvas');
+        canvas.css('height', (document.body.clientHeight - canvas.offset().top).toFixed() + 'px');
+        editor = svgedit.setup(canvas[0], $('#treeview')[0]);
+        editor_load3();
+        editor.recreateView();
+        $("#name").text(editor.model.name);
+    });
+    function editor_save() {
+        localStorage.setItem('svgedit_model',JSON.stringify(editor.save()));
+        alert('Done!');
+    }
+    function editor_load2() {
+        var data = localStorage.getItem('svgedit_model');
+        if (data) {
+            editor.loadJson(JSON.parse(data));
+            $("#name").text(editor.model.name);
+        } else editor_load3();
+    }
+    function editor_load3() {
+        $.getJSON('res/demoface.json',function(json){
+            editor.loadJson(json);
+            $("#name").text(editor.model.name);
+        });
+    }
+    function editor_load1() {
+        $.when($(function () {
+        }), sourceLoaded).then(function () {
+
+            var source = $('#source');
+            //console.log(source[0].contentDocument.readyState);
+            //console.log(window.temp1=source[0].contentDocument);
+            var struct = source[0].contentDocument.getElementById('layer14');
+            editor.loadSvgStruct(struct);
+            source.remove();
+
+            $("#name").text(editor.model.name);
+        });
+    }
+</script>
+</html>
