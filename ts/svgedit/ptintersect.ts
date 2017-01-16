@@ -18,7 +18,7 @@ export class PointAtIntersect extends CModelPoint<ModelPoint> {
 	}
 
 	protected attachChildren() {
-		this.attachAll([this.a1,this.a2,this.b1,this.b2],"ref","pos");
+		this.attachAll([this.a1,this.a2,this.b1,this.b2],"pos");
 	}
 
 	protected updated(other: ModelPoint, attr: EPointAttr) {
@@ -35,7 +35,7 @@ export class PointAtIntersect extends CModelPoint<ModelPoint> {
 	protected draw(): SVGGElement {
 		super.draw();
 		for (let pt of [this.a1,this.a2,this.b1,this.b2]) {
-			this.g.appendChild(pt.display());
+			this.g.appendChild(pt.display("pt_ref"));
 		}
 		this.l1 = undefined;
 		this.l2 = undefined;

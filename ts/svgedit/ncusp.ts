@@ -12,23 +12,19 @@ export class CuspNode extends CommonNode<ModelPoint> {
 	}
 
 	protected updated(other: ModelPoint, attr: EPointAttr) {
-		switch (other.role) {
-			case 'node':
-				return this.update("pos");
-			case 'handle':
-				return this.update("handle");
-		}
+		if (other == this.pos) this.update("pos");
+		else  this.update("handle");
 	}
 
 	protected attachChildren() {
 		super.attachChildren();
-		this.attachAll([this.h1, this.h2], "handle", "pos");
+		this.attachAll([this.h1, this.h2], "pos");
 	}
 
 	protected draw(): SVGElement {
 		super.draw();
-		if (!this.first) this.g.appendChild(this.h1.display());
-		if (!this.last) this.g.appendChild(this.h2.display());
+		if (!this.first) this.g.appendChild(this.h1.display("pt_handle"));
+		if (!this.last) this.g.appendChild(this.h2.display("pt_handle"));
 		return this.g;
 	}
 

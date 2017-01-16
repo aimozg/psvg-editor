@@ -14,12 +14,12 @@ export class PointFromNormal extends CModelPoint<ModelPoint> {
 	}
 
 	protected attachChildren() {
-		this.attachAll([this.pt0,this.pt1], "ref","pos");
+		this.attachAll([this.pt0,this.pt1], "pos");
 	}
 
 	protected draw(): SVGGElement {
 		super.draw();
-		for (let p of [this.pt0,this.pt1]) this.g.appendChild(p.display());
+		for (let p of [this.pt0,this.pt1]) this.g.appendChild(p.display("pt_ref"));
 		return this.g;
 	}
 

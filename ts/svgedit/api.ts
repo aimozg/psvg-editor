@@ -20,7 +20,6 @@ export abstract class ModelPart {
 	public readonly id = '' + ModelPart.Counter++;
 	public parent: ModelPart;
 	public readonly children: ModelPart[];
-	public role: string;
 	protected ctx: ModelCtx|undefined;
 
 	constructor(public readonly loader: ModelLoader,
@@ -38,7 +37,7 @@ export abstract class ModelPart {
 	}
 
 	public treeNodeText(): string {
-		return this.role + ' ' + this.loader.name + (this.name ? '"' + this.name + '"' : '');
+		return this.loader.name + (this.name ? '"' + this.name + '"' : '');
 	}
 
 	public treeNodeSelf(): JSTreeNodeInit {
@@ -74,28 +73,28 @@ export abstract class CModelElement<
 		this.attachChildren();
 	}
 
-	protected attach(child: CHILD, role: string, dependency?: string) {
-		child.role = role;
+	protected attach(child: CHILD, dependency?: string) {
 		this.children.push(child);
 		child.attached(this);
 		if (dependency) this.dependOn(child,dependency);
 	}
 
-	protected attachAll(...items:[CHILD,string,string|null][]);
-	protected attachAll(items:[CHILD|undefined],role:string,dependency?:string);
+	protected attachAll(...items:[CHILD,string|null][]);
+	protected attachAll(items:[CHILD|undefined],dependency?:string);
 	protected attachAll() {
 		if (typeof arguments[1] == 'string') {
 			let items = arguments[0] as (CHILD|undefined)[];
-			for (let obj of items) if (obj) this.attach(obj, arguments[1], arguments[2]);
+			for (let obj of items) if (obj) this.attach(obj, arguments[1]);
 		} else {
-			let items = arguments as List<[CHILD,string,string|null]>;
-			_.each(items,obj=>{if (obj[0]) this.attach(obj[0], obj[1], obj[2])});
+			let items = arguments as List<[CHILD,string|null]>;
+			_.each(items,obj=>{if (obj[0]) this.attach(obj[0], obj[1])});
 		}
 	}
 
-	public display(): SVGElement {
+	public display(addclass?:string): SVGElement {
 		if (!this.graphic) {
 			this.graphic = this.draw();
+			this.graphic.classList.add(addclass);
 			this.redraw("*");
 		}
 		return this.graphic;
@@ -154,7 +153,7 @@ export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElem
 			d: 'M 0,0 z'
 		});
 		updateElement(this.g, {
-			'class': `${this.cssclass} elem point pt_${this.role}`,
+			'class': `${this.cssclass} elem point`,
 			items: [this.outer, this.inner]
 		});
 		return this.g;
@@ -196,11 +195,10 @@ export abstract class CModelNode<CHILD> extends CModelElement<ModelPath,ModelPoi
 	protected last: boolean;
 
 	protected attachChildren() {
-		this.index = +this.role;
+		this.index = this.parent.nodes.indexOf(this);
 		let parent = this.parent;
-		let role = this.index;
-		this.first = !parent.closed && +role == 0;
-		this.last = !parent.closed && +role == parent.nodes.length - 1;
+		this.first = !parent.closed && +this.index == 0;
+		this.last = !parent.closed && +this.index == parent.nodes.length - 1;
 	}
 
 	public abstract center(): IXY;
@@ -223,13 +221,13 @@ export abstract class CommonNode<CHILD> extends CModelNode<any> {
 
 	protected attachChildren() {
 		super.attachChildren();
-		this.attach(this.pos, "node","pos");
+		this.attach(this.pos, "pos");
 	}
 
 	protected draw(): SVGElement {
 		this.l1 = undefined;
 		this.l2 = undefined;
-		updateElement(this.g, {items: [this.pos.display()]});
+		updateElement(this.g, {items: [this.pos.display("pt_node")]});
 		return this.g;
 	}
 
@@ -286,7 +284,7 @@ export class CModelPath extends CModelElement<Model,ModelNode,EPathAttr> {
 
 	protected attachChildren() {
 		for (let i = 0, ns = this.nodes, n = ns.length; i < n; i++) {
-			this.attach(ns[i], '' + i, '*');
+			this.attach(ns[i], '*');
 		}
 	}
 
@@ -402,7 +400,7 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 		for (let j of json['paths']) {
 			const path = m.loadPath(j);
 			m.paths.push(path);
-			m.attach(path, 'path',"*");
+			m.attach(path, "*");
 		}
 		for (let j of json['params'] || []) m.params.push(m.loadPart('Param', j) as ModelParam);
 		m.doPostload();

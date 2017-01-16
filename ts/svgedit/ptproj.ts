@@ -17,7 +17,7 @@ export class PointAtProjection extends CModelPoint<ModelPoint> {
 	}
 	
 	protected attachChildren() {
-		this.attachAll([this.a,this.b,this.p],"ref","pos");
+		this.attachAll([this.a,this.b,this.p],"pos");
 	}
 
 	protected updated(other: ModelPoint, attr: EPointAttr) {
@@ -31,7 +31,7 @@ export class PointAtProjection extends CModelPoint<ModelPoint> {
 	protected draw(): SVGGElement {
 		super.draw();
 		for (let pt of [this.a,this.b,this.p]) {
-			this.g.appendChild(pt.display());
+			this.g.appendChild(pt.display("pt_ref"));
 		}
 		this.lab = undefined;
 		this.lpq = undefined;
