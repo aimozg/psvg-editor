@@ -87,7 +87,7 @@ export abstract class CModelElement<
 		return this.graphic;
 	}
 
-	protected dependOn<A2 extends string>(other: CModelElement<any,any,A2>| (() => CModelElement<any,any,A2>),
+	protected dependOn<A2 extends string>(other: CModelElement<any,any,A2> | (() => CModelElement<any,any,A2>),
 										  attr: A2) {
 		if (typeof other === 'function') this.ctx.model.queuePostload(() => other().dependants.push([attr, this]));
 		else other.dependants.push([attr, this]);
@@ -112,7 +112,6 @@ export abstract class CModelElement<
 	protected abstract updated<A2 extends string>(other: CModelElement<any,any,A2>, attr: A2);
 }
 
-export type EPointRole = 'node'|'handle'|'ref';
 export type EPointAttr = '*'|'pos';
 export type ModelPoint = CModelPoint<any>;
 export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElement<any,CHILD,EPointAttr> {
@@ -301,7 +300,7 @@ export class CModelPath extends CModelElement<Model,ModelNode,EPathAttr> {
 
 
 	protected updated(other: ModelNode, attr: string) {
-		if (attr == 'pos' || attr == '*') this.redraw("*");
+		if (attr == 'pos' || attr == 'handle' || attr == '*') this.redraw("*");
 	}
 
 	public toNodePath(): NodePath {
