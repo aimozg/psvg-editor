@@ -14,10 +14,7 @@ export class PointFromNormal extends CModelPoint<ModelPoint> {
 	}
 
 	protected attachChildren() {
-		this.attach(this.pt0, "ref");
-		this.attach(this.pt1, "ref");
-		this.dependOn(this.pt0, "pos");
-		this.dependOn(this.pt1, "pos");
+		this.attachAll([this.pt0,this.pt1], "ref","pos");
 	}
 
 	protected draw(): SVGGElement {
@@ -34,11 +31,6 @@ export class PointFromNormal extends CModelPoint<ModelPoint> {
 		let a = this.pt0.calculate();
 		let b = this.pt1.calculate();
 		return norm2fixed(a,b,this.alpha,this.beta);
-	}
-
-	repr(): string {
-		return this.alpha.toFixed(3) + ' x (' + this.pt0.repr() + ':' + this.pt1.repr()+') + '+
-			this.beta.toFixed(3) + ' x NORMAL';
 	}
 
 	save(): any {

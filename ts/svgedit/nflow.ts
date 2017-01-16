@@ -49,12 +49,6 @@ export class FlowNode extends CommonNode<ModelPoint> {
 			h2ab:this.h2ab
 		}
 	}
-	public repr(): string {
-		let ab1 = this.h1ab, ab2 = this.h2ab;
-		return 'flow'+
-			(ab1?' ['+ab1[0].toFixed(3)+','+ab1[1].toFixed(3)+']':'')+
-			(ab2?' ['+ab2[0].toFixed(3)+','+ab2[1].toFixed(3)+']':'');
-	}
 }
 export const NODE_FLOW1_LOADER:ModelLoader = {
 	cat:'Node',

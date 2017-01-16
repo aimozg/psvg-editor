@@ -47,10 +47,6 @@ export class AutosmoothNode extends CommonNode<ModelPoint|ModelNode> {
 		}
 	}
 
-	public repr(): string {
-		return 'auto-smooth';
-	}
-
 }
 export const NODE_AUTOSMOOTH_LOADER:ModelLoader = {
 	cat:'Node',

@@ -3,6 +3,7 @@ import {SVGItem, updateElement, CEASvgPath} from "../dom";
 import svg = require("../svg");
 import dom = require("../dom");
 import Dictionary = _.Dictionary;
+import List = _.List;
 
 export type JsTypename = 'object'|'function'|'undefined'|'string'|'number'|'boolean'|'symbol';
 
@@ -19,7 +20,7 @@ export abstract class ModelPart {
 	public readonly id = '' + ModelPart.Counter++;
 	public parent: ModelPart;
 	public readonly children: ModelPart[];
-	public role:string;
+	public role: string;
 	protected ctx: ModelCtx|undefined;
 
 	constructor(public readonly loader: ModelLoader,
@@ -27,7 +28,7 @@ export abstract class ModelPart {
 
 	}
 
-	protected attached(parent:ModelPart){
+	protected attached(parent: ModelPart) {
 		this.ctx = parent.ctx;
 		this.parent = parent;
 	}
@@ -73,10 +74,23 @@ export abstract class CModelElement<
 		this.attachChildren();
 	}
 
-	protected attach(child: CHILD, role: string) {
-		child.role=role;
+	protected attach(child: CHILD, role: string, dependency?: string) {
+		child.role = role;
 		this.children.push(child);
 		child.attached(this);
+		if (dependency) this.dependOn(child,dependency);
+	}
+
+	protected attachAll(...items:[CHILD,string,string|null][]);
+	protected attachAll(items:[CHILD|undefined],role:string,dependency?:string);
+	protected attachAll() {
+		if (typeof arguments[1] == 'string') {
+			let items = arguments[0] as (CHILD|undefined)[];
+			for (let obj of items) if (obj) this.attach(obj, arguments[1], arguments[2]);
+		} else {
+			let items = arguments as List<[CHILD,string,string|null]>;
+			_.each(items,obj=>{if (obj[0]) this.attach(obj[0], obj[1], obj[2])});
+		}
 	}
 
 	public display(): SVGElement {
@@ -155,8 +169,6 @@ export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElem
 		this.outer.setAttribute('d', dstr);
 	}
 
-	abstract repr(): string;
-
 	abstract save(): any;
 
 }
@@ -195,8 +207,6 @@ export abstract class CModelNode<CHILD> extends CModelElement<ModelPath,ModelPoi
 
 	public abstract save(): any;
 
-	public abstract repr(): string;
-
 	public abstract toDNode(): DNode;
 }
 export abstract class CommonNode<CHILD> extends CModelNode<any> {
@@ -213,8 +223,7 @@ export abstract class CommonNode<CHILD> extends CModelNode<any> {
 
 	protected attachChildren() {
 		super.attachChildren();
-		this.attach(this.pos, "node");
-		this.dependOn(this.pos, "pos");
+		this.attach(this.pos, "node","pos");
 	}
 
 	protected draw(): SVGElement {
@@ -277,8 +286,7 @@ export class CModelPath extends CModelElement<Model,ModelNode,EPathAttr> {
 
 	protected attachChildren() {
 		for (let i = 0, ns = this.nodes, n = ns.length; i < n; i++) {
-			this.attach(ns[i], ''+i);
-			this.dependOn(ns[i], '*');
+			this.attach(ns[i], '' + i, '*');
 		}
 	}
 
@@ -394,7 +402,7 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 		for (let j of json['paths']) {
 			const path = m.loadPath(j);
 			m.paths.push(path);
-			m.attach(path, 'path');
+			m.attach(path, 'path',"*");
 		}
 		for (let j of json['params'] || []) m.params.push(m.loadPart('Param', j) as ModelParam);
 		m.doPostload();

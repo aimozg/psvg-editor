@@ -59,10 +59,6 @@ export class FixedPoint extends CModelPoint<any> {
 		 */
 	}
 
-	public repr(): string {
-		return 'F[' + this.pt[0].toFixed(1) + ',' + this.pt[1].toFixed(1) + ']';
-	}
-
 }
 export const POINT_FIXED_LOADER:ModelLoader = {
 	cat:'Point',

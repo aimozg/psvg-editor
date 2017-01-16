@@ -37,10 +37,6 @@ export class PointRef extends CModelPoint<ModelPoint> {
 			type: '@' + this.ref
 		}
 	}
-
-	public repr(): string {
-		return '@' + this.ref;
-	}
 }
 export const POINT_REF_LOADER:ModelLoader = {
 	cat:'Point',

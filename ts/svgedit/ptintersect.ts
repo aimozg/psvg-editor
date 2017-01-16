@@ -18,10 +18,7 @@ export class PointAtIntersect extends CModelPoint<ModelPoint> {
 	}
 
 	protected attachChildren() {
-		for (let pt of [this.a1,this.a2,this.b1,this.b2]) {
-			this.attach(pt,"ref");
-			this.dependOn(pt,"pos");
-		}
+		this.attachAll([this.a1,this.a2,this.b1,this.b2],"ref","pos");
 	}
 
 	protected updated(other: ModelPoint, attr: EPointAttr) {
@@ -61,10 +58,6 @@ export class PointAtIntersect extends CModelPoint<ModelPoint> {
 			y1: b1[1], y2: b2[1], 'class': 'handle2'
 		});
 		this.g.insertBefore(this.l2, this.g.firstChild);
-	}
-
-	repr(): string {
-		return POINT_AT_INTERSECTION_TYPE+" (" + this.a1.repr() + ":" + this.a2.repr() + " X " + this.b1.repr() + ":" + this.b2.repr() + ")"
 	}
 
 	save(): any {

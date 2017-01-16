@@ -17,10 +17,7 @@ export class PointAtProjection extends CModelPoint<ModelPoint> {
 	}
 	
 	protected attachChildren() {
-		for (let pt of [this.a,this.b,this.p]) {
-			this.attach(pt,"ref");
-			this.dependOn(pt,"pos");
-		}
+		this.attachAll([this.a,this.b,this.p],"ref","pos");
 	}
 
 	protected updated(other: ModelPoint, attr: EPointAttr) {
@@ -59,10 +56,6 @@ export class PointAtProjection extends CModelPoint<ModelPoint> {
 		this.g.insertBefore(this.lpq, this.g.firstChild);
 	}
 
-
-	repr(): string {
-		return POINT_AT_PROJECTION_TYPE+" ("+this.a.repr()+":"+this.b.repr()+" X "+this.p.repr()+")";
-	}
 
 	save(): any {
 		return {

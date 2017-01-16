@@ -22,14 +22,7 @@ export class CuspNode extends CommonNode<ModelPoint> {
 
 	protected attachChildren() {
 		super.attachChildren();
-		if (this.h1) {
-			this.attach(this.h1, "handle");
-			this.dependOn(this.h1, "pos");
-		}
-		if (this.h2) {
-			this.attach(this.h2, "handle");
-			this.dependOn(this.h2, "pos");
-		}
+		this.attachAll([this.h1, this.h2], "handle", "pos");
 	}
 
 	protected draw(): SVGElement {
@@ -59,9 +52,6 @@ export class CuspNode extends CommonNode<ModelPoint> {
 		}
 	}
 
-	public repr(): string {
-		return 'cusp';
-	}
 }
 export const NODE_CUSP_LOADER: ModelLoader = {
 	cat:'Node',
