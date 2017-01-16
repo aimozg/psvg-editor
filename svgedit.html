@@ -57,7 +57,6 @@
 			fill: #fff;
 		}
 		.path > path{
-			vector-effect:non-scaling-stroke;
 			stroke-width:4;
 			stroke-opacity:0.8;
 			stroke:#000000;
@@ -69,24 +68,23 @@
 		line.handle1,line.handle2 {
 			stroke-width:2;
 			stroke-opacity: 1;
-			vector-effect:non-scaling-stroke;
 		}
-		.point * {
+		svg * {
 			vector-effect:non-scaling-stroke;
-			stroke-opacity:1;
-			stroke-linecap: round;
 		}
 		.cusp_node .point *, .flow1_node .point *{
 			stroke-linecap: square;
 		}
-		.point .inner {
-			stroke-width:6;
+		.point {
+			stroke-width:2;
+			stroke:transparent;
 		}
-		.point.pt_node .inner {
-			stroke:#00ffff;
+		.point.pt_node {
+			fill:#00ffff;
 		}
 		.point.pt_handle, .node line.handle1 {
 			stroke:#00a060;
+			fill:#00a060;
 		}
 		.node line.handle2 {
 			stroke:#0060a0;
@@ -98,15 +96,14 @@
 		.node.-selected line.handle1,.node.-selected line.handle2 {
 			stroke:#ff8080;
 		}
-		.point.-selected .outer {
+		.point.-selected {
 			stroke:#ff0000;
 		}
-		.point:hover .inner {
-			stroke:#ffff00;
-		}
-		.point.fixed_pt .outer {
-			stroke-width:10;
+		.point.fixed_pt {
 			stroke:#000000;
+		}
+		.point.fixed_pt:hover{
+			stroke:#ffff00;
 		}
 	</style>
 </head>

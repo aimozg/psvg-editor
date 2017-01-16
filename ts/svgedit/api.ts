@@ -130,8 +130,7 @@ export type ModelPoint = CModelPoint<any>;
 export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElement<any,CHILD,EPointAttr> {
 	public xy: TXY = [0, 0];
 	public readonly g: SVGGElement = SVGItem('g');
-	private inner: SVGPathElement;
-	private outer: SVGPathElement;
+	private use: SVGUseElement;
 
 	constructor(loader: ModelLoader,
 				name: string|undefined,
@@ -144,17 +143,10 @@ export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElem
 	}
 
 	protected draw(): SVGGElement {
-		this.inner = SVGItem('path', {
-			'class': 'inner',
-			d: 'M 0,0 z'
-		});
-		this.outer = SVGItem('path', {
-			'class': 'outer',
-			d: 'M 0,0 z'
-		});
+		this.use = SVGItem('use',svg.svguse('#svgpt_diamond',0,0));
 		updateElement(this.g, {
 			'class': `${this.cssclass} elem point`,
-			items: [this.outer, this.inner]
+			items: [this.use]
 		});
 		return this.g;
 	}
@@ -162,10 +154,9 @@ export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElem
 	protected abstract fcalculate(): TXY;
 
 	protected redraw(attr: EPointAttr) {
-		this.calculate();
-		let dstr = 'M ' + this.xy.join(',') + ' z';
-		this.inner.setAttribute('d', dstr);
-		this.outer.setAttribute('d', dstr);
+		let [x,y] =this.calculate();
+		this.use.x.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX,x);
+		this.use.y.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX,y);
 	}
 
 	abstract save(): any;

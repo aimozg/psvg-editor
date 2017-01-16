@@ -243,6 +243,7 @@ export function SVGItem(tag: 'g', attrs?: CreateElementAttrs): SVGGElement;
 export function SVGItem(tag: 'line', attrs?: CreateElementAttrs): SVGLineElement;
 export function SVGItem(tag: 'path', attrs?: CreateElementAttrs): SVGPathElement;
 export function SVGItem(tag: 'svg', attrs?: CreateElementAttrs): SVGSVGElement;
+export function SVGItem(tag: 'use', attrs?: CreateElementAttrs): SVGUseElement;
 export function SVGItem(arg1: any, arg2?: CreateElementAttrs): SVGElement {
 	/*if (typeof arg1 == 'string') {
 	 return

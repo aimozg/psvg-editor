@@ -18,6 +18,7 @@ export class Editor {
 	private zoomfact = 2;
 	private mode: DisplayMode = 'edit';
 	public model: Model = new Model(this.mode);
+	private scaledown:SVGTransformable[];
 
 	selPath: ModelPath;
 	selNode: ModelNode;
@@ -29,25 +30,26 @@ export class Editor {
 		let height = 100;//canvasDiv.clientHeight;
 		let x0 = -Math.floor(width / 2);
 		let y0 = -Math.floor(height / 2);
+		this.scaledown = [];
 		this.root = dom.SVG({
 			width: width,
 			height: height,
 			items: [{
 				tag: 'defs',
-				items: [/*{
-				 tag:'g',
-				 id: 'node',
-				 items:[{
-				 tag: 'path',
-				 'class': 'outer',
-				 d: 'M 0,0 0,0 z'
-				 },{
-				 tag: 'path',
-				 'class': 'inner',
-				 d: 'M 0,0 0,0 z'
-				 }]
-				 }*/]
-			}, {
+				items: [{
+					tag:'path',
+					id:'svgpt_diamond',
+					d:'M -5 0 0 -5 5 0 0 5 z',
+					style: { 'any': 'inherit' },
+					callback:(e)=>this.scaledown.push(e as any as SVGTransformable)
+				},{
+					tag:'circle',
+					id:'svgpt_circle',
+					cx:0,cy:0,r:5,
+					style: {'any':'inherit'},
+					callback:(e)=>this.scaledown.push(e as any as SVGTransformable)
+				}]
+			},{
 				tag: 'rect',
 				x: '-50%', y: '-50%',
 				height: '100%',
@@ -110,7 +112,9 @@ export class Editor {
 		svg.rect_scale(brect, this.zoomfact);
 		this.root.width.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX, brect.width);
 		this.root.height.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX, brect.height);
-
+		for (let obj of this.scaledown) {
+			obj.transform.baseVal.initialize(svg.tfscale(1.0/this.zoomfact));
+		}
 	}
 
 	select(part:ModelPart){
