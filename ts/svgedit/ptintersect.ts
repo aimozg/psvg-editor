@@ -1,12 +1,12 @@
 import svg = require("../svg");
 import dom = require("../dom");
-import {ModelPoint, EPointAttr, Model, ModelElementLoader} from "./api";
+import {ModelPoint, EPointAttr, Model, ModelLoader, CModelPoint} from "./api";
 import {TXY} from "../svg";
 import {SVGItem} from "../dom";
 
 export const POINT_AT_INTERSECTION_TYPE = 'I';
 export const POINT_AT_INTERSECTION_CLASS = 'pt_intsec';
-export class PointAtIntersect extends ModelPoint {
+export class PointAtIntersect extends CModelPoint<ModelPoint> {
 	protected l1: SVGLineElement;
 	protected l2: SVGLineElement;
 	constructor(name: string|undefined,
@@ -14,12 +14,12 @@ export class PointAtIntersect extends ModelPoint {
 				public a2:ModelPoint,
 				public b1:ModelPoint,
 				public b2:ModelPoint) {
-		super(name,POINT_AT_INTERSECTION_CLASS)
+		super(POINT_AT_INTERSECTION_LOADER,name,POINT_AT_INTERSECTION_CLASS)
 	}
 
 	protected attachChildren() {
 		for (let pt of [this.a1,this.a2,this.b1,this.b2]) {
-			pt.attach(this,"ref");
+			this.attach(pt,"ref");
 			this.dependOn(pt,"pos");
 		}
 	}
@@ -78,8 +78,9 @@ export class PointAtIntersect extends ModelPoint {
 		}
 	}
 }
-export const POINT_AT_INTERSECTION_LOADER:ModelElementLoader<PointAtIntersect> = {
+export const POINT_AT_INTERSECTION_LOADER:ModelLoader = {
 	cat:'Point',
+	name:'PointAtIntersection',
 	typename:POINT_AT_INTERSECTION_TYPE,
 	loaderfn:(model:Model,json:any)=>new PointAtIntersect(json['name'],
 		model.loadPoint(json['a1']),

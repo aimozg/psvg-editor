@@ -1,35 +1,33 @@
-import {CommonNode, ModelPoint, ModelElement, EPointAttr, Model, ModelElementLoader} from "./api";
+import {CommonNode, ModelPoint, EPointAttr, Model, ModelLoader} from "./api";
 import {TXY} from "../svg";
 import svg = require("../svg");
 
 export const NODE_CUSP_TYPE = 'cusp';
-export class CuspNode extends CommonNode {
+export class CuspNode extends CommonNode<ModelPoint> {
 	constructor(name:string|undefined,
 				pos: ModelPoint,
 				public h1: ModelPoint|undefined,
 				public h2: ModelPoint|undefined) {
-		super(name,pos, 'cusp_node');
+		super(NODE_CUSP_LOADER,name,pos, 'cusp_node');
 	}
 
-	protected updated(other: ModelElement<any, any, EPointAttr>, attr: EPointAttr) {
-		if (other instanceof ModelPoint) {
-			switch (other.role) {
-				case 'node':
-					return this.update("pos");
-				case 'handle':
-					return this.update("handle");
-			}
+	protected updated(other: ModelPoint, attr: EPointAttr) {
+		switch (other.role) {
+			case 'node':
+				return this.update("pos");
+			case 'handle':
+				return this.update("handle");
 		}
 	}
 
 	protected attachChildren() {
 		super.attachChildren();
 		if (this.h1) {
-			this.h1.attach(this, "handle");
+			this.attach(this.h1, "handle");
 			this.dependOn(this.h1, "pos");
 		}
 		if (this.h2) {
-			this.h2.attach(this, "handle");
+			this.attach(this.h2, "handle");
 			this.dependOn(this.h2, "pos");
 		}
 	}
@@ -65,8 +63,9 @@ export class CuspNode extends CommonNode {
 		return 'cusp';
 	}
 }
-export const NODE_CUSP_LOADER: ModelElementLoader<CuspNode> = {
+export const NODE_CUSP_LOADER: ModelLoader = {
 	cat:'Node',
+	name:'CuspNode',
 	typename:NODE_CUSP_TYPE,
 	loaderfn:(m: Model, json: any)=> new CuspNode(json['name'],
 		m.loadPoint(json['pos']),

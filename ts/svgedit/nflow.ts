@@ -1,20 +1,20 @@
-import {CommonNode, ModelPoint, ModelElement, ModelNode, Model, ModelElementLoader} from "./api";
+import {CommonNode, ModelPoint, ModelElement, Model, ModelLoader, CModelPoint, CModelNode} from "./api";
 import {TXY} from "../svg";
 import {norm2fixed} from "./ptnorm";
 import svg = require("../svg");
 
 export const NODE_FLOW1_TYPE = "flow1";
-export class FlowNode extends CommonNode {
+export class FlowNode extends CommonNode<ModelPoint> {
 	constructor(name: string|undefined,
 				pos: ModelPoint,
 				public h1ab: [number,number]|undefined,
 				public h2ab: [number,number]|undefined) {
-		super(name, pos, 'flow1_node');
+		super(NODE_FLOW1_LOADER,name, pos, 'flow1_node');
 	}
 
-	protected updated<A2 extends string>(other: ModelElement<any, any, A2>, attr: A2) {
-		if (other instanceof ModelPoint) this.update("*");
-		if (other instanceof ModelNode && (attr == "pos" || attr=="*")) {
+	protected updated(other: ModelElement, attr: string) {
+		if (other instanceof CModelPoint) this.update("*");
+		if (other instanceof CModelNode && (attr == "pos" || attr=="*")) {
 			this.update("handle");
 		}
 	}
@@ -29,10 +29,6 @@ export class FlowNode extends CommonNode {
 		super.draw();
 		// TODO draggable ctrl points
 		return this.g;
-	}
-
-	points(): ModelPoint[] {
-		return [this.pos];
 	}
 
 	protected calcHandles(): [TXY, TXY] {
@@ -60,8 +56,9 @@ export class FlowNode extends CommonNode {
 			(ab2?' ['+ab2[0].toFixed(3)+','+ab2[1].toFixed(3)+']':'');
 	}
 }
-export const NODE_FLOW1_LOADER:ModelElementLoader<FlowNode> = {
+export const NODE_FLOW1_LOADER:ModelLoader = {
 	cat:'Node',
+	name:'Flow1Node',
 	typename:NODE_FLOW1_TYPE,
 	loaderfn:(m:Model,json:any) => new FlowNode(json['name'],
 	m.loadPoint(json['pos']),

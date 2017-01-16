@@ -1,24 +1,24 @@
 import svg = require("../svg");
 import dom = require("../dom");
-import {ModelPoint, EPointAttr, Model, ModelElementLoader} from "./api";
+import {ModelPoint, EPointAttr, Model, ModelLoader, CModelPoint} from "./api";
 import {TXY} from "../svg";
 import {SVGItem} from "../dom";
 
 export const POINT_AT_PROJECTION_TYPE = 'PROJ';
 export const POINT_AT_PROJECTION_CLASS = 'pt_proj';
-export class PointAtProjection extends ModelPoint {
+export class PointAtProjection extends CModelPoint<ModelPoint> {
 	protected lab: SVGLineElement;
 	protected lpq: SVGLineElement;
 	constructor(name: string|undefined,
 				public a:ModelPoint,
 				public b:ModelPoint,
 				public p:ModelPoint) {
-		super(name,POINT_AT_PROJECTION_CLASS)
+		super(POINT_AT_PROJECTION_LOADER,name,POINT_AT_PROJECTION_CLASS)
 	}
 	
 	protected attachChildren() {
 		for (let pt of [this.a,this.b,this.p]) {
-			pt.attach(this,"ref");
+			this.attach(pt,"ref");
 			this.dependOn(pt,"pos");
 		}
 	}
@@ -76,8 +76,9 @@ export class PointAtProjection extends ModelPoint {
 
 
 }
-export const POINT_AT_PROJECTION_LOADER:ModelElementLoader<PointAtProjection> = {
+export const POINT_AT_PROJECTION_LOADER:ModelLoader = {
 	cat:'Point',
+	name:'PointAtProjection',
 	typename:POINT_AT_PROJECTION_TYPE,
 	loaderfn:(model:Model,json:any)=>new PointAtProjection(json['name'],
 		model.loadPoint(json['a']),

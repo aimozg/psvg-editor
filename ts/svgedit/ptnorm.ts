@@ -1,21 +1,21 @@
-import {ModelPoint, EPointAttr, Model, ModelElementLoader} from "./api";
+import {ModelPoint, EPointAttr, Model, ModelLoader, CModelPoint} from "./api";
 import {TXY, solve2, vsub, vrot90, IXY, vlinj} from "../svg";
 import svg = require("../svg");
 
 export const POINT_FROM_NORMAL_TYPE = 'N';
 export const POINT_FROM_NORMAL_CLASS = 'pt_norm';
-export class PointFromNormal extends ModelPoint {
+export class PointFromNormal extends CModelPoint<ModelPoint> {
 	constructor(name: string|undefined,
 				public readonly pt0: ModelPoint,
 				public readonly pt1: ModelPoint,
 				public alpha: number,
 				public beta: number) {
-		super(name, POINT_FROM_NORMAL_CLASS)
+		super(POINT_FROM_NORMAL_LOADER,name, POINT_FROM_NORMAL_CLASS)
 	}
 
 	protected attachChildren() {
-		this.pt0.attach(this, "ref");
-		this.pt1.attach(this, "ref");
+		this.attach(this.pt0, "ref");
+		this.attach(this.pt1, "ref");
 		this.dependOn(this.pt0, "pos");
 		this.dependOn(this.pt1, "pos");
 	}
@@ -64,8 +64,9 @@ export function norm2fixed(a:IXY, b:IXY, alpha:number, beta:number):TXY {
 	let v2 = vrot90(v1);
 	return vlinj([1,a],[alpha,v1],[beta,v2]);
 }
-export const POINT_FROM_NORMAL_LOADER:ModelElementLoader<PointFromNormal> = {
+export const POINT_FROM_NORMAL_LOADER:ModelLoader = {
 	cat:'Point',
+	name:'PointFromNormal',
 	typename:POINT_FROM_NORMAL_TYPE,
 	loaderfn:(model:Model,json:any)=> new PointFromNormal(json['name'],
 		model.loadPoint(json['pt0']),

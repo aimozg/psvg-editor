@@ -1,10 +1,10 @@
-import {ModelPoint, EPointAttr, ModelElement, ModelElementLoader, Model} from "./api";
+import {ModelPoint, EPointAttr, ModelLoader, Model, CModelPoint} from "./api";
 import {TXY} from "../svg";
 
 export const POINT_REF_TYPE = '@';
-export class ModelPointRef extends ModelPoint {
+export class PointRef extends CModelPoint<ModelPoint> {
 	constructor(name: string|undefined, public readonly ref: string) {
-		super(name, 'ref_pt');
+		super(POINT_REF_LOADER,name, 'ref_pt');
 	}
 
 	protected draw(): SVGGElement {
@@ -15,14 +15,18 @@ export class ModelPointRef extends ModelPoint {
 	}
 
 	protected fcalculate(): TXY {
-		return this.ctx.model.findPoint(this.ref).calculate();
+		return this.obj().calculate();
+	}
+
+	public obj(): ModelPoint {
+		return this.ctx.model.findPoint(this.ref);
 	}
 
 	protected attachChildren() {
-		this.dependOn(() => this.ctx.model.findPoint(this.ref), 'pos');
+		this.dependOn(() => this.obj(), 'pos');
 	}
 
-	protected updated(other: ModelElement<any, any, EPointAttr>, attr: EPointAttr) {
+	protected updated(other: ModelPoint, attr: EPointAttr) {
 		if (attr == 'pos' || attr == '*') this.update('pos');
 	}
 
@@ -38,17 +42,18 @@ export class ModelPointRef extends ModelPoint {
 		return '@' + this.ref;
 	}
 }
-export const POINT_REF_LOADER:ModelElementLoader<ModelPointRef> = {
+export const POINT_REF_LOADER:ModelLoader = {
 	cat:'Point',
+	name:'PointRef',
 	typename:POINT_REF_TYPE,
 	objtypes:['string','object'],
 	loaderfn:(m:Model,json:any,strict:boolean)=>{
 		if (!strict) {
-			if (typeof json == 'string') return new ModelPointRef(undefined, json.substr(1));
-			if (json['type'][0] == '@') return new ModelPointRef(json['name'], json['type'].substr(1));
+			if (typeof json == 'string') return new PointRef(undefined, json.substr(1));
+			if (json['type'][0] == '@') return new PointRef(json['name'], json['type'].substr(1));
 			return undefined;
 		}
-		return new ModelPointRef(json['name'],json['ref']);
+		return new PointRef(json['name'],json['ref']);
 	}
 };
 Model.registerLoader(POINT_REF_LOADER);

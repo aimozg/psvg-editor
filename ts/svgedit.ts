@@ -2,11 +2,8 @@ import dom = require('./dom');
 import svg = require("./svg");
 require("jstree-css");
 
-import {NodePath} from "./svg";
-import {DisplayMode, Model, ModelPath, ModelNode, TModelItem} from "./svgedit/api";
-import {FixedPoint} from "./svgedit/ptfixed";
+import {DisplayMode, Model, ModelPath, ModelNode, ModelPart, CModelNode, CModelPath} from "./svgedit/api";
 import {ALL_LOADERS} from "./svgedit/_all";
-import {CuspNode} from "./svgedit/ncusp";
 
 //noinspection JSUnusedGlobalSymbols
 export const importz = {dom,svg,ALL_LOADERS};
@@ -65,18 +62,6 @@ export class Editor {
 			}]
 		}, [x0, y0, width, height]);
 		this.root.setAttribute('tabindex','0');
-		/*let handler = (ev: MouseEvent) => {
-		 let tgt = ev.target as Element;
-		 while (tgt && tgt != this.root && !tgt.classList.contains('elem')) tgt = tgt.parentElement;
-		 if (!tgt) return;
-		 let path = this.model.findPath(tgt.getAttribute('data-pathid'));
-		 let node = path ? path.nodes[tgt.getAttribute('data-nodeid')] : undefined;
-
-		 let pt = this.root.createSVGPoint();
-		 pt.x = ev.clientX;
-		 pt.y = ev.clientY;
-		 };
-		 for (let e of ['mousemove', 'mousedown', 'mouseup', 'mouseout']) this.root.addEventListener(e, handler);*/
 		canvasDiv.appendChild(this.root);
 		document.addEventListener('wheel', ev => {
 			if (ev.ctrlKey) {
@@ -103,29 +88,18 @@ export class Editor {
 		if (this.tree) this.tree.destroy();
 		this.tree = $(this.treeDiv).jstree({
 			core: {
-				data: this.model.toTreeNodes(),
+				data: this.model.treeNodeFull().children,
 				check_callback: true
 			}
 		}).jstree();
 		this.tree.get_container().on('select_node.jstree', (e, data: JSTreeNodeEvent) => {
-			let nid = data.node.id.split('_');
-			switch (nid[0]) {
-				case 'Model':
-					break;
-				case 'ModelNode':
-					this.selectNode(nid[1], +nid[2]);
-					break;
-				case 'ModelPoint':
-					break;
-				case 'ModelPath':
-					this.selectPath(nid[1]);
-					break;
-			}
+			let id = data.node.id.split('_');
+			if (id[0] == 'ModelPart') this.select(this.model.parts[id[1]]);
 		}).on('click dblclick', (/*e*/) => {
 			// console.log(e, this.tree.jstree().get_node(e.target))
 		});
-		this.model.onUpdate = (obj: TModelItem) => {
-			this.tree.rename_node(this.model.treeNodeId(obj), this.model.treeNodeText(obj));
+		this.model.onUpdate = (obj: ModelPart) => {
+			this.tree.rename_node(obj.treeNodeId(), obj.treeNodeText());
 		}
 	}
 
@@ -139,20 +113,19 @@ export class Editor {
 
 	}
 
-	selectPath(id: string): ModelPath {
-		if (this.selPath) this.selPath.g.classList.remove('-selected');
-		let path = this.selPath = this.model.findPath(id);
-		path.g.classList.add('-selected');
-		path.g.parentNode.appendChild(path.g);
-		return path;
-	}
-
-	selectNode(pathid: string, i: number): ModelNode {
-		if (this.selNode) this.selNode.g.classList.remove('-selected');
-		let node = this.selNode = this.selectPath(pathid).nodes[i];
-		node.g.classList.add('-selected');
-		node.g.parentNode.appendChild(node.g);
-		return node;
+	select(part:ModelPart){
+		if (part instanceof CModelNode) {
+			if (this.selNode) this.selNode.g.classList.remove('-selected');
+			this.selNode = part;
+			part.g.classList.add('-selected');
+			part.g.parentNode.appendChild(part.g);
+		} else if (part instanceof CModelPath) {
+			if (this.selPath) this.selPath.g.classList.remove('-selected');
+			this.selPath = part;
+			part.g.classList.add('-selected');
+			part.g.parentNode.appendChild(part.g);
+		}
+		if (part !instanceof Model) this.select(part.parent);
 	}
 
 	public save(): any {
@@ -164,7 +137,7 @@ export class Editor {
 		this.recreateView();
 	}
 
-	loadSvgStruct(el: SVGElement) {
+	/*loadSvgStruct(el: SVGElement) {
 		interface JPath {
 			name: string;
 			np: NodePath;
@@ -200,7 +173,7 @@ export class Editor {
 		}
 		this.model = m;
 		this.recreateView();
-	}
+	}*/
 }
 
 

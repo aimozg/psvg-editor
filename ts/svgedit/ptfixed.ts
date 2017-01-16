@@ -1,11 +1,11 @@
-import {ModelPoint, ModelElement, Model, ModelElementLoader} from "./api";
+import {ModelElement, Model, ModelLoader, CModelPoint} from "./api";
 import {TXY, SvgDragEvent, IXY} from "../svg";
 import svg = require("../svg");
 
 export const POINT_FIXED_TYPE = 'F';
-export class FixedPoint extends ModelPoint {
+export class FixedPoint extends CModelPoint<any> {
 	constructor(name: string|undefined, public readonly pt: TXY) {
-		super(name, 'fixed_pt');
+		super(POINT_FIXED_LOADER, name, 'fixed_pt');
 	}
 
 	protected draw(): SVGGElement {
@@ -44,7 +44,7 @@ export class FixedPoint extends ModelPoint {
 	protected attachChildren() {
 	}
 
-	protected updated<A2 extends string>(other: ModelElement<any, any, A2>, attr: A2) {
+	protected updated(other: ModelElement, attr: string) {
 	}
 
 	public save(): any {
@@ -64,8 +64,9 @@ export class FixedPoint extends ModelPoint {
 	}
 
 }
-export const POINT_FIXED_LOADER:ModelElementLoader<FixedPoint> = {
+export const POINT_FIXED_LOADER:ModelLoader = {
 	cat:'Point',
+	name:'FixedPoint',
 	typename:POINT_FIXED_TYPE,
 	objtypes:['object'], // arrays supported
 	loaderfn:(model:Model,json:any,strict:boolean)=>{

@@ -1,16 +1,26 @@
 import {TXY} from "../svg";
-import {CommonNode, ModelPoint, ModelNode, EPointAttr, ENodeAttr, Model, ModelElementLoader} from "./api";
+import {
+	CommonNode,
+	ModelPoint,
+	ModelNode,
+	EPointAttr,
+	ENodeAttr,
+	Model,
+	ModelLoader,
+	CModelPoint,
+	CModelNode
+} from "./api";
 import svg = require("../svg");
 
 export const NODE_AUTOSMOOTH_TYPE = 'autosmooth';
-export class AutosmoothNode extends CommonNode {
+export class AutosmoothNode extends CommonNode<ModelPoint|ModelNode> {
 	constructor(name: string|undefined, pos: ModelPoint) {
-		super(name, pos, 'autosmooth_node');
+		super(NODE_AUTOSMOOTH_LOADER,name, pos, 'autosmooth_node');
 	}
 
 	protected updated(other: ModelPoint|ModelNode, attr: EPointAttr|ENodeAttr) {
-		if (other instanceof ModelPoint) this.update("*");
-		if (other instanceof ModelNode && (attr == "pos" || attr == "*")) {
+		if (other instanceof CModelPoint) this.update("*");
+		if (other instanceof CModelNode && (attr == "pos" || attr == "*")) {
 			this.update("handle");
 		}
 	}
@@ -19,10 +29,6 @@ export class AutosmoothNode extends CommonNode {
 		super.attachChildren();
 		this.dependOn(this.prevNode(),"pos");
 		this.dependOn(this.nextNode(),"pos");
-	}
-
-	points(): ModelPoint[] {
-		return [this.pos];
 	}
 
 	protected calcHandles(): [TXY, TXY] {
@@ -46,8 +52,9 @@ export class AutosmoothNode extends CommonNode {
 	}
 
 }
-export const NODE_AUTOSMOOTH_LOADER:ModelElementLoader<AutosmoothNode> = {
+export const NODE_AUTOSMOOTH_LOADER:ModelLoader = {
 	cat:'Node',
+	name:'AutosmoothNode',
 	typename:NODE_AUTOSMOOTH_TYPE,
 	loaderfn:(m: Model, json: any) =>
 		new AutosmoothNode(json['name'], m.loadPoint(json['pos']))
