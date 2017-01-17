@@ -50,8 +50,8 @@
 			margin: 0 auto;
 			min-height: 100%;
 		}
-		#sidebar {
-			overflow:auto;
+		#treeview, #objview {
+			overflow-y:auto;
 		}
 		.viewport {
 			fill: #fff;
@@ -61,26 +61,19 @@
 			stroke-opacity:0.8;
 			stroke:#000000;
 			fill:none;
+			vector-effect:non-scaling-stroke;
 		}
 		.path.-selected > path{
 			stroke:#ff0000;
-		}
-		line.handle1,line.handle2 {
-			stroke-width:2;
-			stroke-opacity: 1;
-		}
-		svg * {
-			vector-effect:non-scaling-stroke;
-		}
-		.cusp_node .point *, .flow1_node .point *{
-			stroke-linecap: square;
 		}
 		.point {
 			stroke-width:2;
 			stroke:transparent;
 		}
-		.point.pt_node {
-			fill:#00ffff;
+		line.handle1,line.handle2 {
+			stroke-width:2;
+			stroke-opacity: 1;
+			vector-effect:non-scaling-stroke;
 		}
 		.point.pt_handle, .node line.handle1 {
 			stroke:#00a060;
@@ -92,6 +85,7 @@
 		.node line.lineref {
 			stroke:#008080;
 			stroke-dasharray: 1 4;
+			vector-effect:non-scaling-stroke;
 		}
 		.node.-selected line.handle1,.node.-selected line.handle2 {
 			stroke:#ff8080;
@@ -99,11 +93,20 @@
 		.point.-selected {
 			stroke:#ff0000;
 		}
-		.point.fixed_pt {
+		.point > use {
+			fill:#00ffff;
+		}
+		use[href="#svg_FixedPoint"] {
+			stroke-width:2;
 			stroke:#000000;
 		}
-		.point.fixed_pt:hover{
+		use[href="#svg_FixedPoint"]:hover {
 			stroke:#ffff00;
+		}
+		#svg_CuspNode, #svg_AutosmoothNode, #svg_Flow1Node {
+			fill:transparent;
+			stroke-width:2;
+			stroke:#000000;
 		}
 	</style>
 </head>
@@ -120,8 +123,11 @@
 		<div id="svgCanvas" class="fstretch">
 		</div>
 		<div class="fcol" style="flex-basis:15%;">
-			<div id="sidebar">
+			<div id="sidebar" class="fcol">
 				<div id="treeview"></div>
+				<div id="objview">
+
+				</div>
 			</div>
 		</div>
 	</div>

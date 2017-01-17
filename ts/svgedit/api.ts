@@ -27,6 +27,10 @@ export abstract class ModelPart {
 
 	}
 
+	protected uhref():string {
+		return '#svg_'+this.loader.name;
+	}
+
 	protected attached(parent: ModelPart) {
 		this.ctx = parent.ctx;
 		this.parent = parent;
@@ -94,7 +98,7 @@ export abstract class CModelElement<
 	public display(addclass?:string): SVGElement {
 		if (!this.graphic) {
 			this.graphic = this.draw();
-			this.graphic.classList.add(addclass);
+			if (addclass) this.graphic.classList.add(addclass);
 			this.redraw("*");
 		}
 		return this.graphic;
@@ -143,7 +147,7 @@ export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElem
 	}
 
 	protected draw(): SVGGElement {
-		this.use = SVGItem('use',svg.svguse('#svgpt_diamond',0,0));
+		this.use = SVGItem('use',{'href':this.uhref()});
 		updateElement(this.g, {
 			'class': `${this.cssclass} elem point`,
 			items: [this.use]
@@ -155,8 +159,9 @@ export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElem
 
 	protected redraw(attr: EPointAttr) {
 		let [x,y] =this.calculate();
-		this.use.x.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX,x);
-		this.use.y.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX,y);
+		svg.tf2list(svg.tftranslate(x,y),this.use.transform.baseVal);
+		/*this.use.x.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX,x);
+		this.use.y.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX,y);*/
 	}
 
 	abstract save(): any;
@@ -201,6 +206,7 @@ export abstract class CModelNode<CHILD> extends CModelElement<ModelPath,ModelPoi
 export abstract class CommonNode<CHILD> extends CModelNode<any> {
 	protected l1: SVGLineElement;
 	protected l2: SVGLineElement;
+	protected u0: SVGUseElement;
 
 	constructor(loader: ModelLoader,
 				name: string|undefined,
@@ -218,7 +224,10 @@ export abstract class CommonNode<CHILD> extends CModelNode<any> {
 	protected draw(): SVGElement {
 		this.l1 = undefined;
 		this.l2 = undefined;
-		updateElement(this.g, {items: [this.pos.display("pt_node")]});
+		updateElement(this.g, {items: [
+			this.u0 = SVGItem('use',{href:this.uhref()}),
+			this.pos.display("pt_node")
+		]});
 		return this.g;
 	}
 
@@ -237,6 +246,7 @@ export abstract class CommonNode<CHILD> extends CModelNode<any> {
 
 	protected redraw(attr: ENodeAttr) {
 		let pxy = this.pos.calculate();
+		svg.tf2list(svg.tftranslate(pxy[0],pxy[1]),this.u0.transform.baseVal);
 		let h12xy = this.calcHandles();
 		if (this.l1) this.g.removeChild(this.l1);
 		if (this.l2) this.g.removeChild(this.l2);

@@ -38,16 +38,42 @@ export class Editor {
 				tag: 'defs',
 				items: [{
 					tag:'path',
-					id:'svgpt_diamond',
+					id:'svgpt_diamond_sm',
 					d:'M -5 0 0 -5 5 0 0 5 z',
 					style: { 'any': 'inherit' },
 					callback:(e)=>this.scaledown.push(e as any as SVGTransformable)
 				},{
+					tag:'path',
+					id:'svgpt_diamond',
+					d:'M -10 0 0 -10 10 0 0 10 z',
+					style: { 'any': 'inherit' },
+					callback:(e)=>this.scaledown.push(e as any as SVGTransformable)
+				},{
 					tag:'circle',
-					id:'svgpt_circle',
+					id:'svgpt_circle_sm',
 					cx:0,cy:0,r:5,
 					style: {'any':'inherit'},
 					callback:(e)=>this.scaledown.push(e as any as SVGTransformable)
+				},{
+					tag:'circle',
+					id:'svgpt_circle',
+					cx:0,cy:0,r:10,
+					style: {'any':'inherit'},
+					callback:(e)=>this.scaledown.push(e as any as SVGTransformable)
+				},{
+					tag:'rect',
+					id:'svgpt_box_sm',
+					x: -2.5, y: -2.5, width:5,height:5,
+					style: {'any':'inherit'},
+					callback:(e)=>this.scaledown.push(e as any as SVGTransformable)
+				},{
+					tag:'use',id:'svg_FixedPoint',href:'#svgpt_box_sm'
+				},{
+					tag:'use',id:'svg_CuspNode',href:'#svgpt_diamond'
+				},{
+					tag:'use',id:'svg_Flow1Node',href:'#svgpt_circle'
+				},{
+					tag:'use',id:'svg_AutosmoothNode',href:'#svgpt_circle'
 				}]
 			},{
 				tag: 'rect',

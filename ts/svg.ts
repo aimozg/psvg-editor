@@ -256,7 +256,7 @@ export function svgtranslate(svg: SVGTransformable, tx: number, ty: number) {
 	val.appendItem(tftranslate(tx, ty));
 	val.consolidate();
 }
-export function svguse(href: string, x?: number, y?: number,
+export function svguse(href: string, x: number, y: number,
 					   attrs?: CreateElementAttrs): CEASvgUse {
 	return merge1d({
 		tag: 'use',
