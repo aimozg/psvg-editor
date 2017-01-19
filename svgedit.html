@@ -63,9 +63,6 @@
 			fill:none;
 			vector-effect:non-scaling-stroke;
 		}
-		.path.-selected > path{
-			stroke:#ff0000;
-		}
 		.point {
 			stroke-width:2;
 			stroke:transparent;
@@ -87,10 +84,17 @@
 			stroke-dasharray: 1 4;
 			vector-effect:non-scaling-stroke;
 		}
-		.node.-selected line.handle1,.node.-selected line.handle2 {
-			stroke:#ff8080;
+		.node.-selected > line.handle1,
+		.node.-selected > line.handle2,
+		.path.-selected > path,
+		.point.-selected{
+			stroke:#800000;
 		}
-		.point.-selected {
+		.node.-selected.-primary > line.handle1,
+		.node.-selected.-primary > line.handle2,
+		.path.-selected.-primary > path,
+		.point.-selected.-primary,
+		.point.-selected.-primary > use[href="#svg_FixedPoint"] {
 			stroke:#ff0000;
 		}
 		.point > use {

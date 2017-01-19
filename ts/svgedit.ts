@@ -2,7 +2,7 @@ import dom = require('./dom');
 import svg = require("./svg");
 require("jstree-css");
 
-import {DisplayMode, Model, ModelPath, ModelNode, ModelPart, CModelNode, CModelPath} from "./svgedit/api";
+import {DisplayMode, Model, ModelPart, CModelElement} from "./svgedit/api";
 import {ALL_LOADERS} from "./svgedit/_all";
 
 //noinspection JSUnusedGlobalSymbols
@@ -20,8 +20,7 @@ export class Editor {
 	public model: Model = new Model(this.mode);
 	private scaledown:SVGTransformable[];
 
-	selPath: ModelPath;
-	selNode: ModelNode;
+	selection:ModelPart = null;
 
 	constructor(canvasDiv: HTMLElement, private treeDiv: HTMLElement) {
 		canvasDiv.innerHTML = '';
@@ -144,18 +143,20 @@ export class Editor {
 	}
 
 	select(part:ModelPart){
-		if (part instanceof CModelNode) {
-			if (this.selNode) this.selNode.g.classList.remove('-selected');
-			this.selNode = part;
-			part.g.classList.add('-selected');
-			part.g.parentNode.appendChild(part.g);
-		} else if (part instanceof CModelPath) {
-			if (this.selPath) this.selPath.g.classList.remove('-selected');
-			this.selPath = part;
-			part.g.classList.add('-selected');
-			part.g.parentNode.appendChild(part.g);
+		for (let s=this.selection;s && s instanceof CModelElement && s!=this.model;s=s.parent) {
+			s.graphic.classList.remove('-selected','-primary');
 		}
-		if (part !instanceof Model) this.select(part.parent);
+		this.selection = part;
+		if (part && part instanceof CModelElement && part!=this.model) {
+			part.graphic.classList.add('-selected','-primary');
+			for (let s = part;s&&s instanceof CModelElement && s!=this.model;s=s.parent) {
+				const g = s.graphic;
+				if (g) {
+					g.classList.add('-selected');
+					g.parentElement.appendChild(g);
+				}
+			}
+		}
 	}
 
 	public save(): any {

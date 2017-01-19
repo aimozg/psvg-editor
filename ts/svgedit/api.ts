@@ -37,7 +37,7 @@ export abstract class ModelPart {
 	}
 
 	public treeNodeId(): string {
-		return 'ModelElement_' + this.id;
+		return 'ModelPart_' + this.id;
 	}
 
 	public treeNodeText(): string {
@@ -63,7 +63,7 @@ export abstract class CModelElement<
 	CHILD extends ModelElement,
 	ATTR extends string> extends ModelPart {
 	public parent: PARENT;
-	private graphic: SVGElement;
+	public graphic: SVGElement;
 	protected dependants: [string, ModelElement][] = [];
 	public readonly children: CHILD[] = [];
 
