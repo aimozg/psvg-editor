@@ -57,8 +57,10 @@ interface JSTree {
 	enable_node(obj: TNodeRef);
 	hide_node(obj: TNodeRef);
 	show_node(obj: TNodeRef);
-	select_node(obj: TNodeRef); // suppress_event, prevent_open
+	select_node(obj: TNodeRef, supress_event?:boolean, prevent_open?:boolean);
 	deselect_node(obj: TNodeRef); // suppress_event
+	select_all(suppress_event?: boolean);
+	deselect_all(suppress_event?: boolean);
 	refresh_node(obj: TNodeRef);
 	create_node(par: TNodeRef, node: string|JSTreeNodeInit, pos?: number|'first'|'last', callback?: Function): string;
 	rename_node(obj: TNodeRef|TNodeRef[], name: string): boolean;

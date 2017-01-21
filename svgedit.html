@@ -72,11 +72,11 @@
 			stroke-opacity: 1;
 			vector-effect:non-scaling-stroke;
 		}
-		.point.pt_handle, .node line.handle1 {
+		.point.pt_handle, .node > line.handle1 {
 			stroke:#00a060;
 			fill:#00a060;
 		}
-		.node line.handle2 {
+		.node > line.handle2 {
 			stroke:#0060a0;
 		}
 		.node line.lineref {
@@ -84,14 +84,20 @@
 			stroke-dasharray: 1 4;
 			vector-effect:non-scaling-stroke;
 		}
+		.node > use {
+			stroke: #000000;
+		}
 		.node.-selected > line.handle1,
 		.node.-selected > line.handle2,
 		.path.-selected > path,
-		.point.-selected{
+		.node.-selected > use,
+		.point.-selected,
+		.point.-selected > use{
 			stroke:#800000;
 		}
 		.node.-selected.-primary > line.handle1,
 		.node.-selected.-primary > line.handle2,
+		.node.-selected.-primary > use,
 		.path.-selected.-primary > path,
 		.point.-selected.-primary,
 		.point.-selected.-primary > use[href="#svg_FixedPoint"] {
@@ -110,7 +116,7 @@
 		#svg_CuspNode, #svg_AutosmoothNode, #svg_Flow1Node {
 			fill:transparent;
 			stroke-width:2;
-			stroke:#000000;
+			stroke:inherit;
 		}
 	</style>
 </head>

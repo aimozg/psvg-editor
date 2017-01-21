@@ -127,7 +127,16 @@ export class Editor {
 		});
 		this.model.onUpdate = (obj: ModelPart) => {
 			this.tree.rename_node(obj.treeNodeId(), obj.treeNodeText());
-		}
+		};
+		this.eModel.addEventListener('click',(e:MouseEvent)=>{
+			for (let element = e.target as Element;element;element = element.parentElement) {
+				let part = this.model.parts[element.getAttribute('data-partid')];
+				if (part) {
+					this.select(part);
+					return;
+				}
+			}
+		});
 	}
 
 	private resizeView() {
@@ -143,11 +152,14 @@ export class Editor {
 	}
 
 	select(part:ModelPart){
+		if (this.selection == part) return;
 		for (let s=this.selection;s && s instanceof CModelElement && s!=this.model;s=s.parent) {
 			s.graphic.classList.remove('-selected','-primary');
 		}
+		this.tree.deselect_all(true);
 		this.selection = part;
 		if (part && part instanceof CModelElement && part!=this.model) {
+			this.tree.select_node(part.treeNodeId(),true);
 			part.graphic.classList.add('-selected','-primary');
 			for (let s = part;s&&s instanceof CModelElement && s!=this.model;s=s.parent) {
 				const g = s.graphic;

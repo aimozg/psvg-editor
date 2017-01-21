@@ -98,6 +98,7 @@ export abstract class CModelElement<
 	public display(addclass?:string): SVGElement {
 		if (!this.graphic) {
 			this.graphic = this.draw();
+			this.graphic.setAttribute('data-partid',this.id);
 			if (addclass) this.graphic.classList.add(addclass);
 			this.redraw("*");
 		}
