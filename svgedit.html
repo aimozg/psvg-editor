@@ -65,35 +65,35 @@
 		.viewport {
 			fill: #fff;
 		}
-		.path > path{
+		.modelpane-edit .path > path{
 			stroke-width:4;
 			stroke-opacity:0.8;
 			stroke:#000000;
 			fill:none;
 			vector-effect:non-scaling-stroke;
 		}
-		.point {
+		.modelpane-edit.point {
 			stroke-width:2;
 			stroke:transparent;
 		}
-		line.handle1,line.handle2 {
+		.modelpane-edit line.handle1,line.handle2 {
 			stroke-width:2;
 			stroke-opacity: 1;
 			vector-effect:non-scaling-stroke;
 		}
-		.point.pt_handle, .node > line.handle1 {
+		.modelpane-edit .point.pt_handle, .node > line.handle1 {
 			stroke:#00a060;
 			fill:#00a060;
 		}
-		.node > line.handle2 {
+		.modelpane-edit .node > line.handle2 {
 			stroke:#0060a0;
 		}
-		.node line.lineref {
+		.modelpane-edit .node line.lineref {
 			stroke:#008080;
 			stroke-dasharray: 1 4;
 			vector-effect:non-scaling-stroke;
 		}
-		.node > use {
+		.modelpane-edit .node > use {
 			stroke: #000000;
 		}
 		.node.-selected > line.handle1,
@@ -112,7 +112,7 @@
 		.point.-selected.-primary > use[href="#svg_FixedPoint"] {
 			stroke:#ff0000;
 		}
-		.point > use {
+		.modelpane-edit .point > use {
 			fill:#00ffff;
 		}
 		use[href="#svg_FixedPoint"] {
@@ -168,7 +168,6 @@
         canvas.css('height', (document.body.clientHeight - canvas.offset().top).toFixed() + 'px');
         editor = svgedit.setup(canvas[1], $('#treeview')[0],[canvas[0]]);
         editor_load3();
-        $("#name").text(editor.model.name);
     });
     function editor_save() {
         localStorage.setItem('svgedit_model',JSON.stringify(editor.save()));

@@ -253,16 +253,18 @@ export interface CreateSVGAttrs {
 	items: (CreateElementAttrs|Element|undefined)[];
 	width: number;
 	height: number;
+	'class'?: string;
 }
 
-export function SVG(items: CreateSVGAttrs,
-					viewBox: [number, number, number, number] = [0, 0, items.width, items.height]): SVGSVGElement {
+export function SVG(attrs: CreateSVGAttrs,
+					viewBox: [number, number, number, number] = [0, 0, attrs.width, attrs.height]): SVGSVGElement {
 	return SVGItem('svg', {
 		version: 1.1,
 		"xmlns:xlink": "http://www.w3.org/1999/xlink",
 		viewBox: viewBox.join(' '),
-		width: items.width + 'px',
-		height: items.height + 'px',
-		items: items.items
+		width: attrs.width + 'px',
+		height: attrs.height + 'px',
+		items: attrs.items,
+		'class': attrs.class
 	});
 }

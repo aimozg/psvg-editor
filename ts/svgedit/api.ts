@@ -297,6 +297,7 @@ export class CModelPath extends CModelElement<Model,ModelNode,EPathAttr> {
 
 	constructor(name: string|undefined,
 				public nodes: ModelNode[],
+				public style: any,
 				public closed: boolean = true) {
 		super(PATH_LOADER, name);
 	}
@@ -321,6 +322,10 @@ export class CModelPath extends CModelElement<Model,ModelNode,EPathAttr> {
 
 	public redraw(attr: EPathAttr,mode:DisplayMode) {
 		this.p.setAttribute('d', this.toSvgD());
+		updateElement(this.p,{
+			d: this.toSvgD(),
+			style: mode=='edit'?{}:this.style
+		});
 	}
 
 
@@ -343,6 +348,7 @@ export class CModelPath extends CModelElement<Model,ModelNode,EPathAttr> {
 		return {
 			name: this.name,
 			closed: this.closed,
+			style: this.style||{},
 			nodes: this.nodes.map(n => n.save())
 		};
 	}
@@ -355,7 +361,8 @@ export const PATH_LOADER: ModelLoader = {
 	loaderfn: (m: Model, json: any, strict: boolean) => new CModelPath(
 		json['name'] as string,
 		json['nodes'].map(j => m.loadNode(j)),
-		json['closed'] as boolean)
+		json['style']||{},
+		!!json['closed'])
 };
 
 export class ModelParam extends ModelPart {
@@ -437,6 +444,14 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 
 	public draw(mode:DisplayMode): SVGElement {
 		return updateElement(this.g, {
+			style: {
+				stroke: 'transparent',
+				fill: 'transparent',
+				'stroke-opacity': 1,
+				'fill-opacity': 1,
+				'opacity': 1,
+				'stroke-width': 1
+			},
 			items: _.flatten(this.paths.map(p => p.display()))
 		});
 	}

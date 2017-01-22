@@ -37,6 +37,7 @@ class ModelPane {
 		this.svg = dom.SVG({
 			width: width,
 			height: height,
+			'class': 'modelpane-'+mode,
 			items: [defs.length == 0 ? undefined : {
 					tag: 'defs',
 					items: defs
@@ -76,6 +77,7 @@ export class Editor {
 	private editPane: ModelPane;
 	private previews: ModelPane[] = [];
 	private scaledown: SVGTransformable[];
+	get model(): Model { return this.editPane.model }
 
 	selection: ModelPart|null = null;
 

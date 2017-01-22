@@ -2,7 +2,7 @@ import {FPassage, TPassage, TPassageAction, displayPassage, displayFace} from ".
 import * as _face from "./face";
 import {Appearance, Colors} from "./face";
 import {tinycolor_ex as TCX} from "./tinycolor-ex";
-import _ = require("underscore");
+require("underscore");
 export const face = _face;
 const curry = _.partial;
 
@@ -13,7 +13,7 @@ interface CreatureData {
 	appearance: Appearance;
 }
 
-export var player: CreatureData = defaultPlayer();
+export let player: CreatureData = defaultPlayer();
 function defaultPlayer(): CreatureData {
 	let a = face.getDefaultAppearance();
 	a.cheekSz = _.random(10) / 10;

@@ -7,6 +7,10 @@
     {
       "name"  : "face",
       "closed": true,
+      "style": {
+        "stroke": "hsl(26, 49%, 16%)",
+        "fill": "hsl(26, 49%, 64%)"
+      },
       "nodes" : [
         { "type": "autosmooth", "pos": [10, 44] },
         { "type": "autosmooth", "pos": [-10, 44] },
@@ -20,6 +24,10 @@
     }, {
       "name"  : "noseline",
       "closed": false,
+      "style": {
+        "stroke": "hsl(26, 49%, 16%)",
+        "stroke-width": 0.5
+      },
       "nodes" : [
         {
           "type"   : "cusp",
@@ -53,6 +61,9 @@
     }, {
       "name"  : "nosefill",
       "closed": true,
+      "style": {
+        "fill": "hsla(26, 49%, 32%, 0.5)"
+      },
       "nodes" : [
         {
           "type": "flow1",
@@ -74,6 +85,10 @@
     }, {
       "name"  : "mouth",
       "closed": false,
+      "style": {
+        "stroke": "hsl(26, 49%, 16%)",
+        "stroke-width": 0.5
+      },
       "nodes" : [
         {
           "type"   : "cusp",
