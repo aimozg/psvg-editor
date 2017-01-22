@@ -1,5 +1,5 @@
 import {ModelLoader} from "./api";
-import {NODE_AUTOSMOOTH_LOADER} from "./nautosmooth";
+import {NODE_SMOOTH_LOADER} from "./nsmooth";
 import {NODE_FLOW1_LOADER} from "./nflow";
 import {POINT_FIXED_LOADER} from "./ptfixed";
 import {POINT_AT_INTERSECTION_LOADER} from "./ptintersect";
@@ -8,7 +8,7 @@ import {POINT_AT_PROJECTION_LOADER} from "./ptproj";
 import {NODE_CUSP_LOADER} from "./ncusp";
 import {POINT_REF_LOADER} from "./ptref";
 export const ALL_LOADERS:ModelLoader[] = [
-	NODE_AUTOSMOOTH_LOADER,
+	NODE_SMOOTH_LOADER,
 	NODE_CUSP_LOADER,
 	NODE_FLOW1_LOADER,
 	POINT_FIXED_LOADER,

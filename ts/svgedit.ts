@@ -132,13 +132,21 @@ export class Editor {
 				style: {'any': 'inherit'},
 				callback: (e) => this.scaledown.push(e as any as SVGTransformable)
 			}, {
+				tag: 'rect',
+				id: 'svgpt_box',
+				x: -5, y: -5, width: 10, height: 10,
+				style: {'any': 'inherit'},
+				callback: (e) => this.scaledown.push(e as any as SVGTransformable)
+			}, {
 				tag: 'use', id: 'svg_FixedPoint', href: '#svgpt_box_sm'
 			}, {
 				tag: 'use', id: 'svg_CuspNode', href: '#svgpt_diamond'
 			}, {
 				tag: 'use', id: 'svg_Flow1Node', href: '#svgpt_circle'
 			}, {
-				tag: 'use', id: 'svg_AutosmoothNode', href: '#svgpt_circle'
+				tag: 'use', id: 'svg_SmoothNode', href: '#svgpt_circle'
+			}, {
+				tag: 'use', id: 'svg_SymmetricNode', href: '#svgpt_box'
 			}]);
 		for (let pd of this.previewDivs) {
 			this.previews.push(new ModelPane(model,'view',pd));

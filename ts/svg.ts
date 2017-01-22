@@ -65,6 +65,14 @@ export function vsub(a: IXY, b: IXY): TXY {
 export function vrot90(a: IXY): TXY {
 	return [a[1], -a[0]];
 }
+export function vrot([x, y]: IXY, degrees: number): TXY {
+	let sin = Math.sin(Math.PI * degrees / 180);
+	let cos = Math.sqrt(1 - sin ** 2);
+	return [
+		+cos * x + sin * y,
+		-sin * x + cos * y
+	];
+}
 export function vnorm(v: IXY): number {
 	return v[0] ** 2 + v[1] ** 2;
 }
@@ -75,7 +83,7 @@ export function vunit(v: IXY): TXY {
 	return (v[0] == 0 && v[1] == 0) ? [0, 0] : vscale(1.0 / vlen(v), v);
 }
 export function vdot(a: IXY, b: IXY): number {
-	return a[0]*b[0]+a[1]*b[1];
+	return a[0] * b[0] + a[1] * b[1];
 }
 export function vsetlen(s: number, v: IXY): TXY {
 	return vscale(s, vunit(v));
@@ -117,15 +125,20 @@ export interface NodePath {
 	nodes: DNode[]
 }
 
-export function smoothhandles(bac: [IXY, IXY, IXY]): [TXY, TXY] {
-	let b = bac[0], a = bac[1], c = bac[2];
+export function smoothhandles([b,a,c]:[IXY, IXY, IXY],
+							  abq: number = 1.0 / 3,
+							  acq: number = 1.0 / 3,
+							  rot: number = 0): [TXY, TXY] {
 	let ab = vsub(b, a);
 	let ac = vsub(c, a);
 	let ablen = vlen(ab);
 	let aclen = vlen(ac);
 	let dir = vunit(vnormbisect(ab, ac, ablen, aclen));
-	return [vadd(a, vscale(-ablen / 3, dir)),
-		vadd(a, vscale(aclen / 3, dir))];
+	if (rot != 0) {
+		dir = vrot(dir, rot);
+	}
+	return [vadd(a, vscale(-ablen * abq, dir)),
+		vadd(a, vscale(aclen * acq, dir))];
 }
 export function autosmooth(pts: IXY[]): NodePath {
 	let n = pts.length;
@@ -148,16 +161,16 @@ export function noderepr(path: NodePath): string {
 }
 
 export function eltonodes(path: IPathDEl[]): NodePath {
-	if (path.length == 0) return {z:false,nodes:[]};
+	if (path.length == 0) return {z: false, nodes: []};
 	if (path[0].c != 'M') throw "Incorrect path start " + drepr(path);
 	if (path.length < 3) {
 		let p = path[0].p[0];
 		return {
 			z: false,
 			nodes: [{
-				p: [p[0],p[1]],
-				h1: [p[0],p[1]],
-				h2: [p[0],p[1]]
+				p: [p[0], p[1]],
+				h1: [p[0], p[1]],
+				h2: [p[0], p[1]]
 			}]
 		};
 	}
@@ -192,8 +205,8 @@ export function eltonodes(path: IPathDEl[]): NodePath {
 export function nodestoels(path: NodePath): PathDEl[] {
 	let pts = path.nodes;
 	if (pts.length == 0) return [];
-	let M:PathDEl = {c: 'M', p: [[pts[0].p[0], pts[0].p[1]] as TXY]};
-	if (pts.length == 1) return [M,{c:'z',p:[]} as PathDEl];
+	let M: PathDEl = {c: 'M', p: [[pts[0].p[0], pts[0].p[1]] as TXY]};
+	if (pts.length == 1) return [M, {c: 'z', p: []} as PathDEl];
 	let rslt: PathDEl[] = pts.map(a => ({c: 'C', p: [[0, 0], [0, 0], [0, 0]]as TXY[]}));
 	let n = pts.length;
 	let i0 = path.z ? 0 : 1;
@@ -396,7 +409,7 @@ export function solve2(vx: IXY, vy: IXY, vc: IXY): TXY {
 		const a = (m[1][2] - b * m[1][1]) / m[1][0];
 		return [a, b];
 	}
-	m[0] = v3scale(m[0],1/m[0][0]);
+	m[0] = v3scale(m[0], 1 / m[0][0]);
 	//  a     + b*m01 = m02
 	//  a*m10 + b*m11 = m12
 	if (m[1][0] != 0) {
@@ -427,12 +440,12 @@ export function line(a: IXY, b: IXY): Line {
 	// ^ underedfined so we take either of
 	//   dx + g*dy = 0  or
 	// f*dx +   dy = 0
-	if (Math.abs(dx)>Math.abs(dy)) {
+	if (Math.abs(dx) > Math.abs(dy)) {
 		let g = -dx / dy;
 		//    x +  g*y = h
 		return [1, g, ax + g * ay];
 	} else {
-		let f = -dy/dx;
+		let f = -dy / dx;
 		// f*x + y = h
 		return [f, 1, f * ax + ay];
 	}
@@ -453,9 +466,9 @@ export function v22intersect(a1: IXY, a2: IXY, b1: IXY, b2: IXY): TXY {
  * Проекция точки 'p' на линию 'ab'.
  */
 export function ptproj(a: IXY, b: IXY, p: IXY): TXY {
-	let ab = vsub(b,a);
+	let ab = vsub(b, a);
 	let ab1 = vunit(ab);
-	let ap = vsub(p,a);
-	let n = vdot(ap,ab1);
-	return vadd(a,vscale(n,ab1));
+	let ap = vsub(p, a);
+	let n = vdot(ap, ab1);
+	return vadd(a, vscale(n, ab1));
 }
