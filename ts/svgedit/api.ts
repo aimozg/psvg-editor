@@ -11,15 +11,15 @@ export type DisplayMode = 'edit'|'view';
 export interface ModelCtx {
 	model: Model;
 	mode: DisplayMode;
-	ctxid: number;
+	id: number;
 	center: TXY;
 }
 
 export type EModelPartCategory = "Point"|"Node"|"Path"|"Param"|"Model";
 export abstract class ModelPart {
-	private static Counter = 1;
-	public readonly id = '' + ModelPart.Counter++;
-	public ctxid:number;
+	private static GCounter = 1;
+	public readonly gid = '' + ModelPart.GCounter++;
+	public id:number;
 	public parent: ModelPart;
 	public readonly children: ModelPart[];
 	protected ctx: ModelCtx;
@@ -35,7 +35,7 @@ export abstract class ModelPart {
 
 	protected attached(parent: ModelPart) {
 		this.ctx = parent.ctx;
-		this.ctxid = parent.ctx.ctxid++;
+		this.id = parent.ctx.id++;
 		this.parent = parent;
 	}
 
@@ -44,7 +44,7 @@ export abstract class ModelPart {
 	}
 
 	public treeNodeText(): string {
-		return this.loader.name + (this.name ? '"' + this.name + '"' : '');
+		return (this.name? '"'+this.name+'"' : '#'+this.id) + ' ('+this.loader.name+')';
 	}
 
 	public treeNodeSelf(): JSTreeNodeInit {
@@ -104,7 +104,7 @@ export abstract class CModelElement<
 		if (!this.graphic) {
 			this.graphic = this.draw(this.ctx.mode);
 			if (this.graphic) {
-				this.graphic.setAttribute('data-partid', this.id);
+				this.graphic.setAttribute('data-partid', ''+this.id);
 				if (addclass) this.graphic.classList.add(addclass);
 				this.redraw("*", this.ctx.mode);
 			}
@@ -408,7 +408,7 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 		this.ctx = {
 			model: this,
 			mode: mode,
-			ctxid: 0,
+			id: 0,
 			center: [0, 0]
 		}
 	}
@@ -477,9 +477,6 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 
 	public findPoint(name: string): ModelPoint|undefined {
 		return _.find(this.parts, x => (x instanceof CModelPoint && x.name == name)) as ModelPoint;
-	}
-	public findByCtxid(ctxid:number):ModelPart|undefined {
-		return _.find(this.parts, x=>x.ctxid == ctxid);
 	}
 
 	public loadPart(cat: EModelPartCategory, json: any): ModelPart {

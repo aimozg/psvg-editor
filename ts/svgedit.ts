@@ -167,10 +167,10 @@ export class Editor {
 		});
 		this.editPane.model.onUpdate = (obj: ModelPart) => {
 			//console.log(obj);
-			let ctxid = obj.ctxid;
+			let id = obj.id;
 			for (let m of this.previews) {
-				let p = m.model.findByCtxid(ctxid);
-				//console.log(obj,ctxid,p);
+				let p = m.model.parts[id];
+				//console.log(obj,id,p);
 				if (p instanceof FixedPoint && obj instanceof FixedPoint) {
 					p.set(obj.pt);
 				}
