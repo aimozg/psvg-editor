@@ -194,7 +194,7 @@ export class Editor {
 	select(part: ModelPart|null) {
 		if (this.selection == part) return;
 		let model = this.editPane.model;
-		for (let s = this.selection; s && s instanceof CModelElement && s != model; s = s.parent) {
+		for (let s = this.selection; s && s instanceof CModelElement && s != model; s = s.owner) {
 			if (s.graphic) s.graphic.classList.remove('-selected', '-primary');
 		}
 		this.tree.deselect_all(true);
@@ -202,7 +202,7 @@ export class Editor {
 		if (part && part instanceof CModelElement && part != model) {
 			this.tree.select_node(part.treeNodeId(), true);
 			if (part.graphic) part.graphic.classList.add('-selected', '-primary');
-			for (let s = part; s && s instanceof CModelElement && s != model; s = s.parent) {
+			for (let s = part; s && s instanceof CModelElement && s != model; s = s.owner) {
 				const g = s.graphic;
 				if (g) {
 					g.classList.add('-selected');

@@ -1,9 +1,9 @@
 import svg = require("../svg");
-import {Model, ModelLoader, ModelPart, Value} from "./api";
+import {Model, ModelLoader, Value, CModelPart} from "./api";
 import {ValueFloat} from "./vfloat";
 
 export type EParamAttr="*"|"meta"|"value";
-export class ModelParam extends ModelPart {
+export class ModelParam extends CModelPart<EParamAttr> {
 	constructor(name: string,
 				public readonly defVal: ValueFloat,
 				public readonly minVal: ValueFloat,
@@ -14,11 +14,6 @@ export class ModelParam extends ModelPart {
 	public valueUpdated<T>(value: Value<T>) {
 		this.update("meta");
 	}
-
-	public update(attr: EParamAttr='*') {
-		super.update();
-	}
-
 	public save(): any {
 		return {
 			name: this.name,

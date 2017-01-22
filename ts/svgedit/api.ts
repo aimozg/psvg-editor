@@ -27,11 +27,12 @@ export abstract class Value<T> {
 	public abstract editorElement():HTMLElement;
 	public abstract save():any;
 }
-export abstract class ModelPart {
+export type ModelPart = CModelPart<any>;
+export abstract class CModelPart<ATTR extends string> {
 	private static GCounter = 1;
-	public readonly gid = '' + ModelPart.GCounter++;
+	public readonly gid = '' + CModelPart.GCounter++;
 	public id:number;
-	public parent: ModelPart;
+	public owner: ModelPart;
 	public readonly children: ModelPart[];
 	protected ctx: ModelCtx;
 
@@ -51,7 +52,7 @@ export abstract class ModelPart {
 	protected attached(parent: ModelPart) {
 		this.ctx = parent.ctx;
 		this.id = parent.ctx.id++;
-		this.parent = parent;
+		this.owner = parent;
 	}
 
 	public treeNodeId(): string {
@@ -69,7 +70,9 @@ export abstract class ModelPart {
 		}
 	}
 
-	public update() {}
+	public update(attr: ATTR|"*"='*') {
+
+	}
 
 	public treeNodeFull(): JSTreeNodeInit {
 		let self = this.treeNodeSelf();
@@ -78,6 +81,8 @@ export abstract class ModelPart {
 	}
 
 	public valueUpdated<T>(value:Value<T>){}
+
+	public abstract save():any;
 }
 
 /*export const VALUE_FIXNUM_TYPE = 'fixnum';
@@ -100,8 +105,8 @@ export type ModelElement = CModelElement<any,any,any>
 export abstract class CModelElement<
 	PARENT extends ModelPart,
 	CHILD extends ModelElement,
-	ATTR extends string> extends ModelPart {
-	public parent: PARENT;
+	ATTR extends string> extends CModelPart<ATTR> {
+	public owner: PARENT;
 	public graphic: SVGElement|null;
 	protected dependants: [string, ModelElement][] = [];
 	public readonly children: CHILD[] = [];
@@ -153,7 +158,7 @@ export abstract class CModelElement<
 	}
 
 	public update(attr: ATTR|"*"='*') {
-		super.update();
+		super.update(attr);
 		this.redraw(attr,this.ctx.mode);
 		this.fireUpdated(attr);
 	}
@@ -224,21 +229,21 @@ export abstract class CModelNode<CHILD> extends CModelElement<ModelPath,ModelPoi
 	public index: number;
 
 	protected prevNode(): ModelNode {
-		let n = this.parent.nodes.length;
-		return this.parent.nodes[(this.index + n - 1) % n];
+		let n = this.owner.nodes.length;
+		return this.owner.nodes[(this.index + n - 1) % n];
 	}
 
 	protected nextNode(): ModelNode {
-		let n = this.parent.nodes.length;
-		return this.parent.nodes[(this.index + 1) % n];
+		let n = this.owner.nodes.length;
+		return this.owner.nodes[(this.index + 1) % n];
 	}
 
 	protected first: boolean;
 	protected last: boolean;
 
 	protected attachChildren() {
-		this.index = this.parent.nodes.indexOf(this);
-		let parent = this.parent;
+		this.index = this.owner.nodes.indexOf(this);
+		let parent = this.owner;
 		this.first = !parent.closed && +this.index == 0;
 		this.last = !parent.closed && +this.index == parent.nodes.length - 1;
 	}
@@ -399,12 +404,6 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 		[index: string]: LoaderLib;
 	} = {}
 }
-export const MODEL_LOADER: ModelLoader = {
-	cat: 'Model',
-	name: 'Model',
-	objtypes: ['object'],
-	loaderfn: (m: Model, json: any, strict: boolean) => Model.load("edit", json)
-};
 
 export interface LoaderLib {
 	byjstype: Dictionary<ModelLoader[]>/*{
