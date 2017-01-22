@@ -32,11 +32,12 @@ export class PointAtIntersect extends CModelPoint<ModelPoint> {
 	}
 
 
-	protected draw(mode:DisplayMode): SVGGElement {
+	protected draw(mode:DisplayMode): SVGGElement|null {
 		super.draw(mode);
-		if (mode == 'edit') {
+		if (mode == 'edit' && this.g) {
 			for (let pt of [this.a1, this.a2, this.b1, this.b2]) {
-				this.g.appendChild(pt.display("pt_ref"));
+				const g2 = pt.display("pt_ref");
+				if (g2) this.g.appendChild(g2);
 			}
 			this.l1 = null;
 			this.l2 = null;
@@ -46,7 +47,7 @@ export class PointAtIntersect extends CModelPoint<ModelPoint> {
 
 	protected redraw(attr: EPointAttr, mode: DisplayMode) {
 		super.redraw(attr, mode);
-		if (mode == "edit") {
+		if (mode == "edit" && this.g) {
 			let [a1, a2, b1, b2] = [this.a1.calculate(), this.a2.calculate(), this.b1.calculate(), this.b2.calculate()];
 			if (this.l1) this.g.removeChild(this.l1);
 			if (this.l2) this.g.removeChild(this.l2);

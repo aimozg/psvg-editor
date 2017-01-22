@@ -21,11 +21,17 @@ export class CuspNode extends CommonNode<ModelPoint> {
 		this.attachAll([this.h1, this.h2], "pos");
 	}
 
-	protected draw(mode:DisplayMode): SVGElement {
-		super.draw(mode);
-		if (this.ctx.mode == "edit") {
-			if (!this.first) this.g.appendChild(this.h1!!.display("pt_handle"));
-			if (!this.last) this.g.appendChild(this.h2!!.display("pt_handle"));
+	protected draw(mode:DisplayMode): SVGElement|null {
+		let g = super.draw(mode);
+		if (this.ctx.mode == "edit" && g) {
+			if (!this.first && this.h1) {
+				const h1 = this.h1.display("pt_handle");
+				if (h1) g.appendChild(h1);
+			}
+			if (!this.last && this.h2) {
+				const h2 = this.h2.display("pt_handle");
+				if (h2) g.appendChild(h2);
+			}
 		}
 		return this.g;
 	}

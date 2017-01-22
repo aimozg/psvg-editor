@@ -28,11 +28,12 @@ export class PointAtProjection extends CModelPoint<ModelPoint> {
 		return svg.ptproj(this.a.calculate(),this.b.calculate(),this.p.calculate());
 	}
 
-	protected draw(mode:DisplayMode): SVGGElement {
+	protected draw(mode:DisplayMode): SVGGElement|null {
 		super.draw(mode);
-		if (mode == 'edit') {
+		if (mode == 'edit' && this.g) {
 			for (let pt of [this.a, this.b, this.p]) {
-				this.g.appendChild(pt.display("pt_ref"));
+				const g2 = pt.display("pt_ref");
+				if (g2) this.g.appendChild(g2);
 			}
 		}
 		this.lab = null;
@@ -42,7 +43,7 @@ export class PointAtProjection extends CModelPoint<ModelPoint> {
 	
 	protected redraw(attr: EPointAttr,mode:DisplayMode): any {
 		super.redraw(attr,mode);
-		if (mode == 'edit') {
+		if (mode == 'edit' && this.g) {
 			let [a, b, p, q] = [this.a.calculate(), this.b.calculate(), this.p.calculate(), this.calculate()];
 			if (this.lab) this.g.removeChild(this.lab);
 			if (this.lpq) this.g.removeChild(this.lpq);

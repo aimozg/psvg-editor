@@ -25,10 +25,9 @@ export class FlowNode extends CommonNode<ModelPoint> {
 		if (this.h2ab) this.dependOn(this.nextNode(),"pos");
 	}
 
-	protected draw(mode:DisplayMode): SVGElement {
-		super.draw(mode);
+	protected draw(mode:DisplayMode): SVGElement|null {
+		return super.draw(mode);
 		// TODO draggable ctrl points
-		return this.g;
 	}
 
 	protected calcHandles(): [TXY, TXY] {

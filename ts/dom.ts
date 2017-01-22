@@ -133,7 +133,7 @@ export function attrsToList(nl: NamedNodeMap): Attr[] {
 export interface CreateElementAttrsLite {
 	tag?: string;
 	parent?: HTMLElement;
-	items?: (CreateElementAttrs|Element|undefined)[];
+	items?: (CreateElementAttrs|Element|undefined|null)[];
 	text?: string;
 	style?: CEAStyle;
 	callback?: (el:Element,attrs:CreateElementAttrsLite)=>any;

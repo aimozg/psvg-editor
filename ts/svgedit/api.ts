@@ -1,5 +1,5 @@
 import {TXY, IXY, DNode, NodePath} from "../svg";
-import {SVGItem, updateElement, CEASvgPath} from "../dom";
+import {SVGItem, updateElement} from "../dom";
 import svg = require("../svg");
 import dom = require("../dom");
 import Dictionary = _.Dictionary;
@@ -68,7 +68,7 @@ export abstract class CModelElement<
 	CHILD extends ModelElement,
 	ATTR extends string> extends ModelPart {
 	public parent: PARENT;
-	public graphic: SVGElement;
+	public graphic: SVGElement|null;
 	protected dependants: [string, ModelElement][] = [];
 	public readonly children: CHILD[] = [];
 
@@ -100,12 +100,14 @@ export abstract class CModelElement<
 		}
 	}
 
-	public display(addclass?:string): SVGElement {
+	public display(addclass?:string): SVGElement|null {
 		if (!this.graphic) {
 			this.graphic = this.draw(this.ctx.mode);
-			this.graphic.setAttribute('data-partid',this.id);
-			if (addclass) this.graphic.classList.add(addclass);
-			this.redraw("*",this.ctx.mode);
+			if (this.graphic) {
+				this.graphic.setAttribute('data-partid', this.id);
+				if (addclass) this.graphic.classList.add(addclass);
+				this.redraw("*", this.ctx.mode);
+			}
 		}
 		return this.graphic;
 	}
@@ -127,7 +129,7 @@ export abstract class CModelElement<
 		if (this.ctx) this.ctx.model.updated(this, attr)
 	}
 
-	protected abstract draw(mode:DisplayMode): SVGElement;
+	protected abstract draw(mode:DisplayMode): SVGElement|null;
 
 	protected abstract redraw(attr: ATTR|"*",mode:DisplayMode);
 
@@ -140,8 +142,8 @@ export type EPointAttr = '*'|'pos';
 export type ModelPoint = CModelPoint<any>;
 export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElement<any,CHILD,EPointAttr> {
 	public xy: TXY = [0, 0];
-	public readonly g: SVGGElement = SVGItem('g');
-	private use: SVGUseElement;
+	public g: SVGGElement|null;
+	private use: SVGUseElement|null;
 
 	constructor(loader: ModelLoader,
 				name: string|undefined,
@@ -153,22 +155,24 @@ export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElem
 		return this.xy = this.fcalculate();
 	}
 
-	protected draw(mode:DisplayMode): SVGGElement {
+	protected draw(mode:DisplayMode): SVGGElement|null {
 		if (mode == "edit") {
+			this.g = SVGItem('g');
 			this.use = SVGItem('use', {'href': this.uhref()});
 			updateElement(this.g, {
 				'class': `${this.cssclass} elem point`,
 				items: [this.use]
 			});
+			return this.g;
 		}
-		return this.g;
+		return null;
 	}
 
 	protected abstract fcalculate(): TXY;
 
 	protected redraw(attr: EPointAttr,mode:DisplayMode) {
 		let [x,y] =this.calculate();
-		if (mode == 'edit') {
+		if (mode == 'edit' && this.use) {
 			svg.tf2list(svg.tftranslate(x, y), this.use.transform.baseVal);
 			/*this.use.x.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX,x);
 			 this.use.y.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX,y);*/
@@ -183,9 +187,6 @@ export type ENodeAttr = '*'|'pos'|'handle';
 export type ModelNode = CModelNode<any>;
 export abstract class CModelNode<CHILD> extends CModelElement<ModelPath,ModelPoint,ENodeAttr> {
 
-	public readonly g: SVGGElement = dom.SVGItem('g', {
-		'class': 'node'
-	});
 	public index: number;
 
 	protected prevNode(): ModelNode {
@@ -218,13 +219,13 @@ export abstract class CommonNode<CHILD> extends CModelNode<any> {
 	protected l1: SVGLineElement|null;
 	protected l2: SVGLineElement|null;
 	protected u0: SVGUseElement|null;
+	protected g: SVGGElement|null;
 
 	constructor(loader: ModelLoader,
 				name: string|undefined,
 				public pos: ModelPoint,
-				gclass: string) {
+				private gclass: string) {
 		super(loader, name);
-		this.g.classList.add(gclass);
 	}
 
 	protected attachChildren() {
@@ -232,11 +233,12 @@ export abstract class CommonNode<CHILD> extends CModelNode<any> {
 		this.attach(this.pos, "pos");
 	}
 
-	protected draw(mode:DisplayMode): SVGElement {
+	protected draw(mode:DisplayMode): SVGElement|null {
 		this.l1 = null;
 		this.l2 = null;
 		if (mode == 'edit') {
-			updateElement(this.g, {
+			this.g = dom.SVGItem('g', {
+				'class': 'node '+(this.gclass||''),
 				items: [
 					this.u0 = SVGItem('use', {href: this.uhref()}),
 					this.pos.display("pt_node")
@@ -261,8 +263,7 @@ export abstract class CommonNode<CHILD> extends CModelNode<any> {
 
 	protected redraw(attr: ENodeAttr,mode:DisplayMode) {
 		let pxy = this.pos.calculate();
-		if (mode == 'edit') {
-			if (!this.u0) throw null;
+		if (mode == 'edit' && this.g && this.u0) {
 			svg.tf2list(svg.tftranslate(pxy[0], pxy[1]), this.u0.transform.baseVal);
 			let h12xy = this.calcHandles();
 			if (this.l1) this.g.removeChild(this.l1);
@@ -292,8 +293,8 @@ export abstract class CommonNode<CHILD> extends CModelNode<any> {
 export type EPathAttr = "*"|"d";
 export type ModelPath = CModelPath;
 export class CModelPath extends CModelElement<Model,ModelNode,EPathAttr> {
-	public readonly g: SVGGElement = SVGItem('g', {'class': 'elem path'});
-	p: SVGPathElement;
+	private g: SVGGElement|null;
+	private p: SVGPathElement;
 
 	constructor(name: string|undefined,
 				public nodes: ModelNode[],
@@ -309,15 +310,19 @@ export class CModelPath extends CModelElement<Model,ModelNode,EPathAttr> {
 	}
 
 	protected draw(mode:DisplayMode): SVGElement {
-		let enodes = this.nodes.map(n => n.display());
-		updateElement(this.g, {
-			items: _.flatten([{
-				tag: 'path',
-				d: this.toSvgD(),
-				callback: el => this.p = el
-			} as CEASvgPath, enodes])
+		this.p = SVGItem('path',{
+			d: this.toSvgD(),
 		});
-		return this.g;
+		if (mode == 'edit') {
+			let enodes = this.nodes.map(n => n.display());
+			this.g = SVGItem('g', {
+				'class': 'elem path',
+				items: ([this.p] as (Element|null)[]).concat(enodes)
+			});
+			return this.g;
+		} else {
+			return this.p;
+		}
 	}
 
 	public redraw(attr: EPathAttr,mode:DisplayMode) {
@@ -440,6 +445,10 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 	}
 
 	protected attachChildren() {
+	}
+
+	public display(addclass?:string): SVGElement {
+		return super.display(addclass)!!
 	}
 
 	public draw(mode:DisplayMode): SVGElement {

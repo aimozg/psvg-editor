@@ -8,16 +8,16 @@ export class FixedPoint extends CModelPoint<any> {
 		super(POINT_FIXED_LOADER, name, 'fixed_pt');
 	}
 
-	protected draw(mode:DisplayMode): SVGGElement {
+	protected draw(mode:DisplayMode): SVGGElement|null {
 		let g = super.draw(mode);
-		if (mode == "edit") {
-			svg.makeDraggable(this.g);
-			this.g.addEventListener('sdragstart', (e: SvgDragEvent) => {
+		if (mode == "edit" && g) {
+			svg.makeDraggable(g);
+			g.addEventListener('sdragstart', (e: SvgDragEvent) => {
 				let pos = this.calculate();
 				e.start.x = pos[0];
 				e.start.y = pos[1];
 			});
-			this.g.addEventListener('sdrag', (e: SvgDragEvent) => {
+			g.addEventListener('sdrag', (e: SvgDragEvent) => {
 				e.preventDefault();
 				this.set(e.start.x + e.movement.x, e.start.y + e.movement.y);
 			});

@@ -7,8 +7,8 @@ export class PointRef extends CModelPoint<ModelPoint> {
 		super(POINT_REF_LOADER,name, 'ref_pt');
 	}
 
-	protected draw(mode:DisplayMode): SVGGElement {
-		return this.g;
+	protected draw(mode:DisplayMode): SVGGElement|null {
+		return super.draw(mode);
 	}
 
 	protected redraw(attr:EPointAttr,mode:DisplayMode): any {

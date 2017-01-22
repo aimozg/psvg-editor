@@ -185,13 +185,13 @@ export class Editor {
 		if (this.selection == part) return;
 		let model = this.editPane.model;
 		for (let s = this.selection; s && s instanceof CModelElement && s != model; s = s.parent) {
-			s.graphic.classList.remove('-selected', '-primary');
+			if (s.graphic) s.graphic.classList.remove('-selected', '-primary');
 		}
 		this.tree.deselect_all(true);
 		this.selection = part;
 		if (part && part instanceof CModelElement && part != model) {
 			this.tree.select_node(part.treeNodeId(), true);
-			part.graphic.classList.add('-selected', '-primary');
+			if (part.graphic) part.graphic.classList.add('-selected', '-primary');
 			for (let s = part; s && s instanceof CModelElement && s != model; s = s.parent) {
 				const g = s.graphic;
 				if (g) {

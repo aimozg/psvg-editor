@@ -17,10 +17,13 @@ export class PointFromNormal extends CModelPoint<ModelPoint> {
 		this.attachAll([this.pt0,this.pt1], "pos");
 	}
 
-	protected draw(mode:DisplayMode): SVGGElement {
+	protected draw(mode:DisplayMode): SVGGElement|null {
 		super.draw(mode);
-		if (mode == 'edit') {
-			for (let p of [this.pt0, this.pt1]) this.g.appendChild(p.display("pt_ref"));
+		if (mode == 'edit' && this.g) {
+			for (let p of [this.pt0, this.pt1]) {
+				const g2 = p.display("pt_ref");
+				if (g2) this.g.appendChild(g2);
+			}
 		}
 		return this.g;
 	}
