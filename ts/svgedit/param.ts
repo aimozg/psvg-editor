@@ -1,9 +1,9 @@
 import svg = require("../svg");
-import {Model, ModelLoader, Value, CModelPart} from "./api";
+import {Model, ModelLoader, Value, CPart} from "./api";
 import {ValueFloat} from "./vfloat";
 
 export type EParamAttr="*"|"meta"|"value";
-export class ModelParam extends CModelPart<EParamAttr> {
+export class ModelParam extends CPart<EParamAttr> {
 	constructor(name: string,
 				public readonly defVal: ValueFloat,
 				public readonly minVal: ValueFloat,

@@ -17,9 +17,9 @@ export interface ModelCtx {
 	center: TXY;
 }
 
-export type EModelPartCategory = "Point"|"Node"|"Path"|"Model"|"Param"/*|"Value"*/;
+export type EPartCategory = "Point"|"Node"|"Path"|"Model"|"Param"/*|"Value"*/;
 export abstract class Value<T> {
-	public owner:ModelPart;
+	public owner:Part;
 	constructor(public readonly name:string){
 	}
 	public get index():number { return this.owner.values.indexOf(this); }
@@ -27,13 +27,13 @@ export abstract class Value<T> {
 	public abstract editorElement():HTMLElement;
 	public abstract save():any;
 }
-export type ModelPart = CModelPart<any>;
-export abstract class CModelPart<ATTR extends string> {
+export type Part = CPart<any>;
+export abstract class CPart<ATTR extends string> {
 	private static GCounter = 1;
-	public readonly gid = '' + CModelPart.GCounter++;
+	public readonly gid = '' + CPart.GCounter++;
 	public id:number;
-	public owner: ModelPart;
-	public readonly children: ModelPart[];
+	public owner: Part;
+	public readonly children: Part[];
 	protected ctx: ModelCtx;
 
 	constructor(public name: string|undefined,
@@ -49,7 +49,7 @@ export abstract class CModelPart<ATTR extends string> {
 		return this.constructor['name']||'ModelPart';
 	}
 
-	protected attached(parent: ModelPart) {
+	protected attached(parent: Part) {
 		this.ctx = parent.ctx;
 		this.id = parent.ctx.id++;
 		this.owner = parent;
@@ -103,9 +103,9 @@ Model.registerLoader(VALUE_FIXNUM_LOADER);*/
 
 export type ModelElement = CModelElement<any,any,any>
 export abstract class CModelElement<
-	PARENT extends ModelPart,
+	PARENT extends Part,
 	CHILD extends ModelElement,
-	ATTR extends string> extends CModelPart<ATTR> {
+	ATTR extends string> extends CPart<ATTR> {
 	public owner: PARENT;
 	public graphic: SVGElement|null;
 	protected dependants: [string, ModelElement][] = [];
@@ -261,10 +261,10 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 	private paths: ModelPath[] = [];
 	private params: ModelParam[] = [];
 	public readonly parts: {
-		[index: string]: ModelPart;
+		[index: string]: Part;
 	} = {};
 	public readonly g: SVGGElement = SVGItem('g', {'class': 'model'});
-	public onUpdate: (obj: ModelPart) => any = (x => void(0));
+	public onUpdate: (obj: Part) => any = (x => void(0));
 	private postloadQueue: (() => any)[] = [];
 
 	constructor(mode: DisplayMode) {
@@ -343,7 +343,7 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 		return _.find(this.parts, x => (x instanceof CModelPoint && x.name == name)) as ModelPoint;
 	}
 
-	private loadPart(cat: EModelPartCategory, json: any,...args:any[]): ModelPart {
+	private loadPart(cat: EPartCategory, json: any, ...args:any[]): Part {
 		const type = typeof json;
 		let loaders: LoaderLib = Model.loaders[cat] || {
 				bytypefield: {},
@@ -415,9 +415,9 @@ export interface LoaderLib {
 }
 
 export interface ModelLoader {
-	cat: EModelPartCategory;
+	cat: EPartCategory;
 	name: string;
-	loaderfn(model: Model, json: any, strict: boolean, ...args:any[]):ModelPart|null;
+	loaderfn(model: Model, json: any, strict: boolean, ...args:any[]):Part|null;
 	typename?: string;
 	objtypes?: JsTypename[];
 }

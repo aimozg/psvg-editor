@@ -2,7 +2,7 @@ import dom = require('./dom');
 import svg = require("./svg");
 require("jstree-css");
 
-import {Model, ModelPart, CModelElement, DisplayMode} from "./svgedit/api";
+import {Model, Part, CModelElement, DisplayMode} from "./svgedit/api";
 import {ALL_LOADERS} from "./svgedit/_all";
 import {FixedPoint} from "./svgedit/ptfixed";
 import {CreateElementAttrs, updateElement} from "./dom";
@@ -79,7 +79,7 @@ export class Editor {
 	private scaledown: SVGTransformable[];
 	get model(): Model { return this.editPane.model }
 
-	selection: ModelPart|null = null;
+	selection: Part|null = null;
 
 	constructor(private readonly canvasDiv: HTMLElement,
 				private readonly treeDiv: HTMLElement,
@@ -166,7 +166,7 @@ export class Editor {
 		}).on('click dblclick', (/*e*/) => {
 			// console.log(e, this.tree.jstree().get_node(e.target))
 		});
-		this.editPane.model.onUpdate = (obj: ModelPart) => {
+		this.editPane.model.onUpdate = (obj: Part) => {
 			//console.log(obj);
 			let id = obj.id;
 			for (let m of this.previews) {
@@ -191,7 +191,7 @@ export class Editor {
 		this.select(null);
 	}
 
-	select(part: ModelPart|null) {
+	select(part: Part|null) {
 		if (this.selection == part) return;
 		let model = this.editPane.model;
 		for (let s = this.selection; s && s instanceof CModelElement && s != model; s = s.owner) {
