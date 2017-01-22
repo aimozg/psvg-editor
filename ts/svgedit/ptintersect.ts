@@ -1,6 +1,6 @@
 import svg = require("../svg");
 import dom = require("../dom");
-import {ModelPoint, EPointAttr, Model, ModelLoader, CModelPoint} from "./api";
+import {ModelPoint, EPointAttr, Model, ModelLoader, CModelPoint, DisplayMode} from "./api";
 import {TXY} from "../svg";
 import {SVGItem} from "../dom";
 
@@ -32,32 +32,36 @@ export class PointAtIntersect extends CModelPoint<ModelPoint> {
 	}
 
 
-	protected draw(): SVGGElement {
-		super.draw();
-		for (let pt of [this.a1,this.a2,this.b1,this.b2]) {
-			this.g.appendChild(pt.display("pt_ref"));
+	protected draw(mode:DisplayMode): SVGGElement {
+		super.draw(mode);
+		if (mode == 'edit') {
+			for (let pt of [this.a1, this.a2, this.b1, this.b2]) {
+				this.g.appendChild(pt.display("pt_ref"));
+			}
+			this.l1 = undefined;
+			this.l2 = undefined;
 		}
-		this.l1 = undefined;
-		this.l2 = undefined;
 		return this.g;
 	}
 
-	protected redraw(attr: EPointAttr) {
-		super.redraw(attr);
-		let [a1,a2,b1,b2] = [this.a1.calculate(),this.a2.calculate(),this.b1.calculate(),this.b2.calculate()];
-		if (this.l1) this.g.removeChild(this.l1);
-		if (this.l2) this.g.removeChild(this.l2);
-		this.l1 = this.l2 = undefined;
-		this.l1 = SVGItem('line', {
-			x1: a1[0], x2: a2[0],
-			y1: a1[1], y2: a2[1], 'class': 'handle1'
-		});
-		this.g.insertBefore(this.l1, this.g.firstChild);
-		this.l2 = SVGItem('line', {
-			x1: b1[0], x2: b2[0],
-			y1: b1[1], y2: b2[1], 'class': 'handle2'
-		});
-		this.g.insertBefore(this.l2, this.g.firstChild);
+	protected redraw(attr: EPointAttr, mode: DisplayMode) {
+		super.redraw(attr, mode);
+		if (mode == "edit") {
+			let [a1, a2, b1, b2] = [this.a1.calculate(), this.a2.calculate(), this.b1.calculate(), this.b2.calculate()];
+			if (this.l1) this.g.removeChild(this.l1);
+			if (this.l2) this.g.removeChild(this.l2);
+			this.l1 = this.l2 = undefined;
+			this.l1 = SVGItem('line', {
+				x1: a1[0], x2: a2[0],
+				y1: a1[1], y2: a2[1], 'class': 'handle1'
+			});
+			this.g.insertBefore(this.l1, this.g.firstChild);
+			this.l2 = SVGItem('line', {
+				x1: b1[0], x2: b2[0],
+				y1: b1[1], y2: b2[1], 'class': 'handle2'
+			});
+			this.g.insertBefore(this.l2, this.g.firstChild);
+		}
 	}
 
 	save(): any {

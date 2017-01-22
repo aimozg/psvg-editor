@@ -1,4 +1,4 @@
-import {CommonNode, ModelPoint, ModelElement, Model, ModelLoader, CModelPoint, CModelNode} from "./api";
+import {CommonNode, ModelPoint, ModelElement, Model, ModelLoader, CModelPoint, CModelNode, DisplayMode} from "./api";
 import {TXY} from "../svg";
 import {norm2fixed} from "./ptnorm";
 import svg = require("../svg");
@@ -25,8 +25,8 @@ export class FlowNode extends CommonNode<ModelPoint> {
 		if (this.h2ab) this.dependOn(this.nextNode(),"pos");
 	}
 
-	protected draw(): SVGElement {
-		super.draw();
+	protected draw(mode:DisplayMode): SVGElement {
+		super.draw(mode);
 		// TODO draggable ctrl points
 		return this.g;
 	}

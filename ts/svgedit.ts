@@ -2,7 +2,7 @@ import dom = require('./dom');
 import svg = require("./svg");
 require("jstree-css");
 
-import {DisplayMode, Model, ModelPart, CModelElement} from "./svgedit/api";
+import {Model, ModelPart, CModelElement} from "./svgedit/api";
 import {ALL_LOADERS} from "./svgedit/_all";
 
 //noinspection JSUnusedGlobalSymbols
@@ -16,13 +16,15 @@ export class Editor {
 	private eModel: SVGElement = null;
 	private zoombox: SVGGElement = null;
 	private zoomfact = 2;
-	private mode: DisplayMode = 'edit';
-	public model: Model = new Model(this.mode);
+	public model: Model = new Model('edit');
 	private scaledown:SVGTransformable[];
+	private previews:SVGElement[] = [];
 
 	selection:ModelPart = null;
 
-	constructor(canvasDiv: HTMLElement, private treeDiv: HTMLElement) {
+	constructor(canvasDiv: HTMLElement,
+				private treeDiv: HTMLElement,
+				previewDivs: HTMLElement[]) {
 		canvasDiv.innerHTML = '';
 		document = canvasDiv.ownerDocument;
 		let width = 100;//canvasDiv.clientWidth;
@@ -90,6 +92,12 @@ export class Editor {
 		}, [x0, y0, width, height]);
 		this.root.setAttribute('tabindex','0');
 		canvasDiv.appendChild(this.root);
+		for (let pd of previewDivs) {
+			let svg = dom.SVG({width: width,height: height,items:[]},[x0,y0,width,height]);
+			svg.setAttribute('tabindex','0');
+			pd.appendChild(svg);
+			this.previews.push(svg);
+		}
 		document.addEventListener('wheel', ev => {
 			if (ev.ctrlKey) {
 				ev.preventDefault();
@@ -111,6 +119,14 @@ export class Editor {
 		this.eModel = this.model.display();
 		this.zoombox.appendChild(this.eModel);
 		this.resizeView();
+		if (this.previews.length>0) {
+			let j = this.model.save();
+			for (let v of this.previews) {
+				v.innerHTML='';
+				let m2 = Model.load("view", j);
+				v.appendChild(m2.display());
+			}
+		}
 
 		if (this.tree) this.tree.destroy();
 		this.tree = $(this.treeDiv).jstree({
@@ -176,7 +192,7 @@ export class Editor {
 	}
 
 	public loadJson(json: any) {
-		this.model = Model.load(this.mode, json);
+		this.model = Model.load('edit', json);
 		this.recreateView();
 	}
 
@@ -221,7 +237,9 @@ export class Editor {
 
 
 //noinspection JSUnusedGlobalSymbols
-export function setup(canvasDiv: HTMLElement, treeDiv: HTMLElement): Editor {
-	return new Editor(canvasDiv, treeDiv);
+export function setup(editorDiv: HTMLElement,
+					  treeDiv: HTMLElement,
+					  previewDivs: HTMLElement[]=[]): Editor {
+	return new Editor(editorDiv, treeDiv, previewDivs);
 }
 

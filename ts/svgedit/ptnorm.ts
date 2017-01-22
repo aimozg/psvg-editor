@@ -1,4 +1,4 @@
-import {ModelPoint, EPointAttr, Model, ModelLoader, CModelPoint} from "./api";
+import {ModelPoint, EPointAttr, Model, ModelLoader, CModelPoint, DisplayMode} from "./api";
 import {TXY, solve2, vsub, vrot90, IXY, vlinj} from "../svg";
 import svg = require("../svg");
 
@@ -17,9 +17,11 @@ export class PointFromNormal extends CModelPoint<ModelPoint> {
 		this.attachAll([this.pt0,this.pt1], "pos");
 	}
 
-	protected draw(): SVGGElement {
-		super.draw();
-		for (let p of [this.pt0,this.pt1]) this.g.appendChild(p.display("pt_ref"));
+	protected draw(mode:DisplayMode): SVGGElement {
+		super.draw(mode);
+		if (mode == 'edit') {
+			for (let p of [this.pt0, this.pt1]) this.g.appendChild(p.display("pt_ref"));
+		}
 		return this.g;
 	}
 

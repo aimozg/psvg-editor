@@ -1,4 +1,4 @@
-import {ModelPoint, EPointAttr, ModelLoader, Model, CModelPoint} from "./api";
+import {ModelPoint, EPointAttr, ModelLoader, Model, CModelPoint, DisplayMode} from "./api";
 import {TXY} from "../svg";
 
 export const POINT_REF_TYPE = '@';
@@ -7,11 +7,11 @@ export class PointRef extends CModelPoint<ModelPoint> {
 		super(POINT_REF_LOADER,name, 'ref_pt');
 	}
 
-	protected draw(): SVGGElement {
+	protected draw(mode:DisplayMode): SVGGElement {
 		return this.g;
 	}
 
-	protected redraw(attr:EPointAttr): any {
+	protected redraw(attr:EPointAttr,mode:DisplayMode): any {
 	}
 
 	protected fcalculate(): TXY {

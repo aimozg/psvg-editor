@@ -1,4 +1,4 @@
-import {ModelElement, Model, ModelLoader, CModelPoint} from "./api";
+import {ModelElement, Model, ModelLoader, CModelPoint, DisplayMode} from "./api";
 import {TXY, SvgDragEvent, IXY} from "../svg";
 import svg = require("../svg");
 
@@ -8,19 +8,21 @@ export class FixedPoint extends CModelPoint<any> {
 		super(POINT_FIXED_LOADER, name, 'fixed_pt');
 	}
 
-	protected draw(): SVGGElement {
-		let g = super.draw();
-		svg.makeDraggable(this.g);
-		this.g.addEventListener('sdragstart', (e: SvgDragEvent) => {
-			let pos = this.calculate();
-			e.start.x = pos[0];
-			e.start.y = pos[1];
-		});
-		this.g.addEventListener('sdrag', (e: SvgDragEvent) => {
-			e.preventDefault();
-			this.set(e.start.x + e.movement.x, e.start.y + e.movement.y);
-			this.update('pos');
-		});
+	protected draw(mode:DisplayMode): SVGGElement {
+		let g = super.draw(mode);
+		if (mode == "edit") {
+			svg.makeDraggable(this.g);
+			this.g.addEventListener('sdragstart', (e: SvgDragEvent) => {
+				let pos = this.calculate();
+				e.start.x = pos[0];
+				e.start.y = pos[1];
+			});
+			this.g.addEventListener('sdrag', (e: SvgDragEvent) => {
+				e.preventDefault();
+				this.set(e.start.x + e.movement.x, e.start.y + e.movement.y);
+				this.update('pos');
+			});
+		}
 		return g;
 	}
 

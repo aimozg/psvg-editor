@@ -1,4 +1,4 @@
-import {CommonNode, ModelPoint, EPointAttr, Model, ModelLoader} from "./api";
+import {CommonNode, ModelPoint, EPointAttr, Model, ModelLoader, DisplayMode} from "./api";
 import {TXY} from "../svg";
 import svg = require("../svg");
 
@@ -21,10 +21,12 @@ export class CuspNode extends CommonNode<ModelPoint> {
 		this.attachAll([this.h1, this.h2], "pos");
 	}
 
-	protected draw(): SVGElement {
-		super.draw();
-		if (!this.first) this.g.appendChild(this.h1.display("pt_handle"));
-		if (!this.last) this.g.appendChild(this.h2.display("pt_handle"));
+	protected draw(mode:DisplayMode): SVGElement {
+		super.draw(mode);
+		if (this.ctx.mode == "edit") {
+			if (!this.first) this.g.appendChild(this.h1.display("pt_handle"));
+			if (!this.last) this.g.appendChild(this.h2.display("pt_handle"));
+		}
 		return this.g;
 	}
 

@@ -26,6 +26,10 @@
 		.frow, .frows {
 			flex-direction: row;
 		}
+		.ffix {
+			flex-grow: 0;
+			flex-shrink: 0;
+		}
 		.fgrow {
 			flex-grow: 1;
 			flex-shrink: 0;
@@ -37,15 +41,15 @@
 		#main {
 			height: 100vh;
 		}
-		#svgCanvas {
+		.canvas {
 			overflow:scroll;
 			border: 1px solid red;
-			width:100%;
+			/*width:100%;*/
 			height:100%;
 			background:#cff;
 			box-sizing: border-box;
 		}
-		#svgCanvas svg {
+		.canvas svg {
 			display: block;
 			margin: 0 auto;
 			min-height: 100%;
@@ -130,9 +134,11 @@
 		<button type="button" onclick="editor_load2()">Load from localStorage</button>
 	</div>
 	<div class="frow">
-		<div id="svgCanvas" class="fstretch">
+		<div id="svgCanvas1" class="canvas fstretch">
 		</div>
-		<div class="fcol" style="flex-basis:15%;">
+		<div id="svgCanvas2" class="canvas fstretch">
+		</div>
+		<div class="fcol" style="flex-basis:300px;">
 			<div id="sidebar" class="fcol">
 				<div id="treeview"></div>
 				<div id="objview">
@@ -153,9 +159,9 @@
             if (n.nodeType == Node.TEXT_NODE) purge.push(n);
         } while (n = n.nextSibling);
         for (var i = 0; i < purge.length; i++)document.body.removeChild(purge[i]);
-        var canvas = $('#svgCanvas');
+        var canvas = $('#svgCanvas1,#svgCanvas2');
         canvas.css('height', (document.body.clientHeight - canvas.offset().top).toFixed() + 'px');
-        editor = svgedit.setup(canvas[0], $('#treeview')[0]);
+        editor = svgedit.setup(canvas[1], $('#treeview')[0],[canvas[0]]);
         editor_load3();
         editor.recreateView();
         $("#name").text(editor.model.name);

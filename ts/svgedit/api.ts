@@ -97,10 +97,10 @@ export abstract class CModelElement<
 
 	public display(addclass?:string): SVGElement {
 		if (!this.graphic) {
-			this.graphic = this.draw();
+			this.graphic = this.draw(this.ctx.mode);
 			this.graphic.setAttribute('data-partid',this.id);
 			if (addclass) this.graphic.classList.add(addclass);
-			this.redraw("*");
+			this.redraw("*",this.ctx.mode);
 		}
 		return this.graphic;
 	}
@@ -112,7 +112,7 @@ export abstract class CModelElement<
 	}
 
 	protected update(attr: ATTR|"*") {
-		this.redraw(attr);
+		this.redraw(attr,this.ctx.mode);
 		this.fireUpdated(attr);
 	}
 
@@ -121,9 +121,9 @@ export abstract class CModelElement<
 		if (this.ctx) this.ctx.model.updated(this, attr)
 	}
 
-	protected abstract draw(): SVGElement;
+	protected abstract draw(mode:DisplayMode): SVGElement;
 
-	protected abstract redraw(attr: ATTR|"*");
+	protected abstract redraw(attr: ATTR|"*",mode:DisplayMode);
 
 	protected abstract attachChildren();
 
@@ -147,22 +147,26 @@ export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElem
 		return this.xy = this.fcalculate();
 	}
 
-	protected draw(): SVGGElement {
-		this.use = SVGItem('use',{'href':this.uhref()});
-		updateElement(this.g, {
-			'class': `${this.cssclass} elem point`,
-			items: [this.use]
-		});
+	protected draw(mode:DisplayMode): SVGGElement {
+		if (mode == "edit") {
+			this.use = SVGItem('use', {'href': this.uhref()});
+			updateElement(this.g, {
+				'class': `${this.cssclass} elem point`,
+				items: [this.use]
+			});
+		}
 		return this.g;
 	}
 
 	protected abstract fcalculate(): TXY;
 
-	protected redraw(attr: EPointAttr) {
+	protected redraw(attr: EPointAttr,mode:DisplayMode) {
 		let [x,y] =this.calculate();
-		svg.tf2list(svg.tftranslate(x,y),this.use.transform.baseVal);
-		/*this.use.x.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX,x);
-		this.use.y.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX,y);*/
+		if (mode == 'edit') {
+			svg.tf2list(svg.tftranslate(x, y), this.use.transform.baseVal);
+			/*this.use.x.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX,x);
+			 this.use.y.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX,y);*/
+		}
 	}
 
 	abstract save(): any;
@@ -222,13 +226,17 @@ export abstract class CommonNode<CHILD> extends CModelNode<any> {
 		this.attach(this.pos, "pos");
 	}
 
-	protected draw(): SVGElement {
+	protected draw(mode:DisplayMode): SVGElement {
 		this.l1 = undefined;
 		this.l2 = undefined;
-		updateElement(this.g, {items: [
-			this.u0 = SVGItem('use',{href:this.uhref()}),
-			this.pos.display("pt_node")
-		]});
+		if (mode == 'edit') {
+			updateElement(this.g, {
+				items: [
+					this.u0 = SVGItem('use', {href: this.uhref()}),
+					this.pos.display("pt_node")
+				]
+			});
+		}
 		return this.g;
 	}
 
@@ -245,26 +253,28 @@ export abstract class CommonNode<CHILD> extends CModelNode<any> {
 		}
 	}
 
-	protected redraw(attr: ENodeAttr) {
+	protected redraw(attr: ENodeAttr,mode:DisplayMode) {
 		let pxy = this.pos.calculate();
-		svg.tf2list(svg.tftranslate(pxy[0],pxy[1]),this.u0.transform.baseVal);
-		let h12xy = this.calcHandles();
-		if (this.l1) this.g.removeChild(this.l1);
-		if (this.l2) this.g.removeChild(this.l2);
-		this.l1 = this.l2 = undefined;
-		if (!this.first) {
-			this.l1 = dom.SVGItem('line', {
-				x1: pxy[0], x2: h12xy[0][0],
-				y1: pxy[1], y2: h12xy[0][1], 'class': 'handle1'
-			});
-			this.g.insertBefore(this.l1, this.g.firstChild);
-		}
-		if (!this.last) {
-			this.l2 = dom.SVGItem('line', {
-				x1: pxy[0], x2: h12xy[1][0],
-				y1: pxy[1], y2: h12xy[1][1], 'class': 'handle2'
-			});
-			this.g.insertBefore(this.l2, this.g.firstChild);
+		if (mode == 'edit') {
+			svg.tf2list(svg.tftranslate(pxy[0], pxy[1]), this.u0.transform.baseVal);
+			let h12xy = this.calcHandles();
+			if (this.l1) this.g.removeChild(this.l1);
+			if (this.l2) this.g.removeChild(this.l2);
+			this.l1 = this.l2 = undefined;
+			if (!this.first) {
+				this.l1 = dom.SVGItem('line', {
+					x1: pxy[0], x2: h12xy[0][0],
+					y1: pxy[1], y2: h12xy[0][1], 'class': 'handle1'
+				});
+				this.g.insertBefore(this.l1, this.g.firstChild);
+			}
+			if (!this.last) {
+				this.l2 = dom.SVGItem('line', {
+					x1: pxy[0], x2: h12xy[1][0],
+					y1: pxy[1], y2: h12xy[1][1], 'class': 'handle2'
+				});
+				this.g.insertBefore(this.l2, this.g.firstChild);
+			}
 		}
 	}
 
@@ -290,7 +300,7 @@ export class CModelPath extends CModelElement<Model,ModelNode,EPathAttr> {
 		}
 	}
 
-	protected draw(): SVGElement {
+	protected draw(mode:DisplayMode): SVGElement {
 		let enodes = this.nodes.map(n => n.display());
 		updateElement(this.g, {
 			items: _.flatten([{
@@ -302,13 +312,13 @@ export class CModelPath extends CModelElement<Model,ModelNode,EPathAttr> {
 		return this.g;
 	}
 
-	public redraw(attr: EPathAttr) {
+	public redraw(attr: EPathAttr,mode:DisplayMode) {
 		this.p.setAttribute('d', this.toSvgD());
 	}
 
 
 	protected updated(other: ModelNode, attr: string) {
-		if (attr == 'pos' || attr == 'handle' || attr == '*') this.redraw("*");
+		if (attr == 'pos' || attr == 'handle' || attr == '*') this.redraw("*",this.ctx.mode);
 	}
 
 	public toNodePath(): NodePath {
@@ -417,13 +427,13 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 	protected attachChildren() {
 	}
 
-	public draw(): SVGElement {
+	public draw(mode:DisplayMode): SVGElement {
 		return updateElement(this.g, {
 			items: _.flatten(this.paths.map(p => p.display()))
 		});
 	}
 
-	protected redraw(attr: EModelAttr) {
+	protected redraw(attr: EModelAttr,mode:DisplayMode) {
 		/*updateElement(this.g, {
 		 items: this.paths.map(p => p.display())
 		 });*/
