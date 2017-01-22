@@ -1,20 +1,21 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "es5",
-        "noImplicitAny": false,
-        "sourceMap": true,
-        "rootDir": ".",
-        "outDir": "tsout"
-    },
-    "include":[
-        "ts/*.ts",
-        "ts/**/*.ts",
-        "typings/index.d.ts"
-    ],
-    "exclude": [
-        "node_modules",
-        "js",
-        ".c9"
-    ]
+  "compilerOptions": {
+    "module"          : "commonjs",
+    "target"          : "es5",
+    "noImplicitAny"   : false,
+    "sourceMap"       : true,
+    "rootDir"         : ".",
+    "strictNullChecks": true,
+    "outDir"          : "tsout"
+  },
+  "include"        : [
+    "ts/*.ts",
+    "ts/**/*.ts",
+    "typings/index.d.ts"
+  ],
+  "exclude"        : [
+    "node_modules",
+    "js",
+    ".c9"
+  ]
 }

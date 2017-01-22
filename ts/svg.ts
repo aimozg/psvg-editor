@@ -1,4 +1,4 @@
-import {CEASvgUse, CreateElementAttrs, merge1d} from "./dom";
+import {CEASvgUse, merge1d, CreateElementAttrsLite} from "./dom";
 export const SVGNS = 'http://www.w3.org/2000/svg';
 export type TXY = [number, number];
 export type IXY = TXY|number[];
@@ -257,7 +257,7 @@ export function svgtranslate(svg: SVGTransformable, tx: number, ty: number) {
 	val.consolidate();
 }
 export function svguse(href: string, x: number, y: number,
-					   attrs?: CreateElementAttrs): CEASvgUse {
+					   attrs?: CreateElementAttrsLite): CEASvgUse {
 	return merge1d({
 		tag: 'use',
 		href, x, y
@@ -339,7 +339,7 @@ export function makeDraggable(el: SVGLocatableElement) {
 	function onmdown(e: MouseEvent) {
 		if (e.button != 0) return;
 		let svg = el.ownerSVGElement;
-		el.parentNode.appendChild(el); // move to top
+		if (el.parentNode) el.parentNode.appendChild(el); // move to top
 		const x = el.tagName == 'circle' ? 'cx' : 'x';
 		const y = el.tagName == 'circle' ? 'cy' : 'y';
 		const mouseStart = unproject(svg, e.clientX, e.clientY);

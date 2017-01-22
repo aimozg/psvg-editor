@@ -7,8 +7,8 @@ import {SVGItem} from "../dom";
 export const POINT_AT_PROJECTION_TYPE = 'PROJ';
 export const POINT_AT_PROJECTION_CLASS = 'pt_proj';
 export class PointAtProjection extends CModelPoint<ModelPoint> {
-	protected lab: SVGLineElement;
-	protected lpq: SVGLineElement;
+	protected lab: SVGLineElement|null;
+	protected lpq: SVGLineElement|null;
 	constructor(name: string|undefined,
 				public a:ModelPoint,
 				public b:ModelPoint,
@@ -35,8 +35,8 @@ export class PointAtProjection extends CModelPoint<ModelPoint> {
 				this.g.appendChild(pt.display("pt_ref"));
 			}
 		}
-		this.lab = undefined;
-		this.lpq = undefined;
+		this.lab = null;
+		this.lpq = null;
 		return this.g;
 	}
 	
@@ -46,7 +46,7 @@ export class PointAtProjection extends CModelPoint<ModelPoint> {
 			let [a, b, p, q] = [this.a.calculate(), this.b.calculate(), this.p.calculate(), this.calculate()];
 			if (this.lab) this.g.removeChild(this.lab);
 			if (this.lpq) this.g.removeChild(this.lpq);
-			this.lab = this.lpq = undefined;
+			this.lab = this.lpq = null;
 			this.lab = SVGItem('line', {
 				x1: a[0], x2: b[0],
 				y1: a[1], y2: b[1], 'class': 'lineref'

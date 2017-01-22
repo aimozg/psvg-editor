@@ -13,14 +13,14 @@ let document: Document;
 export class Editor {
 	public root: SVGSVGElement;
 	private tree: JSTree;
-	private eModel: SVGElement = null;
-	private zoombox: SVGGElement = null;
+	private eModel: SVGElement|null = null;
+	private zoombox: SVGGElement;
 	private zoomfact = 2;
 	public model: Model = new Model('edit');
 	private scaledown:SVGTransformable[];
 	private previews:SVGElement[] = [];
 
-	selection:ModelPart = null;
+	selection:ModelPart|null = null;
 
 	constructor(canvasDiv: HTMLElement,
 				private treeDiv: HTMLElement,
@@ -145,8 +145,8 @@ export class Editor {
 			this.tree.rename_node(obj.treeNodeId(), obj.treeNodeText());
 		};
 		this.eModel.addEventListener('click',(e:MouseEvent)=>{
-			for (let element = e.target as Element;element;element = element.parentElement) {
-				let part = this.model.parts[element.getAttribute('data-partid')];
+			for (let element = e.target as Element|null;element;element = element.parentElement) {
+				let part = this.model.parts[element.getAttribute('data-partid')||''];
 				if (part) {
 					this.select(part);
 					return;
@@ -181,7 +181,7 @@ export class Editor {
 				const g = s.graphic;
 				if (g) {
 					g.classList.add('-selected');
-					g.parentElement.appendChild(g);
+					if (g.parentElement) g.parentElement.appendChild(g);
 				}
 			}
 		}

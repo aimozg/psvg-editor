@@ -6,8 +6,8 @@ export const NODE_CUSP_TYPE = 'cusp';
 export class CuspNode extends CommonNode<ModelPoint> {
 	constructor(name:string|undefined,
 				pos: ModelPoint,
-				public h1: ModelPoint|undefined,
-				public h2: ModelPoint|undefined) {
+				public h1: ModelPoint|null,
+				public h2: ModelPoint|null) {
 		super(NODE_CUSP_LOADER,name,pos, 'cusp_node');
 	}
 
@@ -24,20 +24,16 @@ export class CuspNode extends CommonNode<ModelPoint> {
 	protected draw(mode:DisplayMode): SVGElement {
 		super.draw(mode);
 		if (this.ctx.mode == "edit") {
-			if (!this.first) this.g.appendChild(this.h1.display("pt_handle"));
-			if (!this.last) this.g.appendChild(this.h2.display("pt_handle"));
+			if (!this.first) this.g.appendChild(this.h1!!.display("pt_handle"));
+			if (!this.last) this.g.appendChild(this.h2!!.display("pt_handle"));
 		}
 		return this.g;
 	}
 
 	protected calcHandles(): [TXY, TXY] {
 		return [
-			this.first ? [NaN, NaN] : this.h1.calculate(),
-			this.last ? [NaN, NaN] : this.h2.calculate()];
-	}
-
-	points(): ModelPoint[] {
-		return [this.pos].concat(this.first ? [] : this.h1, this.last ? [] : this.h2);
+			this.first ? [NaN, NaN] : this.h1!!.calculate(),
+			this.last ? [NaN, NaN] : this.h2!!.calculate()];
 	}
 
 	public save(): any {
@@ -45,8 +41,8 @@ export class CuspNode extends CommonNode<ModelPoint> {
 			type: NODE_CUSP_TYPE,
 			pos: this.pos.save(),
 			name: this.name,
-			handle1: this.first ? undefined : this.h1.save(),
-			handle2: this.last ? undefined : this.h2.save()
+			handle1: this.first ? undefined : this.h1!!.save(),
+			handle2: this.last ? undefined : this.h2!!.save()
 		}
 	}
 

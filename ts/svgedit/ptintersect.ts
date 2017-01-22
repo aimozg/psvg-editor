@@ -7,8 +7,8 @@ import {SVGItem} from "../dom";
 export const POINT_AT_INTERSECTION_TYPE = 'I';
 export const POINT_AT_INTERSECTION_CLASS = 'pt_intsec';
 export class PointAtIntersect extends CModelPoint<ModelPoint> {
-	protected l1: SVGLineElement;
-	protected l2: SVGLineElement;
+	protected l1: SVGLineElement|null;
+	protected l2: SVGLineElement|null;
 	constructor(name: string|undefined,
 				public a1:ModelPoint,
 				public a2:ModelPoint,
@@ -38,8 +38,8 @@ export class PointAtIntersect extends CModelPoint<ModelPoint> {
 			for (let pt of [this.a1, this.a2, this.b1, this.b2]) {
 				this.g.appendChild(pt.display("pt_ref"));
 			}
-			this.l1 = undefined;
-			this.l2 = undefined;
+			this.l1 = null;
+			this.l2 = null;
 		}
 		return this.g;
 	}
@@ -50,7 +50,7 @@ export class PointAtIntersect extends CModelPoint<ModelPoint> {
 			let [a1, a2, b1, b2] = [this.a1.calculate(), this.a2.calculate(), this.b1.calculate(), this.b2.calculate()];
 			if (this.l1) this.g.removeChild(this.l1);
 			if (this.l2) this.g.removeChild(this.l2);
-			this.l1 = this.l2 = undefined;
+			this.l1 = this.l2 = null;
 			this.l1 = SVGItem('line', {
 				x1: a1[0], x2: a2[0],
 				y1: a1[1], y2: a2[1], 'class': 'handle1'

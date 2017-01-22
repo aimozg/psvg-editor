@@ -20,7 +20,7 @@ export abstract class ModelPart {
 	public readonly id = '' + ModelPart.Counter++;
 	public parent: ModelPart;
 	public readonly children: ModelPart[];
-	protected ctx: ModelCtx|undefined;
+	protected ctx: ModelCtx;
 
 	constructor(public readonly loader: ModelLoader,
 				public name: string|undefined) {
@@ -83,14 +83,14 @@ export abstract class CModelElement<
 		if (dependency) this.dependOn(child,dependency);
 	}
 
-	protected attachAll(...items:[CHILD,string|null][]);
-	protected attachAll(items:[CHILD|undefined],dependency?:string);
+	protected attachAll(...items:[CHILD,string][]);
+	protected attachAll(items:[CHILD|null],dependency?:string);
 	protected attachAll() {
 		if (typeof arguments[1] == 'string') {
-			let items = arguments[0] as (CHILD|undefined)[];
+			let items = arguments[0] as (CHILD|null)[];
 			for (let obj of items) if (obj) this.attach(obj, arguments[1]);
 		} else {
-			let items = arguments as List<[CHILD,string|null]>;
+			let items = arguments as List<[CHILD,string]>;
 			_.each(items,obj=>{if (obj[0]) this.attach(obj[0], obj[1])});
 		}
 	}
@@ -209,9 +209,9 @@ export abstract class CModelNode<CHILD> extends CModelElement<ModelPath,ModelPoi
 	public abstract toDNode(): DNode;
 }
 export abstract class CommonNode<CHILD> extends CModelNode<any> {
-	protected l1: SVGLineElement;
-	protected l2: SVGLineElement;
-	protected u0: SVGUseElement;
+	protected l1: SVGLineElement|null;
+	protected l2: SVGLineElement|null;
+	protected u0: SVGUseElement|null;
 
 	constructor(loader: ModelLoader,
 				name: string|undefined,
@@ -227,8 +227,8 @@ export abstract class CommonNode<CHILD> extends CModelNode<any> {
 	}
 
 	protected draw(mode:DisplayMode): SVGElement {
-		this.l1 = undefined;
-		this.l2 = undefined;
+		this.l1 = null;
+		this.l2 = null;
 		if (mode == 'edit') {
 			updateElement(this.g, {
 				items: [
@@ -256,11 +256,12 @@ export abstract class CommonNode<CHILD> extends CModelNode<any> {
 	protected redraw(attr: ENodeAttr,mode:DisplayMode) {
 		let pxy = this.pos.calculate();
 		if (mode == 'edit') {
+			if (!this.u0) throw null;
 			svg.tf2list(svg.tftranslate(pxy[0], pxy[1]), this.u0.transform.baseVal);
 			let h12xy = this.calcHandles();
 			if (this.l1) this.g.removeChild(this.l1);
 			if (this.l2) this.g.removeChild(this.l2);
-			this.l1 = this.l2 = undefined;
+			this.l1 = this.l2 = null;
 			if (!this.first) {
 				this.l1 = dom.SVGItem('line', {
 					x1: pxy[0], x2: h12xy[0][0],
@@ -455,7 +456,7 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 			};
 		if (type == 'object') {
 			let tfloader = loaders.bytypefield[json['type']];
-			if (tfloader) return tfloader.loaderfn(this, json, true);
+			if (tfloader) return tfloader.loaderfn(this, json, true)!!;
 		}
 		let jtloaders = loaders.byjstype[type];
 		if (!jtloaders || jtloaders.length == 0) throw "No loaders for " + cat + " "
@@ -464,6 +465,7 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 			let ele = loader.loaderfn(this, json, false);
 			if (ele) return ele;
 		}
+		throw JSON.stringify(json)
 	}
 
 	public loadPoint(json: any): ModelPoint {
@@ -518,7 +520,7 @@ export interface LoaderLib {
 export interface ModelLoader {
 	cat: EModelPartCategory;
 	name: string;
-	loaderfn: (model: Model, json: any, strict: boolean) => ModelPart;
+	loaderfn(model: Model, json: any, strict: boolean):ModelPart|null;
 	typename?: string;
 	objtypes?: JsTypename[];
 }

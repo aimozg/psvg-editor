@@ -19,7 +19,7 @@ export class PointRef extends CModelPoint<ModelPoint> {
 	}
 
 	public obj(): ModelPoint {
-		return this.ctx.model.findPoint(this.ref);
+		return this.ctx.model.findPoint(this.ref)!!;
 	}
 
 	protected attachChildren() {
@@ -47,7 +47,7 @@ export const POINT_REF_LOADER:ModelLoader = {
 		if (!strict) {
 			if (typeof json == 'string') return new PointRef(undefined, json.substr(1));
 			if (json['type'][0] == '@') return new PointRef(json['name'], json['type'].substr(1));
-			return undefined;
+			return null;
 		}
 		return new PointRef(json['name'],json['ref']);
 	}

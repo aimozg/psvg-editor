@@ -31,7 +31,7 @@ export class FixedPoint extends CModelPoint<any> {
 	public set(arg1: IXY|number, arg2?: number): this {
 		if (typeof arg1 == 'number') {
 			this.pt[0] = arg1;
-			this.pt[1] = arg2;
+			this.pt[1] = arg2!!;
 		} else {
 			this.pt[0] = arg1[0];
 			this.pt[1] = arg1[1];
@@ -72,7 +72,7 @@ export const POINT_FIXED_LOADER:ModelLoader = {
 			const length = json['length'];
 			if (length === 2) return new FixedPoint(undefined, [+json[0], +json[1]]);
 			if (length === 3) return new FixedPoint('' + json[0], [+json[1], +json[2]]);
-			return undefined;
+			return null;
 		}
 		return new FixedPoint(json['name'], [+json['pt'][0], +json['pt'][1]])
 	}

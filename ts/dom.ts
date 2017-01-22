@@ -1,7 +1,7 @@
 export function escape(s: string): string {
 	return ('' + ((s === undefined || s === null) ? '' : s)).replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
-export function byId(id: string): HTMLElement|undefined {
+export function byId(id: string): HTMLElement|null {
 	return document.getElementById(id)
 }
 
@@ -133,32 +133,31 @@ export function attrsToList(nl: NamedNodeMap): Attr[] {
 export interface CreateElementAttrsLite {
 	tag?: string;
 	parent?: HTMLElement;
-	items?: (CreateElementAttrs|undefined)[];
+	items?: (CreateElementAttrs|Element|undefined)[];
 	text?: string;
 	style?: CEAStyle;
-	callback?: (el:Element,attrs:CreateElementAttrs)=>any;
+	callback?: (el:Element,attrs:CreateElementAttrsLite)=>any;
 	[index: string]: any;
 }
-export interface CreateElementAttrsFull extends CreateElementAttrsLite {
+export interface CreateElementAttrs extends CreateElementAttrsLite {
 	tag: string;
 }
-export interface CEASvgPath extends CreateElementAttrsFull {
+export interface CEASvgPath extends CreateElementAttrs {
 	tag: 'path';
 	d: string;
 	callback?: (el:SVGPathElement,attrs:CEASvgPath)=>any;
 }
-export interface CEASvgG extends CreateElementAttrsFull {
+export interface CEASvgG extends CreateElementAttrs {
 	tag: 'g';
 	callback?: (el:SVGGElement,attrs:CEASvgG)=>any;
 }
-export interface CEASvgUse extends CreateElementAttrsFull {
+export interface CEASvgUse extends CreateElementAttrs {
 	tag: 'use';
 	href: string;
 	x?: number;
 	y?: number;
 	callback?: (el:SVGUseElement,attrs:CEASvgUse)=>any;
 }
-export type CreateElementAttrs = CreateElementAttrsFull | CreateElementAttrsLite;
 export interface CEAStyle {
 	[index: string]: any;
 }
@@ -167,13 +166,12 @@ export function merge1d<T>(dst: T, ...src: (any|undefined)[]): T {
 	return dst;
 }
 interface CEAFns<T extends Element> {
-	dce: (tag: string, params: CreateElementAttrs) => T;
+	dce: (tag: string, params: CreateElementAttrsLite) => T;
 	specialAttrs?: string[];
-	pre?: (i: T, attrs: CreateElementAttrs) => void;
+	pre?: (i: T, attrs: CreateElementAttrsLite) => void;
 	prea?: (child: T, parent: T) => void;
 }
-function CEAApply<T extends Element>(i:T,fns:CEAFns<T>,attrs:CreateElementAttrs):T{
-	const tag = attrs.tag;
+function CEAApply<T extends Element>(i:T,fns:CEAFns<T>,attrs:CreateElementAttrsLite):T{
 	const parent = attrs.parent;
 	const items = attrs.items;
 	const text = attrs.text;
@@ -213,7 +211,7 @@ const CeaFnHtml: CEAFns<HTMLElement> = {
 		}
 	}
 };
-export function createElement(attrs: CreateElementAttrsFull): HTMLElement {
+export function createElement(attrs: CreateElementAttrs): HTMLElement {
 	return CreateElement(CeaFnHtml,attrs);
 }
 const CeaFnSvg: CEAFns<SVGElement> = {
@@ -226,9 +224,9 @@ const CeaFnSvg: CEAFns<SVGElement> = {
 		}
 	}
 };
-export function updateElement<T extends HTMLElement>(e:T,attrs:CreateElementAttrs):T;
-export function updateElement<T extends SVGElement>(e:T,attrs:CreateElementAttrs):T;
-export function updateElement(e:Element,attrs:CreateElementAttrs):Element {
+export function updateElement<T extends HTMLElement>(e:T,attrs:CreateElementAttrsLite):T;
+export function updateElement<T extends SVGElement>(e:T,attrs:CreateElementAttrsLite):T;
+export function updateElement(e:Element,attrs:CreateElementAttrsLite):Element {
 	let fns: CEAFns<HTMLElement>|CEAFns<SVGElement>;
 	if (e instanceof HTMLElement) fns = CeaFnHtml;
 	else if (e instanceof SVGElement) fns = CeaFnSvg;
@@ -237,14 +235,14 @@ export function updateElement(e:Element,attrs:CreateElementAttrs):Element {
 	return e;
 }
 
-export function SVGItem(attrs: CreateElementAttrsFull): SVGElement;
-export function SVGItem(tag: string, attrs?: CreateElementAttrs): SVGElement;
-export function SVGItem(tag: 'g', attrs?: CreateElementAttrs): SVGGElement;
-export function SVGItem(tag: 'line', attrs?: CreateElementAttrs): SVGLineElement;
-export function SVGItem(tag: 'path', attrs?: CreateElementAttrs): SVGPathElement;
-export function SVGItem(tag: 'svg', attrs?: CreateElementAttrs): SVGSVGElement;
-export function SVGItem(tag: 'use', attrs?: CreateElementAttrs): SVGUseElement;
-export function SVGItem(arg1: any, arg2?: CreateElementAttrs): SVGElement {
+export function SVGItem(attrs: CreateElementAttrs): SVGElement;
+export function SVGItem(tag: string, attrs?: CreateElementAttrsLite): SVGElement;
+export function SVGItem(tag: 'g', attrs?: CreateElementAttrsLite): SVGGElement;
+export function SVGItem(tag: 'line', attrs?: CreateElementAttrsLite): SVGLineElement;
+export function SVGItem(tag: 'path', attrs?: CreateElementAttrsLite): SVGPathElement;
+export function SVGItem(tag: 'svg', attrs?: CreateElementAttrsLite): SVGSVGElement;
+export function SVGItem(tag: 'use', attrs?: CreateElementAttrsLite): SVGUseElement;
+export function SVGItem(arg1: any, arg2?: CreateElementAttrsLite): SVGElement {
 	/*if (typeof arg1 == 'string') {
 	 return
 	 }*/
@@ -252,7 +250,7 @@ export function SVGItem(arg1: any, arg2?: CreateElementAttrs): SVGElement {
 		merge1d({tag: arg1}, arg2) : arg1);
 }
 export interface CreateSVGAttrs {
-	items: (CreateElementAttrs|undefined)[];
+	items: (CreateElementAttrs|Element|undefined)[];
 	width: number;
 	height: number;
 }
