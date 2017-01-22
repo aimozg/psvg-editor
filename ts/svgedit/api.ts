@@ -19,10 +19,8 @@ export interface ModelCtx {
 
 export type EModelPartCategory = "Point"|"Node"|"Path"|"Model"|"Param"/*|"Value"*/;
 export abstract class Value<T> {
-	constructor(
-		public owner:ModelPart,
-		public readonly name:string){
-		owner.values.push(this);
+	public owner:ModelPart;
+	constructor(public readonly name:string){
 	}
 	public get index():number { return this.owner.values.indexOf(this); }
 	public abstract get():T;
@@ -35,12 +33,12 @@ export abstract class ModelPart {
 	public id:number;
 	public parent: ModelPart;
 	public readonly children: ModelPart[];
-	public readonly values: Value<any>[];
 	protected ctx: ModelCtx;
 
 	constructor(public readonly loader: ModelLoader,
-				public name: string|undefined) {
-
+				public name: string|undefined,
+				public readonly values: Value<any>[]) {
+		for (let v of values) v.owner = this;
 	}
 
 	protected uhref():string {
@@ -104,10 +102,9 @@ export abstract class CModelElement<
 	public graphic: SVGElement|null;
 	protected dependants: [string, ModelElement][] = [];
 	public readonly children: CHILD[] = [];
-	public readonly values: Value<any>[] = [];
 
-	constructor(loader: ModelLoader, name: string|undefined) {
-		super(loader, name);
+	constructor(loader: ModelLoader, name: string|undefined,values: Value<any>[]) {
+		super(loader, name, values);
 	}
 
 	public attached(parent: PARENT) {
@@ -181,8 +178,9 @@ export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElem
 
 	constructor(loader: ModelLoader,
 				name: string|undefined,
-				public readonly cssclass: string) {
-		super(loader, name);
+				public readonly cssclass: string,
+				values: Value<any>[]) {
+		super(loader, name, values);
 	}
 
 	calculate(): TXY {
@@ -263,7 +261,7 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 	private postloadQueue: (() => any)[] = [];
 
 	constructor(mode: DisplayMode) {
-		super(MODEL_LOADER, "unnamed");
+		super(MODEL_LOADER, "unnamed", []);
 		this.ctx = {
 			model: this,
 			mode: mode,

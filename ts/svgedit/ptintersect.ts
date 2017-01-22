@@ -14,7 +14,7 @@ export class PointAtIntersect extends CModelPoint<ModelPoint> {
 				public a2:ModelPoint,
 				public b1:ModelPoint,
 				public b2:ModelPoint) {
-		super(POINT_AT_INTERSECTION_LOADER,name,POINT_AT_INTERSECTION_CLASS)
+		super(POINT_AT_INTERSECTION_LOADER,name,POINT_AT_INTERSECTION_CLASS,[])
 	}
 
 	protected attachChildren() {

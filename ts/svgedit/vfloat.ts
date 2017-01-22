@@ -1,11 +1,10 @@
 import {createElement} from "../dom";
-import {ModelPart, Value} from "./api";
+import {Value} from "./api";
 export class ValueFloat extends Value<number> {
 	private input: HTMLInputElement|null = null;
 	constructor(private value:number,
-				owner:ModelPart,
 				name:string) {
-		super(owner, name);
+		super(name);
 	}
 
 	public get(): number {
@@ -53,14 +52,16 @@ export class ValueFloat extends Value<number> {
 			]
 		});
 	}
-	public static load(owner:ModelPart,name:string,json:any): ValueFloat {
+	public static load(name:string,json:any,def?:number): ValueFloat {
 		let x:number;
-		if (typeof json == 'number') {
+		if (def !== undefined && (json === null || json === undefined)) {
+			x = def;
+		} else if (typeof json == 'number') {
 			x = json;
 		} else if (typeof json == 'string') {
 			x = +json;
 			if (!isFinite(x)) throw JSON.stringify(json);
 		} else throw JSON.stringify(json);
-		return new ValueFloat(x,owner,name);
+		return new ValueFloat(x,name);
 	}
 }

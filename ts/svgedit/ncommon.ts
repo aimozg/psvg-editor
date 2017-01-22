@@ -1,7 +1,7 @@
 import svg = require("../svg");
 import dom = require("../dom");
 import {TXY, DNode, IXY} from "../svg";
-import {CModelNode, ModelLoader, ModelPoint, DisplayMode, ENodeAttr} from "./api";
+import {CModelNode, ModelLoader, ModelPoint, DisplayMode, ENodeAttr, Value} from "./api";
 import {SVGItem} from "../dom";
 
 export abstract class CommonNode<CHILD> extends CModelNode<any> {
@@ -13,8 +13,9 @@ export abstract class CommonNode<CHILD> extends CModelNode<any> {
 	constructor(loader: ModelLoader,
 				name: string|undefined,
 				public pos: ModelPoint,
-				private gclass: string) {
-		super(loader, name);
+				private gclass: string,
+				values: Value<any>[]) {
+		super(loader, name, values);
 	}
 
 	protected attachChildren() {

@@ -13,7 +13,7 @@ export class CModelPath extends CModelElement<Model,ModelNode,EPathAttr> {
 				public nodes: ModelNode[],
 				public style: any,
 				public closed: boolean = true) {
-		super(PATH_LOADER, name);
+		super(PATH_LOADER, name, []);
 	}
 
 	protected attachChildren() {

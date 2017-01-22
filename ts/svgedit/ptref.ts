@@ -4,7 +4,7 @@ import {TXY} from "../svg";
 export const POINT_REF_TYPE = '@';
 export class PointRef extends CModelPoint<ModelPoint> {
 	constructor(name: string|undefined, public readonly ref: string) {
-		super(POINT_REF_LOADER,name, 'ref_pt');
+		super(POINT_REF_LOADER,name, 'ref_pt',[]);
 	}
 
 	protected draw(mode:DisplayMode): SVGGElement|null {

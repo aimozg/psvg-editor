@@ -1,5 +1,6 @@
-import {ModelPoint, EPointAttr, Model, ModelLoader, CModelPoint, DisplayMode} from "./api";
+import {ModelPoint, EPointAttr, Model, ModelLoader, CModelPoint, DisplayMode, Value} from "./api";
 import {TXY, solve2, vsub, vrot90, IXY, vlinj} from "../svg";
+import {ValueFloat} from "./vfloat";
 import svg = require("../svg");
 
 export const POINT_FROM_NORMAL_TYPE = 'N';
@@ -8,13 +9,18 @@ export class PointFromNormal extends CModelPoint<ModelPoint> {
 	constructor(name: string|undefined,
 				public readonly pt0: ModelPoint,
 				public readonly pt1: ModelPoint,
-				public alpha: number,
-				public beta: number) {
-		super(POINT_FROM_NORMAL_LOADER,name, POINT_FROM_NORMAL_CLASS)
+				public readonly alpha: ValueFloat,
+				public readonly beta: ValueFloat) {
+		super(POINT_FROM_NORMAL_LOADER,name, POINT_FROM_NORMAL_CLASS,[alpha,beta])
 	}
 
 	protected attachChildren() {
 		this.attachAll([this.pt0,this.pt1], "pos");
+	}
+
+
+	public valueUpdated<T>(value: Value<T>) {
+		this.update("pos");
 	}
 
 	protected draw(mode:DisplayMode): SVGGElement|null {
@@ -35,7 +41,7 @@ export class PointFromNormal extends CModelPoint<ModelPoint> {
 	protected fcalculate(): TXY {
 		let a = this.pt0.calculate();
 		let b = this.pt1.calculate();
-		return norm2fixed(a,b,this.alpha,this.beta);
+		return norm2fixed(a,b,this.alpha.get(),this.beta.get());
 	}
 
 	save(): any {
@@ -44,8 +50,8 @@ export class PointFromNormal extends CModelPoint<ModelPoint> {
 			name: this.name,
 			pt0: this.pt0.save(),
 			pt1: this.pt1.save(),
-			alpha: this.alpha,
-			beta: this.beta
+			alpha: this.alpha.save(),
+			beta: this.beta.save()
 		}
 	}
 
@@ -68,6 +74,7 @@ export const POINT_FROM_NORMAL_LOADER:ModelLoader = {
 	loaderfn:(model:Model,json:any)=> new PointFromNormal(json['name'],
 		model.loadPoint(json['pt0']),
 		model.loadPoint(json['pt1']),
-		+json['alpha'], +json['beta'])
+		ValueFloat.load('tangent',json['alpha']),
+		ValueFloat.load('normal',json['beta']))
 };
 Model.registerLoader(POINT_FROM_NORMAL_LOADER);
