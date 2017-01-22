@@ -23,6 +23,16 @@ export class ValueFloat extends Value<number> {
 
 	public editorElement(): HTMLElement {
 		let id = 'valuefloat_'+this.owner.id+'_'+this.index;
+		const handler = (e:Event)=>{
+			const input = (e.target as HTMLInputElement);
+			const value = +input.value;
+			if (isFinite(value)) {
+				this.set(value);
+				input.classList.remove('-error');
+			} else {
+				input.classList.add('-error');
+			}
+		};
 		return createElement('div',{
 			'class':'Value ValueFloat',
 			items: [
@@ -37,9 +47,8 @@ export class ValueFloat extends Value<number> {
 					id: id,
 					value: this.get(),
 					callback: (e:Element) => this.input = e as HTMLInputElement,
-					onchange: (e:Event)=>{
-						this.set(+(e.target as HTMLInputElement).value)
-					}
+					onchange: handler,
+					oninput: handler
 				}
 			]
 		});
