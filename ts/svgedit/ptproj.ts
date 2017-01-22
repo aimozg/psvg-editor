@@ -13,7 +13,7 @@ export class PointAtProjection extends CModelPoint<ModelPoint> {
 				public a:ModelPoint,
 				public b:ModelPoint,
 				public p:ModelPoint) {
-		super(POINT_AT_PROJECTION_LOADER,name,POINT_AT_PROJECTION_CLASS,[])
+		super(name,POINT_AT_PROJECTION_CLASS,[])
 	}
 	
 	protected attachChildren() {

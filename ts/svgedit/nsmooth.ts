@@ -14,7 +14,7 @@ export class SmoothNode extends CommonNode<ModelPoint|ModelNode> {
 				public readonly abq: ValueFloat,
 				public readonly acq: ValueFloat,
 				public readonly rot: ValueFloat) {
-		super(NODE_SMOOTH_LOADER, name, pos, 'smooth_node',[abq,acq,rot]);
+		super(name, pos, 'smooth_node',[abq,acq,rot]);
 	}
 
 	protected updated(other: ModelPoint|ModelNode, attr: EPointAttr|ENodeAttr) {

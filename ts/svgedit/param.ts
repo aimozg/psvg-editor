@@ -8,7 +8,7 @@ export class ModelParam extends ModelPart {
 				public readonly defVal: ValueFloat,
 				public readonly minVal: ValueFloat,
 				public readonly maxVal: ValueFloat) {
-		super(PARAM_LOADER, name, [defVal, minVal, maxVal]);
+		super(name, [defVal, minVal, maxVal]);
 	}
 
 	public valueUpdated<T>(value: Value<T>) {

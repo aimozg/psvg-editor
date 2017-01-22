@@ -6,12 +6,12 @@ import {ValueFloat} from "./vfloat";
 import svg = require("../svg");
 
 export const NODE_FLOW1_TYPE = "flow1";
-export class FlowNode extends CommonNode<ModelPoint> {
+export class Flow1Node extends CommonNode<ModelPoint> {
 	constructor(name: string|undefined,
 				pos: ModelPoint,
 				private h1ab: [ValueFloat, ValueFloat]|undefined,
 				private h2ab: [ValueFloat, ValueFloat]|undefined) {
-		super(NODE_FLOW1_LOADER, name, pos, 'flow1_node',
+		super(name, pos, 'flow1_node',
 			(h1ab ? [h1ab[0], h1ab[1]] : []).concat(h2ab ? [h2ab[0], h2ab[1]]:[])
 		);
 	}
@@ -63,7 +63,7 @@ export const NODE_FLOW1_LOADER: ModelLoader = {
 	cat: 'Node',
 	name: 'Flow1Node',
 	typename: NODE_FLOW1_TYPE,
-	loaderfn: (m: Model, json: any) => new FlowNode(json['name'],
+	loaderfn: (m: Model, json: any) => new Flow1Node(json['name'],
 		m.loadPoint(json['pos']),
 		json['h1ab'] ? [
 				ValueFloat.load('prev_tangent', json['h1ab'][0]),

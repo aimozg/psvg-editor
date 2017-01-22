@@ -9,7 +9,7 @@ export class CuspNode extends CommonNode<ModelPoint> {
 				pos: ModelPoint,
 				public h1: ModelPoint|null,
 				public h2: ModelPoint|null) {
-		super(NODE_CUSP_LOADER,name,pos, 'cusp_node', []);
+		super(name,pos, 'cusp_node', []);
 	}
 
 	protected updated(other: ModelPoint, attr: EPointAttr) {

@@ -1,6 +1,6 @@
 import {ModelLoader} from "./api";
 import {NODE_SMOOTH_LOADER} from "./nsmooth";
-import {NODE_FLOW1_LOADER} from "./nflow";
+import {NODE_FLOW1_LOADER} from "./nflow1";
 import {POINT_FIXED_LOADER} from "./ptfixed";
 import {POINT_AT_INTERSECTION_LOADER} from "./ptintersect";
 import {POINT_FROM_NORMAL_LOADER} from "./ptnorm";

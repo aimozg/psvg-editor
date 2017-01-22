@@ -8,7 +8,7 @@ export class FixedPoint extends CModelPoint<any> {
 	constructor(name: string|undefined,
 				public readonly x:ValueFloat,
 				public readonly y:ValueFloat) {
-		super(POINT_FIXED_LOADER, name, 'fixed_pt', [x,y]);
+		super(name, 'fixed_pt', [x,y]);
 	}
 
 	protected draw(mode:DisplayMode): SVGGElement|null {

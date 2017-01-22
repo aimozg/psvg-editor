@@ -35,14 +35,17 @@ export abstract class ModelPart {
 	public readonly children: ModelPart[];
 	protected ctx: ModelCtx;
 
-	constructor(public readonly loader: ModelLoader,
-				public name: string|undefined,
+	constructor(public name: string|undefined,
 				public readonly values: Value<any>[]) {
 		for (let v of values) v.owner = this;
 	}
 
 	protected uhref():string {
-		return '#svg_'+this.loader.name;
+		return '#svg_'+this.classname;
+	}
+
+	public get classname():string {
+		return this.constructor['name']||'ModelPart';
 	}
 
 	protected attached(parent: ModelPart) {
@@ -56,7 +59,7 @@ export abstract class ModelPart {
 	}
 
 	public treeNodeText(): string {
-		return (this.name? '"'+this.name+'"' : '#'+this.id) + ' ('+this.loader.name+')';
+		return (this.name? '"'+this.name+'"' : '#'+this.id) + ' ('+this.classname+')';
 	}
 
 	public treeNodeSelf(): JSTreeNodeInit {
@@ -103,8 +106,8 @@ export abstract class CModelElement<
 	protected dependants: [string, ModelElement][] = [];
 	public readonly children: CHILD[] = [];
 
-	constructor(loader: ModelLoader, name: string|undefined,values: Value<any>[]) {
-		super(loader, name, values);
+	constructor(name: string|any, values: Value<any>[]) {
+		super(name, values);
 	}
 
 	public attached(parent: PARENT) {
@@ -176,11 +179,10 @@ export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElem
 	public g: SVGGElement|null;
 	private use: SVGUseElement|null;
 
-	constructor(loader: ModelLoader,
-				name: string|undefined,
+	constructor(name: string|undefined,
 				public readonly cssclass: string,
 				values: Value<any>[]) {
-		super(loader, name, values);
+		super(name, values);
 	}
 
 	calculate(): TXY {
@@ -261,7 +263,7 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 	private postloadQueue: (() => any)[] = [];
 
 	constructor(mode: DisplayMode) {
-		super(MODEL_LOADER, "unnamed", []);
+		super("unnamed", []);
 		this.ctx = {
 			model: this,
 			mode: mode,

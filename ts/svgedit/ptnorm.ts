@@ -11,7 +11,7 @@ export class PointFromNormal extends CModelPoint<ModelPoint> {
 				public readonly pt1: ModelPoint,
 				public readonly alpha: ValueFloat,
 				public readonly beta: ValueFloat) {
-		super(POINT_FROM_NORMAL_LOADER,name, POINT_FROM_NORMAL_CLASS,[alpha,beta])
+		super(name, POINT_FROM_NORMAL_CLASS,[alpha,beta])
 	}
 
 	protected attachChildren() {
