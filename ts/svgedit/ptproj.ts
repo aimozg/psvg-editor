@@ -1,6 +1,6 @@
 import svg = require("../svg");
 import dom = require("../dom");
-import {ModelPoint, EPointAttr, Model, ModelLoader, CModelPoint, DisplayMode} from "./api";
+import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode, ModelContext} from "./api";
 import {TXY} from "../svg";
 import {SVGItem} from "../dom";
 
@@ -10,14 +10,16 @@ export class PointAtProjection extends CModelPoint<ModelPoint> {
 	protected lab: SVGLineElement|null;
 	protected lpq: SVGLineElement|null;
 	constructor(name: string|undefined,
+				ctx: ModelContext,
 				public a:ModelPoint,
 				public b:ModelPoint,
 				public p:ModelPoint) {
-		super(name,POINT_AT_PROJECTION_CLASS,[])
+		super(name,ctx,POINT_AT_PROJECTION_CLASS,[
+			[a,"pos"],[b,"pos"],[p,"pos"]
+		],[])
 	}
 	
 	protected attachChildren() {
-		this.attachAll([this.a,this.b,this.p],"pos");
 	}
 
 	protected updated(other: ModelPoint, attr: EPointAttr) {
@@ -78,10 +80,10 @@ export const POINT_AT_PROJECTION_LOADER:ModelLoader = {
 	cat:'Point',
 	name:'PointAtProjection',
 	typename:POINT_AT_PROJECTION_TYPE,
-	loaderfn:(model:Model,json:any)=>new PointAtProjection(json['name'],
-		model.loadPoint(json['a']),
-		model.loadPoint(json['b']),
-		model.loadPoint(json['p'])
+	loaderfn:(ctx:ModelContext, json:any)=>new PointAtProjection(json['name'],ctx,
+		ctx.loadPoint(json['a']),
+		ctx.loadPoint(json['b']),
+		ctx.loadPoint(json['p'])
 	)
 };
-Model.registerLoader(POINT_AT_PROJECTION_LOADER);
+ModelContext.registerLoader(POINT_AT_PROJECTION_LOADER);

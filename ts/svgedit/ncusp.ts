@@ -1,4 +1,4 @@
-import {ModelPoint, EPointAttr, Model, ModelLoader, DisplayMode} from "./api";
+import {ModelPoint, EPointAttr, ModelLoader, DisplayMode, ModelContext} from "./api";
 import {TXY} from "../svg";
 import {CommonNode} from "./ncommon";
 import svg = require("../svg");
@@ -6,10 +6,11 @@ import svg = require("../svg");
 export const NODE_CUSP_TYPE = 'cusp';
 export class CuspNode extends CommonNode<ModelPoint> {
 	constructor(name:string|undefined,
+				ctx: ModelContext,
 				pos: ModelPoint,
 				public h1: ModelPoint|null,
 				public h2: ModelPoint|null) {
-		super(name,pos, 'cusp_node', []);
+		super(name,ctx,pos, 'cusp_node', [],[]);
 	}
 
 	protected updated(other: ModelPoint, attr: EPointAttr) {
@@ -58,10 +59,10 @@ export const NODE_CUSP_LOADER: ModelLoader = {
 	cat:'Node',
 	name:'CuspNode',
 	typename:NODE_CUSP_TYPE,
-	loaderfn:(m: Model, json: any)=> new CuspNode(json['name'],
+	loaderfn:(m: ModelContext, json: any)=> new CuspNode(json['name'],m,
 		m.loadPoint(json['pos']),
 		json['handle1'] ? m.loadPoint(json['handle1']) : null,
 		json['handle2'] ? m.loadPoint(json['handle2']) : null
 	)
 };
-Model.registerLoader(NODE_CUSP_LOADER);
+ModelContext.registerLoader(NODE_CUSP_LOADER);

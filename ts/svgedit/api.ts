@@ -10,23 +10,89 @@ import List = _.List;
 export type JsTypename = 'object'|'function'|'undefined'|'string'|'number'|'boolean'|'symbol';
 
 export type DisplayMode = 'edit'|'view';
-export interface ModelCtx {
-	model: Model;
-	mode: DisplayMode;
-	id: number;
-	center: TXY;
+
+export class ModelContext {
+	public id: number = 0;
+	public readonly parts: {
+		[id: string]: Part;
+	} = {};
+	public onUpdate: (obj: Part,attr:string) => any = (x => void(0));
+	private readonly postloadQueue: (() => any)[] = [];
+	constructor(
+		public readonly mode:DisplayMode
+	) {
+	}
+
+	public findPoint(name:string):ModelPoint|null {
+		return _.find(this.parts, x => (x instanceof CModelPoint && x.name == name)) as ModelPoint;
+	}
+	public updated<A2 extends string>(part:CPart<A2>,attr:A2) {
+		this.onUpdate(part,attr);
+	}
+	private loadPart(cat: EPartCategory, json: any, ...args:any[]): Part {
+		const type = typeof json;
+		let loaders: LoaderLib = ModelContext.loaders[cat] || {
+				bytypefield: {},
+				byjstype: {}
+			};
+		if (type == 'object') {
+			let tfloader = loaders.bytypefield[json['type']];
+			if (tfloader) return tfloader.loaderfn(this, json, true, ...args)!!;
+		}
+		let jtloaders = loaders.byjstype[type];
+		if (!jtloaders || jtloaders.length == 0) throw "No loaders for " + cat + " "
+		+ type + " " + JSON.stringify(json);
+		for (let loader of jtloaders) {
+			let ele = loader.loaderfn(this, json, false, ...args);
+			if (ele) return ele;
+		}
+		throw JSON.stringify(json)
+	}
+
+	public loadPoint(json: any): ModelPoint {
+		return this.loadPart('Point', json) as ModelPoint;
+	}
+
+	public loadNode(json: any): ModelNode {
+		return this.loadPart('Node', json) as ModelNode;
+	}
+
+	public loadPath(json: any): ModelPath {
+		return this.loadPart('Path', json) as ModelPath;
+	}
+	public loadParam(json: any): ModelParam {
+		return this.loadPart('Param', json) as ModelParam;
+	}
+	public static registerLoader(loader: ModelLoader) {
+		let lib: LoaderLib = ModelContext.loaders[loader.cat] || {
+				bytypefield: {},
+				byjstype: {}
+			};
+		if (loader.typename) {
+			lib.bytypefield[loader.typename] = loader;
+		}
+		for (let ot of loader.objtypes || []) {
+			let byjt: ModelLoader[] = lib.byjstype[ot] || [];
+			byjt.push(loader);
+			lib.byjstype[ot] = byjt;
+		}
+		ModelContext.loaders[loader.cat] = lib;
+	}
+	public doPostload() {
+		for (let toa of this.postloadQueue) toa();
+		this.postloadQueue.splice(0);
+	}
+	public queuePostload(code: () => any) {
+		this.postloadQueue.push(code);
+	}
+
+	private static loaders: {
+		//TODO [index:EModelElementCategory]: {
+		[index: string]: LoaderLib;
+	} = {}
 }
 
-export type EPartCategory = "Point"|"Node"|"Path"|"Model"|"Param"/*|"Value"*/;
-export abstract class Value<T> {
-	public owner:Part;
-	constructor(public readonly name:string){
-	}
-	public get index():number { return this.owner.values.indexOf(this); }
-	public abstract get():T;
-	public abstract editorElement():HTMLElement;
-	public abstract save():any;
-}
+export type EPartCategory = "Point"|"Node"|"Path"|"Model"|"Param"|"Value";
 export type Part = CPart<any>;
 export abstract class CPart<ATTR extends string> {
 	private static GCounter = 1;
@@ -34,11 +100,12 @@ export abstract class CPart<ATTR extends string> {
 	public id:number;
 	public owner: Part;
 	public readonly children: Part[];
-	protected ctx: ModelCtx;
 
 	constructor(public name: string|undefined,
+				public readonly ctx:ModelContext,
 				public readonly values: Value<any>[]) {
 		for (let v of values) v.owner = this;
+		this.id = ctx.id++;
 	}
 
 	protected uhref():string {
@@ -50,8 +117,6 @@ export abstract class CPart<ATTR extends string> {
 	}
 
 	protected attached(parent: Part) {
-		this.ctx = parent.ctx;
-		this.id = parent.ctx.id++;
 		this.owner = parent;
 	}
 
@@ -84,6 +149,16 @@ export abstract class CPart<ATTR extends string> {
 
 	public abstract save():any;
 }
+export type EValueAttr = "*";
+export abstract class Value<T> {
+	public owner:Part;
+	constructor(public readonly name:string){
+	}
+	public get index():number { return this.owner.values.indexOf(this); }
+	public abstract get():T;
+	public abstract editorElement():HTMLElement;
+	public abstract save():any;
+}
 
 /*export const VALUE_FIXNUM_TYPE = 'fixnum';
 export const VALUE_FIXNUM_LOADER:ModelLoader = {
@@ -99,9 +174,10 @@ export const VALUE_FIXNUM_LOADER:ModelLoader = {
 		return new ValueFixedNumber(+json['value'], name);
 	}
 };
-Model.registerLoader(VALUE_FIXNUM_LOADER);*/
+ModelCtx.registerLoader(VALUE_FIXNUM_LOADER);*/
 
-export type ModelElement = CModelElement<any,any,any>
+export type ModelElement = CModelElement<any,any,any>;
+export type ItemDeclaration<CHILD extends CPart<any>> = [(CHILD|(()=>CHILD)),string|undefined];
 export abstract class CModelElement<
 	PARENT extends Part,
 	CHILD extends ModelElement,
@@ -111,13 +187,21 @@ export abstract class CModelElement<
 	protected dependants: [string, ModelElement][] = [];
 	public readonly children: CHILD[] = [];
 
-	constructor(name: string|any, values: Value<any>[]) {
-		super(name, values);
+	constructor(name: string|any,
+				ctx: ModelContext,
+				items: ItemDeclaration<CHILD>[],
+				values: Value<any>[]) {
+		super(name, ctx, values);
+		for (let icd of items) {
+			const [item,dependency] = icd;
+			if (typeof item != 'function') this.attach(item);
+			if (dependency) this.dependOn(item,dependency);
+		}
 	}
 
 	public attached(parent: PARENT) {
 		super.attached(parent);
-		this.ctx.model.parts[this.id] = this;
+		this.ctx.parts[this.id] = this;
 		this.attachChildren();
 	}
 
@@ -153,7 +237,7 @@ export abstract class CModelElement<
 
 	protected dependOn<A2 extends string>(other: CModelElement<any,any,A2> | (() => CModelElement<any,any,A2>),
 										  attr: A2) {
-		if (typeof other === 'function') this.ctx.model.queuePostload(() => other().dependants.push([attr, this]));
+		if (typeof other === 'function') this.ctx.queuePostload(() => other().dependants.push([attr, this]));
 		else other.dependants.push([attr, this]);
 	}
 
@@ -165,7 +249,7 @@ export abstract class CModelElement<
 
 	protected fireUpdated(attr: ATTR|"*") {
 		for (let dep of this.dependants) if (attr == '*' || dep[0] == '*' || attr == dep[0]) dep[1].updated(this, attr);
-		if (this.ctx) this.ctx.model.updated(this, attr)
+		this.ctx.updated(this, attr)
 	}
 
 	protected abstract draw(mode:DisplayMode): SVGElement|null;
@@ -185,9 +269,11 @@ export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElem
 	private use: SVGUseElement|null;
 
 	constructor(name: string|undefined,
+				ctx: ModelContext,
 				public readonly cssclass: string,
+				items: ItemDeclaration<CHILD>[],
 				values: Value<any>[]) {
-		super(name, values);
+		super(name, ctx, items, values);
 	}
 
 	calculate(): TXY {
@@ -224,7 +310,7 @@ export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElem
 
 export type ENodeAttr = '*'|'pos'|'handle';
 export type ModelNode = CModelNode<any>;
-export abstract class CModelNode<CHILD> extends CModelElement<ModelPath,ModelPoint,ENodeAttr> {
+export abstract class CModelNode<CHILD extends ModelElement> extends CModelElement<ModelPath,CHILD,ENodeAttr> {
 
 	public index: number;
 
@@ -258,23 +344,14 @@ export abstract class CModelNode<CHILD> extends CModelElement<ModelPath,ModelPoi
 
 export type EModelAttr = "*";
 export class Model extends CModelElement<Model,any,EModelAttr> {
-	private paths: ModelPath[] = [];
-	private params: ModelParam[] = [];
-	public readonly parts: {
-		[index: string]: Part;
-	} = {};
 	public readonly g: SVGGElement = SVGItem('g', {'class': 'model'});
-	public onUpdate: (obj: Part) => any = (x => void(0));
-	private postloadQueue: (() => any)[] = [];
 
-	constructor(mode: DisplayMode) {
-		super("unnamed", []);
-		this.ctx = {
-			model: this,
-			mode: mode,
-			id: 0,
-			center: [0, 0]
-		}
+	constructor(name:string|undefined,ctx:ModelContext,
+				private readonly paths:ModelPath[],
+				private readonly params:ModelParam[]
+	) {
+		super(name,ctx,
+			paths.map(p=>[p,'*'] as [ModelPath,string]), []);
 	}
 
 	public save(): any {
@@ -286,27 +363,18 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 	}
 
 	public updated(other: ModelElement, attr: string) {
-		//console.log(other,attr);
-		this.onUpdate(other);
 	}
 
-	public static load(mode: DisplayMode, json: any): Model {
-		let m = new Model(mode);
-		m.name = json['name'];
-		for (let j of json['paths']) {
-			const path = m.loadPath(j);
-			m.paths.push(path);
-			m.attach(path, "*");
-		}
-		for (let j of json['params'] || []) m.params.push(m.loadPart('Param', j) as ModelParam);
-		m.doPostload();
+	public static load(mode:DisplayMode, json: any): Model {
+		const ctx = new ModelContext(mode);
+		let m = new Model(json['name']||'unnamed',ctx,
+			(json['paths']||[]).map(j=>ctx.loadPath(j)),
+			(json['params']||[]).map(j=>ctx.loadParam(j))
+		);
+		ctx.doPostload();
 		return m;
 	}
 
-	public doPostload() {
-		for (let toa of this.postloadQueue) toa();
-		this.postloadQueue = [];
-	}
 
 	protected attachChildren() {
 	}
@@ -335,45 +403,7 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 		 });*/
 	}
 
-	public queuePostload<A2 extends string>(code: () => any) {
-		this.postloadQueue.push(code);
-	}
 
-	public findPoint(name: string): ModelPoint|undefined {
-		return _.find(this.parts, x => (x instanceof CModelPoint && x.name == name)) as ModelPoint;
-	}
-
-	private loadPart(cat: EPartCategory, json: any, ...args:any[]): Part {
-		const type = typeof json;
-		let loaders: LoaderLib = Model.loaders[cat] || {
-				bytypefield: {},
-				byjstype: {}
-			};
-		if (type == 'object') {
-			let tfloader = loaders.bytypefield[json['type']];
-			if (tfloader) return tfloader.loaderfn(this, json, true, ...args)!!;
-		}
-		let jtloaders = loaders.byjstype[type];
-		if (!jtloaders || jtloaders.length == 0) throw "No loaders for " + cat + " "
-		+ type + " " + JSON.stringify(json);
-		for (let loader of jtloaders) {
-			let ele = loader.loaderfn(this, json, false, ...args);
-			if (ele) return ele;
-		}
-		throw JSON.stringify(json)
-	}
-
-	public loadPoint(json: any): ModelPoint {
-		return this.loadPart('Point', json) as ModelPoint;
-	}
-
-	public loadNode(json: any): ModelNode {
-		return this.loadPart('Node', json) as ModelNode;
-	}
-
-	public loadPath(json: any): ModelPath {
-		return this.loadPart('Path', json) as ModelPath;
-	}
 	/*public loadValue<T>(json: any, name:string):Value<T> {
 		return this.loadPart('Value',json,name) as Value<T>;
 	}*/
@@ -383,26 +413,6 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 		return Model.load(mode,this.save());
 	}
 
-	public static registerLoader(loader: ModelLoader) {
-		let lib: LoaderLib = Model.loaders[loader.cat] || {
-				bytypefield: {},
-				byjstype: {}
-			};
-		if (loader.typename) {
-			lib.bytypefield[loader.typename] = loader;
-		}
-		for (let ot of loader.objtypes || []) {
-			let byjt: ModelLoader[] = lib.byjstype[ot] || [];
-			byjt.push(loader);
-			lib.byjstype[ot] = byjt;
-		}
-		Model.loaders[loader.cat] = lib;
-	}
-
-	private static loaders: {
-		//TODO [index:EModelElementCategory]: {
-		[index: string]: LoaderLib;
-	} = {}
 }
 
 export interface LoaderLib {
@@ -417,7 +427,7 @@ export interface LoaderLib {
 export interface ModelLoader {
 	cat: EPartCategory;
 	name: string;
-	loaderfn(model: Model, json: any, strict: boolean, ...args:any[]):Part|null;
+	loaderfn(ctx: ModelContext, json: any, strict: boolean, ...args:any[]):Part|null;
 	typename?: string;
 	objtypes?: JsTypename[];
 }

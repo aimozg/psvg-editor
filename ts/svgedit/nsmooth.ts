@@ -1,5 +1,15 @@
 import {TXY} from "../svg";
-import {ModelPoint, ModelNode, EPointAttr, ENodeAttr, Model, ModelLoader, CModelPoint, CModelNode, Value} from "./api";
+import {
+	ModelPoint,
+	ModelNode,
+	EPointAttr,
+	ENodeAttr,
+	ModelLoader,
+	CModelPoint,
+	CModelNode,
+	Value,
+	ModelContext
+} from "./api";
 import {CommonNode} from "./ncommon";
 import {ValueFloat} from "./vfloat";
 import svg = require("../svg");
@@ -10,11 +20,12 @@ const DEFAULT_ACQ = 0.3;
 const DEFAULT_ROT = 0;
 export class SmoothNode extends CommonNode<ModelPoint|ModelNode> {
 	constructor(name: string|undefined,
+				ctx: ModelContext,
 				pos: ModelPoint,
 				public readonly abq: ValueFloat,
 				public readonly acq: ValueFloat,
 				public readonly rot: ValueFloat) {
-		super(name, pos, 'smooth_node',[abq,acq,rot]);
+		super(name,ctx, pos, 'smooth_node',[],[abq,acq,rot]);
 	}
 
 	protected updated(other: ModelPoint|ModelNode, attr: EPointAttr|ENodeAttr) {
@@ -59,11 +70,11 @@ export const NODE_SMOOTH_LOADER: ModelLoader = {
 	cat: 'Node',
 	name: 'SmoothNode',
 	typename: NODE_SMOOTH_TYPE,
-	loaderfn: (m: Model, json: any) =>
-		new SmoothNode(json['name'],
+	loaderfn: (m: ModelContext, json: any) =>
+		new SmoothNode(json['name'],m,
 			m.loadPoint(json['pos']),
 			ValueFloat.load('prev',json['b'],DEFAULT_ABQ),
 			ValueFloat.load('next',json['c'],DEFAULT_ACQ),
 			ValueFloat.load('rotation',json['rot'],DEFAULT_ROT))
 };
-Model.registerLoader(NODE_SMOOTH_LOADER);
+ModelContext.registerLoader(NODE_SMOOTH_LOADER);

@@ -1,10 +1,10 @@
-import {ModelPoint, EPointAttr, ModelLoader, Model, CModelPoint, DisplayMode} from "./api";
+import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode, ModelContext} from "./api";
 import {TXY} from "../svg";
 
 export const POINT_REF_TYPE = '@';
 export class PointRef extends CModelPoint<ModelPoint> {
-	constructor(name: string|undefined, public readonly ref: string) {
-		super(name, 'ref_pt',[]);
+	constructor(name: string|undefined, ctx:ModelContext, public readonly ref: string) {
+		super(name,ctx, 'ref_pt',[],[]);
 	}
 
 	protected draw(mode:DisplayMode): SVGGElement|null {
@@ -19,7 +19,7 @@ export class PointRef extends CModelPoint<ModelPoint> {
 	}
 
 	public obj(): ModelPoint {
-		return this.ctx.model.findPoint(this.ref)!!;
+		return this.ctx.findPoint(this.ref)!!;
 	}
 
 	protected attachChildren() {
@@ -43,13 +43,13 @@ export const POINT_REF_LOADER:ModelLoader = {
 	name:'PointRef',
 	typename:POINT_REF_TYPE,
 	objtypes:['string','object'],
-	loaderfn:(m:Model,json:any,strict:boolean)=>{
+	loaderfn:(m:ModelContext, json:any, strict:boolean)=>{
 		if (!strict) {
-			if (typeof json == 'string') return new PointRef(undefined, json.substr(1));
-			if (json['type'][0] == '@') return new PointRef(json['name'], json['type'].substr(1));
+			if (typeof json == 'string') return new PointRef(undefined,m, json.substr(1));
+			if (json['type'][0] == '@') return new PointRef(json['name'],m, json['type'].substr(1));
 			return null;
 		}
-		return new PointRef(json['name'],json['ref']);
+		return new PointRef(json['name'],m,json['ref']);
 	}
 };
-Model.registerLoader(POINT_REF_LOADER);
+ModelContext.registerLoader(POINT_REF_LOADER);

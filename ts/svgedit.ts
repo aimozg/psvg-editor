@@ -2,7 +2,7 @@ import dom = require('./dom');
 import svg = require("./svg");
 require("jstree-css");
 
-import {Model, Part, CModelElement, DisplayMode} from "./svgedit/api";
+import {Model, Part, CModelElement, DisplayMode, ModelContext} from "./svgedit/api";
 import {ALL_LOADERS} from "./svgedit/_all";
 import {FixedPoint} from "./svgedit/ptfixed";
 import {CreateElementAttrs, updateElement} from "./dom";
@@ -13,6 +13,7 @@ export const importz = {dom, svg, ALL_LOADERS};
 class ModelPane {
 	public readonly model: Model;
 	public readonly eModel: SVGElement;
+	public readonly ctx: ModelContext;
 	private zoombox: SVGGElement;
 	private svg: SVGSVGElement;
 	private _zoomfact:number=1;
@@ -29,6 +30,7 @@ class ModelPane {
 				public readonly div: HTMLElement,
 				defs: (CreateElementAttrs|Element|undefined)[] = []) {
 		this.model = model.clone(mode);
+		this.ctx = this.model.ctx;
 		div.innerHTML = '';
 		let width = 100;
 		let height = 100;
@@ -162,15 +164,15 @@ export class Editor {
 		}).jstree();
 		this.tree.get_container().on('select_node.jstree', (e, data: JSTreeNodeEvent) => {
 			let id = data.node.id.split('_');
-			if (id[0] == 'ModelPart') this.select(this.editPane.model.parts[id[1]]);
+			if (id[0] == 'ModelPart') this.select(this.editPane.ctx.parts[id[1]]);
 		}).on('click dblclick', (/*e*/) => {
 			// console.log(e, this.tree.jstree().get_node(e.target))
 		});
-		this.editPane.model.onUpdate = (obj: Part) => {
+		this.editPane.ctx.onUpdate = (obj: Part) => {
 			//console.log(obj);
 			let id = obj.id;
 			for (let m of this.previews) {
-				let p = m.model.parts[id];
+				let p = m.ctx.parts[id];
 				//console.log(obj,id,p);
 				if (p instanceof FixedPoint && obj instanceof FixedPoint) {
 					p.set(obj.x.get(),obj.y.get());
@@ -181,7 +183,7 @@ export class Editor {
 		};
 		this.editPane.eModel.addEventListener('click', (e: MouseEvent) => {
 			for (let element = e.target as Element|null; element; element = element.parentElement) {
-				let part = this.editPane.model.parts[element.getAttribute('data-partid') || ''];
+				let part = this.editPane.model.ctx.parts[element.getAttribute('data-partid') || ''];
 				if (part) {
 					this.select(part);
 					return;

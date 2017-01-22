@@ -1,6 +1,6 @@
 import svg = require("../svg");
 import dom = require("../dom");
-import {ModelPoint, EPointAttr, Model, ModelLoader, CModelPoint, DisplayMode} from "./api";
+import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode, ModelContext} from "./api";
 import {TXY} from "../svg";
 import {SVGItem} from "../dom";
 
@@ -10,11 +10,12 @@ export class PointAtIntersect extends CModelPoint<ModelPoint> {
 	protected l1: SVGLineElement|null;
 	protected l2: SVGLineElement|null;
 	constructor(name: string|undefined,
+				ctx: ModelContext,
 				public a1:ModelPoint,
 				public a2:ModelPoint,
 				public b1:ModelPoint,
 				public b2:ModelPoint) {
-		super(name,POINT_AT_INTERSECTION_CLASS,[])
+		super(name,ctx,POINT_AT_INTERSECTION_CLASS,[],[])
 	}
 
 	protected attachChildren() {
@@ -80,10 +81,10 @@ export const POINT_AT_INTERSECTION_LOADER:ModelLoader = {
 	cat:'Point',
 	name:'PointAtIntersection',
 	typename:POINT_AT_INTERSECTION_TYPE,
-	loaderfn:(model:Model,json:any)=>new PointAtIntersect(json['name'],
-		model.loadPoint(json['a1']),
-		model.loadPoint(json['a2']),
-		model.loadPoint(json['b1']),
-		model.loadPoint(json['b2']))
+	loaderfn:(ctx:ModelContext, json:any)=>new PointAtIntersect(json['name'],ctx,
+		ctx.loadPoint(json['a1']),
+		ctx.loadPoint(json['a2']),
+		ctx.loadPoint(json['b1']),
+		ctx.loadPoint(json['b2']))
 };
-Model.registerLoader(POINT_AT_INTERSECTION_LOADER);
+ModelContext.registerLoader(POINT_AT_INTERSECTION_LOADER);

@@ -1,4 +1,4 @@
-import {ModelPoint, ModelElement, Model, ModelLoader, CModelPoint, CModelNode, DisplayMode, Value} from "./api";
+import {ModelPoint, ModelElement, ModelLoader, CModelPoint, CModelNode, DisplayMode, Value, ModelContext} from "./api";
 import {TXY} from "../svg";
 import {norm2fixed} from "./ptnorm";
 import {CommonNode} from "./ncommon";
@@ -8,10 +8,11 @@ import svg = require("../svg");
 export const NODE_FLOW1_TYPE = "flow1";
 export class Flow1Node extends CommonNode<ModelPoint> {
 	constructor(name: string|undefined,
+				ctx: ModelContext,
 				pos: ModelPoint,
 				private h1ab: [ValueFloat, ValueFloat]|undefined,
 				private h2ab: [ValueFloat, ValueFloat]|undefined) {
-		super(name, pos, 'flow1_node',
+		super(name, ctx, pos, 'flow1_node',[],
 			(h1ab ? [h1ab[0], h1ab[1]] : []).concat(h2ab ? [h2ab[0], h2ab[1]]:[])
 		);
 	}
@@ -63,7 +64,7 @@ export const NODE_FLOW1_LOADER: ModelLoader = {
 	cat: 'Node',
 	name: 'Flow1Node',
 	typename: NODE_FLOW1_TYPE,
-	loaderfn: (m: Model, json: any) => new Flow1Node(json['name'],
+	loaderfn: (m: ModelContext, json: any) => new Flow1Node(json['name'],m,
 		m.loadPoint(json['pos']),
 		json['h1ab'] ? [
 				ValueFloat.load('prev_tangent', json['h1ab'][0]),
@@ -72,4 +73,4 @@ export const NODE_FLOW1_LOADER: ModelLoader = {
 				ValueFloat.load('next_tangent', json['h2ab'][0]),
 				ValueFloat.load('next_normal', json['h2ab'][1])] : undefined)
 };
-Model.registerLoader(NODE_FLOW1_LOADER);
+ModelContext.registerLoader(NODE_FLOW1_LOADER);

@@ -1,4 +1,4 @@
-import {Model, ModelLoader, CModelElement, ModelNode, DisplayMode} from "./api";
+import {Model, ModelLoader, CModelElement, ModelNode, DisplayMode, ModelContext} from "./api";
 import {SVGItem, updateElement} from "../dom";
 import {NodePath} from "../svg";
 import svg = require("../svg");
@@ -10,10 +10,11 @@ export class CModelPath extends CModelElement<Model,ModelNode,EPathAttr> {
 	private p: SVGPathElement;
 
 	constructor(name: string|undefined,
+				ctx: ModelContext,
 				public nodes: ModelNode[],
 				public style: any,
 				public closed: boolean = true) {
-		super(name, []);
+		super(name,ctx, [],[]);
 	}
 
 	protected attachChildren() {
@@ -76,11 +77,11 @@ export const PATH_LOADER: ModelLoader = {
 	cat: 'Path',
 	name: 'Path',
 	objtypes: ['object'],
-	loaderfn: (m: Model, json: any, strict: boolean) => new CModelPath(
-		json['name'] as string,
+	loaderfn: (m: ModelContext, json: any, strict: boolean) => new CModelPath(
+		json['name'] as string,m,
 		json['nodes'].map(j => m.loadNode(j)),
 		json['style']||{},
 		!!json['closed'])
 };
-Model.registerLoader(PATH_LOADER);
+ModelContext.registerLoader(PATH_LOADER);
 

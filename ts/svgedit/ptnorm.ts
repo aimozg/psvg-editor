@@ -1,4 +1,4 @@
-import {ModelPoint, EPointAttr, Model, ModelLoader, CModelPoint, DisplayMode, Value} from "./api";
+import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode, Value, ModelContext} from "./api";
 import {TXY, solve2, vsub, vrot90, IXY, vlinj} from "../svg";
 import {ValueFloat} from "./vfloat";
 import svg = require("../svg");
@@ -7,11 +7,12 @@ export const POINT_FROM_NORMAL_TYPE = 'N';
 export const POINT_FROM_NORMAL_CLASS = 'pt_norm';
 export class PointFromNormal extends CModelPoint<ModelPoint> {
 	constructor(name: string|undefined,
+				ctx: ModelContext,
 				public readonly pt0: ModelPoint,
 				public readonly pt1: ModelPoint,
 				public readonly alpha: ValueFloat,
 				public readonly beta: ValueFloat) {
-		super(name, POINT_FROM_NORMAL_CLASS,[alpha,beta])
+		super(name,ctx, POINT_FROM_NORMAL_CLASS,[],[alpha,beta])
 	}
 
 	protected attachChildren() {
@@ -71,10 +72,10 @@ export const POINT_FROM_NORMAL_LOADER:ModelLoader = {
 	cat:'Point',
 	name:'PointFromNormal',
 	typename:POINT_FROM_NORMAL_TYPE,
-	loaderfn:(model:Model,json:any)=> new PointFromNormal(json['name'],
-		model.loadPoint(json['pt0']),
-		model.loadPoint(json['pt1']),
+	loaderfn:(ctx:ModelContext, json:any)=> new PointFromNormal(json['name'],ctx,
+		ctx.loadPoint(json['pt0']),
+		ctx.loadPoint(json['pt1']),
 		ValueFloat.load('tangent',json['alpha']),
 		ValueFloat.load('normal',json['beta']))
 };
-Model.registerLoader(POINT_FROM_NORMAL_LOADER);
+ModelContext.registerLoader(POINT_FROM_NORMAL_LOADER);
