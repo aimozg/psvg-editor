@@ -11,20 +11,25 @@
 			overflow:hidden;
 			min-height: 100vh;
 		}
-		.frow, .frows, .fcol, .fcols {
+		.frow {
 			display: flex;
-		}
-		.frows, .fcols {
-			flex-wrap: wrap;
-		}
-		.frow, .fcol {
 			flex-wrap: nowrap;
+			flex-direction: row;
 		}
-		.fcol, .fcols {
+		.frows {
+			display: flex;
+			flex-wrap: wrap;
+			flex-direction: row;
+		}
+		.fcol {
+			display: flex;
+			flex-wrap: nowrap;
 			flex-direction: column;
 		}
-		.frow, .frows {
-			flex-direction: row;
+		.fcols {
+			display: flex;
+			flex-wrap: wrap;
+			flex-direction: column;
 		}
 		.ffix {
 			flex-grow: 0;
@@ -163,7 +168,6 @@
         canvas.css('height', (document.body.clientHeight - canvas.offset().top).toFixed() + 'px');
         editor = svgedit.setup(canvas[1], $('#treeview')[0],[canvas[0]]);
         editor_load3();
-        editor.recreateView();
         $("#name").text(editor.model.name);
     });
     function editor_save() {

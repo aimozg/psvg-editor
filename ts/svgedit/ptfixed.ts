@@ -20,7 +20,6 @@ export class FixedPoint extends CModelPoint<any> {
 			this.g.addEventListener('sdrag', (e: SvgDragEvent) => {
 				e.preventDefault();
 				this.set(e.start.x + e.movement.x, e.start.y + e.movement.y);
-				this.update('pos');
 			});
 		}
 		return g;
@@ -36,6 +35,7 @@ export class FixedPoint extends CModelPoint<any> {
 			this.pt[0] = arg1[0];
 			this.pt[1] = arg1[1];
 		}
+		this.update('pos');
 		return this;
 	}
 

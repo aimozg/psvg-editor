@@ -11,6 +11,7 @@ export type DisplayMode = 'edit'|'view';
 export interface ModelCtx {
 	model: Model;
 	mode: DisplayMode;
+	ctxid: number;
 	center: TXY;
 }
 
@@ -18,6 +19,7 @@ export type EModelPartCategory = "Point"|"Node"|"Path"|"Param"|"Model";
 export abstract class ModelPart {
 	private static Counter = 1;
 	public readonly id = '' + ModelPart.Counter++;
+	public ctxid:number;
 	public parent: ModelPart;
 	public readonly children: ModelPart[];
 	protected ctx: ModelCtx;
@@ -33,6 +35,7 @@ export abstract class ModelPart {
 
 	protected attached(parent: ModelPart) {
 		this.ctx = parent.ctx;
+		this.ctxid = parent.ctx.ctxid++;
 		this.parent = parent;
 	}
 
@@ -50,6 +53,8 @@ export abstract class ModelPart {
 			text: this.treeNodeText()
 		}
 	}
+
+	public update() {}
 
 	public treeNodeFull(): JSTreeNodeInit {
 		let self = this.treeNodeSelf();
@@ -111,7 +116,8 @@ export abstract class CModelElement<
 		else other.dependants.push([attr, this]);
 	}
 
-	protected update(attr: ATTR|"*") {
+	public update(attr: ATTR|"*"='*') {
+		super.update();
 		this.redraw(attr,this.ctx.mode);
 		this.fireUpdated(attr);
 	}
@@ -319,7 +325,7 @@ export class CModelPath extends CModelElement<Model,ModelNode,EPathAttr> {
 
 
 	protected updated(other: ModelNode, attr: string) {
-		if (attr == 'pos' || attr == 'handle' || attr == '*') this.redraw("*",this.ctx.mode);
+		if (attr == 'pos' || attr == 'handle' || attr == '*') this.update("*");
 	}
 
 	public toNodePath(): NodePath {
@@ -390,6 +396,7 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 		this.ctx = {
 			model: this,
 			mode: mode,
+			ctxid: 0,
 			center: [0, 0]
 		}
 	}
@@ -447,6 +454,9 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 	public findPoint(name: string): ModelPoint|undefined {
 		return _.find(this.parts, x => (x instanceof CModelPoint && x.name == name)) as ModelPoint;
 	}
+	public findByCtxid(ctxid:number):ModelPart|undefined {
+		return _.find(this.parts, x=>x.ctxid == ctxid);
+	}
 
 	public loadPart(cat: EModelPartCategory, json: any): ModelPart {
 		const type = typeof json;
@@ -478,6 +488,11 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 
 	public loadPath(json: any): ModelPath {
 		return this.loadPart('Path', json) as ModelPath;
+	}
+
+	public clone(mode:DisplayMode):Model {
+		// TODO optimize
+		return Model.load(mode,this.save());
 	}
 
 	public static registerLoader(loader: ModelLoader) {
