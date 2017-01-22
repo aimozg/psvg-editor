@@ -1,5 +1,6 @@
-import {CommonNode, ModelPoint, EPointAttr, Model, ModelLoader, DisplayMode} from "./api";
+import {ModelPoint, EPointAttr, Model, ModelLoader, DisplayMode} from "./api";
 import {TXY} from "../svg";
+import {CommonNode} from "./ncommon";
 import svg = require("../svg");
 
 export const NODE_CUSP_TYPE = 'cusp';

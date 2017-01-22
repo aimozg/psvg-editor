@@ -127,6 +127,18 @@
 			stroke-width:2;
 			stroke:inherit;
 		}
+		.Value {
+			display: flex;
+			margin: 2px 0px;
+		}
+		.Value > label {
+			flex-basis: 20%;
+			margin: 0 4px;
+		}
+		.Value > input {
+			flex-basis: 80%;
+			margin: 0 4px;
+		}
 	</style>
 </head>
 <body>
@@ -142,9 +154,13 @@
 		</span>
 	</div>
 	<div class="frow">
-		<div id="svgCanvas1" class="canvas fstretch">
+		<div class="fcol">
+			<div class="canvas canvas-preview fstretch">
+			</div>
+			<div class="canvas canvas-preview fstretch">
+			</div>
 		</div>
-		<div id="svgCanvas2" class="canvas fstretch">
+		<div class="canvas canvas-editor fstretch">
 		</div>
 		<div class="fcol" style="flex-basis:300px;">
 			<div id="sidebar" class="fcol">
@@ -160,16 +176,19 @@
 <script type="text/javascript">
     var editor;
     var sourceLoaded = new $.Deferred();
-    $(function(){
+    $(function () {
         var n = document.body.firstChild;
         var purge = [];
         do {
             if (n.nodeType == Node.TEXT_NODE) purge.push(n);
         } while (n = n.nextSibling);
         for (var i = 0; i < purge.length; i++)document.body.removeChild(purge[i]);
-        var canvas = $('#svgCanvas1,#svgCanvas2');
+        var canvas = $('.canvas-editor');
         canvas.css('height', (document.body.clientHeight - canvas.offset().top).toFixed() + 'px');
-        editor = svgedit.setup(canvas[1], $('#treeview')[0],[canvas[0]]);
+        editor = svgedit.setup(canvas[0],
+            $('#treeview')[0],
+            $('.canvas-preview').toArray(),
+            $('#objview')[0]);
         editor_load3();
     });
     function editor_save() {

@@ -1,6 +1,7 @@
-import {CommonNode, ModelPoint, ModelElement, Model, ModelLoader, CModelPoint, CModelNode, DisplayMode} from "./api";
+import {ModelPoint, ModelElement, Model, ModelLoader, CModelPoint, CModelNode, DisplayMode} from "./api";
 import {TXY} from "../svg";
 import {norm2fixed} from "./ptnorm";
+import {CommonNode} from "./ncommon";
 import svg = require("../svg");
 
 export const NODE_FLOW1_TYPE = "flow1";

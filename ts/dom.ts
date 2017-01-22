@@ -137,11 +137,15 @@ export interface CreateElementAttrsLite {
 	text?: string;
 	style?: CEAStyle;
 	callback?: (el:Element,attrs:CreateElementAttrsLite)=>any;
+	oninput?: string|((e:MouseEvent)=>any);
+	onchange?: string|((e:Event)=>any);
 	[index: string]: any;
 }
 export interface CreateElementAttrs extends CreateElementAttrsLite {
 	tag: string;
 }
+const CEAevents = ['oninput','onchange'];
+const CEAspecials = ['tag', 'parent', 'items', 'text', 'callback'];
 export interface CEASvgPath extends CreateElementAttrs {
 	tag: 'path';
 	d: string;
@@ -172,20 +176,22 @@ interface CEAFns<T extends Element> {
 	prea?: (child: T, parent: T) => void;
 }
 function CEAApply<T extends Element>(i:T,fns:CEAFns<T>,attrs:CreateElementAttrsLite):T{
-	const parent = attrs.parent;
-	const items = attrs.items;
-	const text = attrs.text;
-	const callback = attrs.callback;
 	if (fns.pre) fns.pre(i, attrs);
 	for (let a in attrs) {
-		if (['tag', 'parent', 'items', 'text','callback'].indexOf(a) == -1 &&
+		let v = attrs[a];
+		if (CEAevents.indexOf(a) != -1 && typeof v == 'function') {
+			i.addEventListener(a.substr(2), v);
+		} else if (CEAspecials.indexOf(a) == -1 &&
 			(fns.specialAttrs || []).indexOf(a) == -1) {
-			if (['checked', 'disabled'].indexOf(a) == -1) i.setAttribute(a, attrs[a]);
-			else i[a] = attrs[a];
+			if (['checked', 'disabled'].indexOf(a) == -1) i.setAttribute(a, v);
+			else i[a] = v;
 		}
 	}
+	const text = attrs.text;
 	if (text) i.textContent = text;
+	const callback = attrs.callback;
 	if (callback) callback(i,attrs);
+	const items = attrs.items;
 	if (items) {
 		clear(i);
 		for (let arg of items) {
@@ -195,6 +201,7 @@ function CEAApply<T extends Element>(i:T,fns:CEAFns<T>,attrs:CreateElementAttrsL
 			i.appendChild(item);
 		}
 	}
+	const parent = attrs.parent;
 	if (parent) parent.appendChild(i);
 	return i;
 }
@@ -211,8 +218,12 @@ const CeaFnHtml: CEAFns<HTMLElement> = {
 		}
 	}
 };
-export function createElement(attrs: CreateElementAttrs): HTMLElement {
-	return CreateElement(CeaFnHtml,attrs);
+export function createElement(attrs: CreateElementAttrs): HTMLElement;
+export function createElement(tag: string, attrs: CreateElementAttrsLite): HTMLElement;
+export function createElement(tag: 'div', attrs?: CreateElementAttrsLite): HTMLDivElement;
+export function createElement(): HTMLElement {
+	return CreateElement(CeaFnHtml,(typeof arguments[0] == 'string') ?
+		merge1d({tag: arguments[0]}, arguments[1]) : arguments[0]);
 }
 const CeaFnSvg: CEAFns<SVGElement> = {
 	dce: tag => document.createElementNS("http://www.w3.org/2000/svg", tag) as SVGElement,
@@ -224,8 +235,7 @@ const CeaFnSvg: CEAFns<SVGElement> = {
 		}
 	}
 };
-export function updateElement<T extends HTMLElement>(e:T,attrs:CreateElementAttrsLite):T;
-export function updateElement<T extends SVGElement>(e:T,attrs:CreateElementAttrsLite):T;
+export function updateElement<T extends HTMLElement|SVGElement>(e:T,attrs:CreateElementAttrsLite):T;
 export function updateElement(e:Element,attrs:CreateElementAttrsLite):Element {
 	let fns: CEAFns<HTMLElement>|CEAFns<SVGElement>;
 	if (e instanceof HTMLElement) fns = CeaFnHtml;
@@ -242,7 +252,7 @@ export function SVGItem(tag: 'line', attrs?: CreateElementAttrsLite): SVGLineEle
 export function SVGItem(tag: 'path', attrs?: CreateElementAttrsLite): SVGPathElement;
 export function SVGItem(tag: 'svg', attrs?: CreateElementAttrsLite): SVGSVGElement;
 export function SVGItem(tag: 'use', attrs?: CreateElementAttrsLite): SVGUseElement;
-export function SVGItem(arg1: any, arg2?: CreateElementAttrsLite): SVGElement {
+export function SVGItem(arg1: CreateElementAttrs|string, arg2?: CreateElementAttrsLite): SVGElement {
 	/*if (typeof arg1 == 'string') {
 	 return
 	 }*/

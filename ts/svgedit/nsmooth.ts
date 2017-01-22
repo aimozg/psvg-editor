@@ -1,15 +1,6 @@
 import {TXY} from "../svg";
-import {
-	CommonNode,
-	ModelPoint,
-	ModelNode,
-	EPointAttr,
-	ENodeAttr,
-	Model,
-	ModelLoader,
-	CModelPoint,
-	CModelNode
-} from "./api";
+import {ModelPoint, ModelNode, EPointAttr, ENodeAttr, Model, ModelLoader, CModelPoint, CModelNode} from "./api";
+import {CommonNode} from "./ncommon";
 import svg = require("../svg");
 
 export const NODE_SMOOTH_TYPE = 'smooth';

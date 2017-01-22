@@ -5,7 +5,7 @@ require("jstree-css");
 import {Model, ModelPart, CModelElement, DisplayMode} from "./svgedit/api";
 import {ALL_LOADERS} from "./svgedit/_all";
 import {FixedPoint} from "./svgedit/ptfixed";
-import {CreateElementAttrs} from "./dom";
+import {CreateElementAttrs, updateElement} from "./dom";
 
 //noinspection JSUnusedGlobalSymbols
 export const importz = {dom, svg, ALL_LOADERS};
@@ -83,7 +83,8 @@ export class Editor {
 
 	constructor(private readonly canvasDiv: HTMLElement,
 				private readonly treeDiv: HTMLElement,
-				private readonly previewDivs: HTMLElement[]) {
+				private readonly previewDivs: HTMLElement[],
+				private readonly objviewDiv: HTMLElement) {
 		this.scaledown = [];
 		document.addEventListener('wheel', ev => {
 			if (ev.ctrlKey) {
@@ -172,7 +173,7 @@ export class Editor {
 				let p = m.model.parts[id];
 				//console.log(obj,id,p);
 				if (p instanceof FixedPoint && obj instanceof FixedPoint) {
-					p.set(obj.pt);
+					p.set(obj.x.get(),obj.y.get());
 				}
 				// if (p) p.update();
 			}
@@ -187,9 +188,10 @@ export class Editor {
 				}
 			}
 		});
+		this.select(null);
 	}
 
-	select(part: ModelPart) {
+	select(part: ModelPart|null) {
 		if (this.selection == part) return;
 		let model = this.editPane.model;
 		for (let s = this.selection; s && s instanceof CModelElement && s != model; s = s.parent) {
@@ -208,6 +210,10 @@ export class Editor {
 				}
 			}
 		}
+		this.objviewDiv.innerHTML = '';
+		updateElement(this.objviewDiv,{
+			items:(part?part.values:[]).map(v=>v.editorElement())
+		});
 	}
 
 	public save(): any {
@@ -261,7 +267,8 @@ export class Editor {
 //noinspection JSUnusedGlobalSymbols
 export function setup(editorDiv: HTMLElement,
 					  treeDiv: HTMLElement,
-					  previewDivs: HTMLElement[] = []): Editor {
-	return new Editor(editorDiv, treeDiv, previewDivs);
+					  previewDivs: HTMLElement[],
+					  objviewDiv: HTMLElement): Editor {
+	return new Editor(editorDiv, treeDiv, previewDivs, objviewDiv);
 }
 
