@@ -1,5 +1,6 @@
 import svg = require("../svg");
-import {ModelLoader, CPart, ModelContext} from "./api";
+import {ModelLoader, CPart} from "./api";
+import {ModelContext} from "./_ctx";
 import {ValueFloat} from "./vfloat";
 
 export type EParamAttr="*"|"meta"|"value";

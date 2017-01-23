@@ -1,4 +1,5 @@
-import {ModelElement, ModelLoader, CModelPoint, DisplayMode, ModelContext} from "./api";
+import {ModelElement, ModelLoader, CModelPoint, DisplayMode} from "./api";
+import {ModelContext} from "./_ctx";
 import {TXY, SvgDragEvent, IXY} from "../svg";
 import {ValueFloat} from "./vfloat";
 import svg = require("../svg");

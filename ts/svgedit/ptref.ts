@@ -1,4 +1,5 @@
-import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode, ModelContext} from "./api";
+import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode} from "./api";
+import {ModelContext} from "./_ctx";
 import {TXY} from "../svg";
 
 export const POINT_REF_TYPE = '@';

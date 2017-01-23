@@ -2,7 +2,7 @@ import {TXY, IXY, DNode} from "../svg";
 import {SVGItem, updateElement} from "../dom";
 import {ModelPath} from "./path";
 import {ModelParam} from "./param";
-import {ValueFloat} from "./vfloat";
+import {ModelContext} from "./_ctx";
 import svg = require("../svg");
 import dom = require("../dom");
 import Dictionary = _.Dictionary;
@@ -11,90 +11,6 @@ import List = _.List;
 export type JsTypename = 'object'|'function'|'undefined'|'string'|'number'|'boolean'|'symbol';
 
 export type DisplayMode = 'edit'|'view';
-
-export class ModelContext {
-	public id: number = 0;
-	public readonly parts: {
-		[id: string]: Part;
-	} = {};
-	public onUpdate: (obj: Part,attr:string) => any = (x => void(0));
-	private readonly postloadQueue: (() => any)[] = [];
-	constructor(
-		public readonly mode:DisplayMode
-	) {
-	}
-
-	public findPoint(name:string):ModelPoint|null {
-		return _.find(this.parts, x => (x instanceof CModelPoint && x.name == name)) as ModelPoint;
-	}
-	public updated<A2 extends string>(part:CPart<any,A2>,attr:A2) {
-		this.onUpdate(part,attr);
-	}
-	private loadPart(cat: EPartCategory, json: any, ...args:any[]): Part {
-		const type = typeof json;
-		let loaders: LoaderLib = ModelContext.loaders[cat] || {
-				bytypefield: {},
-				byjstype: {}
-			};
-		if (type == 'object') {
-			let tfloader = loaders.bytypefield[json['type']];
-			if (tfloader) return tfloader.loaderfn(this, json, true, ...args)!!;
-		}
-		let jtloaders = loaders.byjstype[type];
-		if (!jtloaders || jtloaders.length == 0) throw "No loaders for " + cat + " "
-		+ type + " " + JSON.stringify(json);
-		for (let loader of jtloaders) {
-			let ele = loader.loaderfn(this, json, false, ...args);
-			if (ele) return ele;
-		}
-		throw JSON.stringify(json)
-	}
-
-	public loadPoint(json: any): ModelPoint {
-		return this.loadPart('Point', json) as ModelPoint;
-	}
-
-	public loadNode(json: any): ModelNode {
-		return this.loadPart('Node', json) as ModelNode;
-	}
-
-	public loadPath(json: any): ModelPath {
-		return this.loadPart('Path', json) as ModelPath;
-	}
-	public loadParam(json: any): ModelParam {
-		return this.loadPart('Param', json) as ModelParam;
-	}
-	public loadFloat(name:string,json:any,def?:number):ValueFloat {
-		return ValueFloat.load(name,this,json,def);
-	}
-	public static registerLoader(loader: ModelLoader) {
-		let lib: LoaderLib = ModelContext.loaders[loader.cat] || {
-				bytypefield: {},
-				byjstype: {}
-			};
-		if (loader.typename) {
-			lib.bytypefield[loader.typename] = loader;
-		}
-		for (let ot of loader.objtypes || []) {
-			let byjt: ModelLoader[] = lib.byjstype[ot] || [];
-			byjt.push(loader);
-			lib.byjstype[ot] = byjt;
-		}
-		ModelContext.loaders[loader.cat] = lib;
-	}
-	public doPostload() {
-		for (let toa of this.postloadQueue) toa();
-		this.postloadQueue.splice(0);
-	}
-	public queuePostload(code: () => any) {
-		this.postloadQueue.push(code);
-	}
-
-	private static loaders: {
-		//TODO [index:EModelElementCategory]: {
-		[index: string]: LoaderLib;
-	} = {}
-}
 
 export type EPartCategory = "Point"|"Node"|"Path"|"Model"|"Param"|"Value";
 export type Part = CPart<any,string>;
@@ -194,22 +110,6 @@ export abstract class Value<T> extends CPart<Part,EValueAttr> {
 	public abstract editorElement():HTMLElement;
 	public abstract save():any;
 }
-
-/*export const VALUE_FIXNUM_TYPE = 'fixnum';
-export const VALUE_FIXNUM_LOADER:ModelLoader = {
-	cat:'Value',
-	name:'ValueFixedNumber',
-	typename:VALUE_FIXNUM_TYPE,
-	objtypes:['number'],
-	loaderfn(model: Model, json: any, strict: boolean,name:string):ValueFixedNumber|null {
-		if (!strict) {
-			if (typeof json == 'number') return new ValueFixedNumber(json, name);
-			return null;
-		}
-		return new ValueFixedNumber(+json['value'], name);
-	}
-};
-ModelCtx.registerLoader(VALUE_FIXNUM_LOADER);*/
 
 export type ModelElement = CModelElement<any,string>;
 export abstract class CModelElement<
@@ -354,6 +254,7 @@ export class Model extends CModelElement<any,EModelAttr> {
 	) {
 		super(name,ctx,
 			paths.map(p=>[p,'*'] as [ModelPath,string]));
+		ctx.doPostload();
 	}
 
 	public save(): any {
@@ -367,14 +268,11 @@ export class Model extends CModelElement<any,EModelAttr> {
 	public updated(other: ModelElement, attr: string) {
 	}
 
-	public static load(mode:DisplayMode, json: any): Model {
-		const ctx = new ModelContext(mode);
-		let m = new Model(json['name']||'unnamed',ctx,
-			(json['paths']||[]).map(j=>ctx.loadPath(j)),
-			(json['params']||[]).map(j=>ctx.loadParam(j))
+	public static load(ctx:ModelContext, json: any): Model {
+		return new Model(json['name'] || 'unnamed', ctx,
+			(json['paths'] || []).map(j => ctx.loadPath(j)),
+			(json['params'] || []).map(j => ctx.loadParam(j))
 		);
-		ctx.doPostload();
-		return m;
 	}
 
 
@@ -407,9 +305,9 @@ export class Model extends CModelElement<any,EModelAttr> {
 		return this.loadPart('Value',json,name) as Value<T>;
 	}*/
 
-	public clone(mode:DisplayMode):Model {
+	public clone(ctx:ModelContext):Model {
 		// TODO optimize
-		return Model.load(mode,this.save());
+		return Model.load(ctx,this.save());
 	}
 
 }

@@ -2,10 +2,11 @@ import dom = require('./dom');
 import svg = require("./svg");
 require("jstree-css");
 
-import {Model, Part, CModelElement, DisplayMode, ModelContext, Value} from "./svgedit/api";
+import {Model, Part, CModelElement, DisplayMode, Value} from "./svgedit/api";
 import {ALL_LOADERS} from "./svgedit/_all";
 import {FixedPoint} from "./svgedit/ptfixed";
 import {CreateElementAttrs, updateElement} from "./dom";
+import {ModelContext} from "./svgedit/_ctx";
 
 //noinspection JSUnusedGlobalSymbols
 export const importz = {dom, svg, ALL_LOADERS};
@@ -29,8 +30,8 @@ class ModelPane {
 				public readonly mode: DisplayMode,
 				public readonly div: HTMLElement,
 				defs: (CreateElementAttrs|Element|undefined)[] = []) {
-		this.model = model.clone(mode);
-		this.ctx = this.model.ctx;
+		this.ctx = new ModelContext(mode);
+		this.model = model.clone(this.ctx);
 		div.innerHTML = '';
 		let width = 100;
 		let height = 100;
@@ -223,7 +224,7 @@ export class Editor {
 	}
 
 	public loadJson(json: any) {
-		this.recreateView(Model.load('edit', json));
+		this.recreateView(Model.load(new ModelContext('edit'),json));
 	}
 
 	/*loadSvgStruct(el: SVGElement) {

@@ -1,6 +1,7 @@
 import svg = require("../svg");
 import dom = require("../dom");
-import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode, ModelContext} from "./api";
+import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode} from "./api";
+import {ModelContext} from "./_ctx";
 import {TXY} from "../svg";
 import {SVGItem} from "../dom";
 

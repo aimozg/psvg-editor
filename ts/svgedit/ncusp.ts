@@ -1,4 +1,5 @@
-import {ModelPoint, EPointAttr, ModelLoader, DisplayMode, ModelContext} from "./api";
+import {ModelPoint, EPointAttr, ModelLoader, DisplayMode} from "./api";
+import {ModelContext} from "./_ctx";
 import {TXY} from "../svg";
 import {CommonNode} from "./ncommon";
 import svg = require("../svg");

@@ -1,4 +1,5 @@
-import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode, ModelContext, EValueAttr} from "./api";
+import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode, EValueAttr} from "./api";
+import {ModelContext} from "./_ctx";
 import {TXY, solve2, vsub, vrot90, IXY, vlinj} from "../svg";
 import {ValueFloat} from "./vfloat";
 import svg = require("../svg");

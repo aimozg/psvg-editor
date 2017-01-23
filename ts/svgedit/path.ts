@@ -1,4 +1,5 @@
-import {Model, ModelLoader, CModelElement, ModelNode, DisplayMode, ModelContext} from "./api";
+import {Model, ModelLoader, CModelElement, ModelNode, DisplayMode} from "./api";
+import {ModelContext} from "./_ctx";
 import {SVGItem, updateElement} from "../dom";
 import {NodePath} from "../svg";
 import svg = require("../svg");

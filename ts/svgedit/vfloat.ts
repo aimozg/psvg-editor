@@ -1,17 +1,24 @@
 import {createElement} from "../dom";
-import {Value, ModelContext} from "./api";
+import {Value} from "./api";
+import {ModelContext} from "./_ctx";
 export class ValueFloat extends Value<number> {
 	private input: HTMLInputElement|null = null;
 	constructor(name:string,
 				ctx:ModelContext,
-				private value:number) {
+				private value:number,
+				public readonly def:number,
+				public readonly min:number,
+				public readonly max:number
+	) {
 		super(name,ctx);
+		if (def<min || def>max || min>max) throw `Illegal bounds for ${name}: def=${def} min=${min} max=${max}`
 	}
 
 	public get(): number {
 		return this.value;
 	}
 	public set(value:number, suppressEvent: boolean = false){
+		if (!this.validate(value)) return;
 		this.value = value;
 		if (this.input) this.input.value = ''+value;
 		if (!suppressEvent) this.update('*');
@@ -21,18 +28,23 @@ export class ValueFloat extends Value<number> {
 		return this.get();
 	}
 
+	public validate(x:number):boolean {
+		return isFinite(x) && x>=this.min && x<=this.max;
+	}
 	public editorElement(): HTMLElement {
 		let id = 'valuefloat_'+this.id;
 		const handler = (e:Event)=>{
 			const input = (e.target as HTMLInputElement);
-			const value = +input.value;
-			if (isFinite(value)) {
+			const s = input.value.trim();
+			const value = (s === '') ? this.def : +s;
+			if (!this.validate(value)) {
 				this.set(value);
 				input.classList.remove('-error');
 			} else {
 				input.classList.add('-error');
 			}
 		};
+		const value = this.get();
 		return createElement('div',{
 			'class':'Value ValueFloat',
 			items: [
@@ -43,9 +55,9 @@ export class ValueFloat extends Value<number> {
 				},{
 					tag:'input',
 					type: 'text',
-					placeholder: '1.234',
+					placeholder: this.def,
 					id: id,
-					value: this.get(),
+					value: value === this.def ? '' : value,
 					callback: (e:Element) => this.input = e as HTMLInputElement,
 					onchange: handler,
 					oninput: handler
@@ -53,7 +65,12 @@ export class ValueFloat extends Value<number> {
 			]
 		});
 	}
-	public static load(name:string,ctx:ModelContext,json:any,def?:number): ValueFloat {
+	public static load(name:string,
+					   ctx:ModelContext,
+					   json:any,
+					   def:number,
+					   min:number,
+					   max:number): ValueFloat {
 		let x:number;
 		if (def !== undefined && (json === null || json === undefined)) {
 			x = def;
@@ -63,7 +80,7 @@ export class ValueFloat extends Value<number> {
 			x = +json;
 			if (!isFinite(x)) throw JSON.stringify(json);
 		} else throw JSON.stringify(json);
-		return new ValueFloat(name,ctx,x);
+		return new ValueFloat(name,ctx,x,def,min,max);
 	}
 
 }

@@ -7,11 +7,11 @@ import {
 	ModelLoader,
 	CModelPoint,
 	CModelNode,
-	ModelContext,
 	ItemDeclaration
 } from "./api";
 import {CommonNode} from "./ncommon";
 import {ValueFloat} from "./vfloat";
+import {ModelContext} from "./_ctx";
 import svg = require("../svg");
 
 export const NODE_SMOOTH_TYPE = 'smooth';

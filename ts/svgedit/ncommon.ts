@@ -1,8 +1,9 @@
 import svg = require("../svg");
 import dom = require("../dom");
 import {TXY, DNode, IXY} from "../svg";
-import {CModelNode, ModelPoint, DisplayMode, ENodeAttr, ItemDeclaration, ModelContext} from "./api";
+import {CModelNode, ModelPoint, DisplayMode, ENodeAttr, ItemDeclaration} from "./api";
 import {SVGItem} from "../dom";
+import {ModelContext} from "./_ctx";
 
 export abstract class CommonNode extends CModelNode {
 	protected l1: SVGLineElement|null;
