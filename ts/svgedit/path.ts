@@ -5,7 +5,7 @@ import svg = require("../svg");
 
 export type EPathAttr = "*"|"d";
 export type ModelPath = CModelPath;
-export class CModelPath extends CModelElement<Model,ModelNode,EPathAttr> {
+export class CModelPath extends CModelElement<Model,EPathAttr> {
 	private g: SVGGElement|null;
 	private p: SVGPathElement;
 
@@ -14,13 +14,7 @@ export class CModelPath extends CModelElement<Model,ModelNode,EPathAttr> {
 				public nodes: ModelNode[],
 				public style: any,
 				public closed: boolean = true) {
-		super(name,ctx, [],[]);
-	}
-
-	protected attachChildren() {
-		for (let i = 0, ns = this.nodes, n = ns.length; i < n; i++) {
-			this.attach(ns[i], '*');
-		}
+		super(name,ctx, nodes);
 	}
 
 	protected draw(mode:DisplayMode): SVGElement {

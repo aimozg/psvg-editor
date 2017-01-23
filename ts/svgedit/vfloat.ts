@@ -1,10 +1,11 @@
 import {createElement} from "../dom";
-import {Value} from "./api";
+import {Value, ModelContext} from "./api";
 export class ValueFloat extends Value<number> {
 	private input: HTMLInputElement|null = null;
-	constructor(private value:number,
-				name:string) {
-		super(name);
+	constructor(name:string,
+				ctx:ModelContext,
+				private value:number) {
+		super(name,ctx);
 	}
 
 	public get(): number {
@@ -13,7 +14,7 @@ export class ValueFloat extends Value<number> {
 	public set(value:number, suppressEvent: boolean = false){
 		this.value = value;
 		if (this.input) this.input.value = ''+value;
-		if (!suppressEvent) this.owner.valueUpdated(this);
+		if (!suppressEvent) this.update('*');
 	}
 
 	public save(): number|string {
@@ -21,7 +22,7 @@ export class ValueFloat extends Value<number> {
 	}
 
 	public editorElement(): HTMLElement {
-		let id = 'valuefloat_'+this.owner.id+'_'+this.index;
+		let id = 'valuefloat_'+this.id;
 		const handler = (e:Event)=>{
 			const input = (e.target as HTMLInputElement);
 			const value = +input.value;
@@ -52,7 +53,7 @@ export class ValueFloat extends Value<number> {
 			]
 		});
 	}
-	public static load(name:string,json:any,def?:number): ValueFloat {
+	public static load(name:string,ctx:ModelContext,json:any,def?:number): ValueFloat {
 		let x:number;
 		if (def !== undefined && (json === null || json === undefined)) {
 			x = def;
@@ -62,6 +63,7 @@ export class ValueFloat extends Value<number> {
 			x = +json;
 			if (!isFinite(x)) throw JSON.stringify(json);
 		} else throw JSON.stringify(json);
-		return new ValueFloat(x,name);
+		return new ValueFloat(name,ctx,x);
 	}
+
 }

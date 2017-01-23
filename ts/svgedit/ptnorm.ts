@@ -1,27 +1,18 @@
-import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode, Value, ModelContext} from "./api";
+import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode, ModelContext, EValueAttr} from "./api";
 import {TXY, solve2, vsub, vrot90, IXY, vlinj} from "../svg";
 import {ValueFloat} from "./vfloat";
 import svg = require("../svg");
 
 export const POINT_FROM_NORMAL_TYPE = 'N';
 export const POINT_FROM_NORMAL_CLASS = 'pt_norm';
-export class PointFromNormal extends CModelPoint<ModelPoint> {
+export class PointFromNormal extends CModelPoint {
 	constructor(name: string|undefined,
 				ctx: ModelContext,
 				public readonly pt0: ModelPoint,
 				public readonly pt1: ModelPoint,
 				public readonly alpha: ValueFloat,
 				public readonly beta: ValueFloat) {
-		super(name,ctx, POINT_FROM_NORMAL_CLASS,[],[alpha,beta])
-	}
-
-	protected attachChildren() {
-		this.attachAll([this.pt0,this.pt1], "pos");
-	}
-
-
-	public valueUpdated<T>(value: Value<T>) {
-		this.update("pos");
+		super(name,ctx, POINT_FROM_NORMAL_CLASS,[pt0,pt1,alpha,beta])
 	}
 
 	protected draw(mode:DisplayMode): SVGGElement|null {
@@ -35,7 +26,7 @@ export class PointFromNormal extends CModelPoint<ModelPoint> {
 		return this.g;
 	}
 
-	protected updated(other: ModelPoint, attr: EPointAttr) {
+	protected updated(other: ModelPoint|ValueFloat, attr: EPointAttr|EValueAttr) {
 		this.update("pos");
 	}
 
@@ -75,7 +66,7 @@ export const POINT_FROM_NORMAL_LOADER:ModelLoader = {
 	loaderfn:(ctx:ModelContext, json:any)=> new PointFromNormal(json['name'],ctx,
 		ctx.loadPoint(json['pt0']),
 		ctx.loadPoint(json['pt1']),
-		ValueFloat.load('tangent',json['alpha']),
-		ValueFloat.load('normal',json['beta']))
+		ctx.loadFloat('tangent',json['alpha'],0),
+		ctx.loadFloat('normal',json['beta'],0))
 };
 ModelContext.registerLoader(POINT_FROM_NORMAL_LOADER);

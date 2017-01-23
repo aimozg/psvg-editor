@@ -7,43 +7,33 @@ import {
 	ModelLoader,
 	CModelPoint,
 	CModelNode,
-	Value,
-	ModelContext
+	ModelContext,
+	ItemDeclaration
 } from "./api";
 import {CommonNode} from "./ncommon";
 import {ValueFloat} from "./vfloat";
 import svg = require("../svg");
 
 export const NODE_SMOOTH_TYPE = 'smooth';
-const DEFAULT_ABQ = 0.3;
-const DEFAULT_ACQ = 0.3;
-const DEFAULT_ROT = 0;
-export class SmoothNode extends CommonNode<ModelPoint|ModelNode> {
+export class SmoothNode extends CommonNode {
 	constructor(name: string|undefined,
 				ctx: ModelContext,
 				pos: ModelPoint,
 				public readonly abq: ValueFloat,
 				public readonly acq: ValueFloat,
 				public readonly rot: ValueFloat) {
-		super(name,ctx, pos, 'smooth_node',[],[abq,acq,rot]);
+		super(name,ctx, pos, 'smooth_node',[
+			pos,abq,acq,rot,
+			[()=>this.prevNode(),'pos'] as ItemDeclaration,
+			[()=>this.nextNode(),'pos'] as ItemDeclaration
+		]);
 	}
 
 	protected updated(other: ModelPoint|ModelNode, attr: EPointAttr|ENodeAttr) {
 		if (other instanceof CModelPoint) this.update("*");
-		if (other instanceof CModelNode && (attr == "pos" || attr == "*")) {
+		if (other instanceof CModelNode && (attr == "pos" || attr == "*") || (other instanceof ValueFloat)) {
 			this.update("handle");
 		}
-	}
-
-
-	public valueUpdated<T>(value: Value<T>) {
-		this.update("handle");
-	}
-
-	protected attachChildren() {
-		super.attachChildren();
-		this.dependOn(this.prevNode(), "pos");
-		this.dependOn(this.nextNode(), "pos");
 	}
 
 	protected calcHandles(): [TXY, TXY] {
@@ -73,8 +63,8 @@ export const NODE_SMOOTH_LOADER: ModelLoader = {
 	loaderfn: (m: ModelContext, json: any) =>
 		new SmoothNode(json['name'],m,
 			m.loadPoint(json['pos']),
-			ValueFloat.load('prev',json['b'],DEFAULT_ABQ),
-			ValueFloat.load('next',json['c'],DEFAULT_ACQ),
-			ValueFloat.load('rotation',json['rot'],DEFAULT_ROT))
+			m.loadFloat('prev',json['b'],0.3),
+			m.loadFloat('next',json['c'],0.3),
+			m.loadFloat('rotation',json['rot'],0))
 };
 ModelContext.registerLoader(NODE_SMOOTH_LOADER);

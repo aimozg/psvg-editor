@@ -2,9 +2,11 @@ import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode, ModelCont
 import {TXY} from "../svg";
 
 export const POINT_REF_TYPE = '@';
-export class PointRef extends CModelPoint<ModelPoint> {
+export class PointRef extends CModelPoint {
 	constructor(name: string|undefined, ctx:ModelContext, public readonly ref: string) {
-		super(name,ctx, 'ref_pt',[],[]);
+		super(name,ctx, 'ref_pt',[
+			[() => this.obj(), 'pos']
+		]);
 	}
 
 	protected draw(mode:DisplayMode): SVGGElement|null {
@@ -20,10 +22,6 @@ export class PointRef extends CModelPoint<ModelPoint> {
 
 	public obj(): ModelPoint {
 		return this.ctx.findPoint(this.ref)!!;
-	}
-
-	protected attachChildren() {
-		this.dependOn(() => this.obj(), 'pos');
 	}
 
 	protected updated(other: ModelPoint, attr: EPointAttr) {

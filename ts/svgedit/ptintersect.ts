@@ -6,7 +6,7 @@ import {SVGItem} from "../dom";
 
 export const POINT_AT_INTERSECTION_TYPE = 'I';
 export const POINT_AT_INTERSECTION_CLASS = 'pt_intsec';
-export class PointAtIntersect extends CModelPoint<ModelPoint> {
+export class PointAtIntersect extends CModelPoint {
 	protected l1: SVGLineElement|null;
 	protected l2: SVGLineElement|null;
 	constructor(name: string|undefined,
@@ -15,11 +15,7 @@ export class PointAtIntersect extends CModelPoint<ModelPoint> {
 				public a2:ModelPoint,
 				public b1:ModelPoint,
 				public b2:ModelPoint) {
-		super(name,ctx,POINT_AT_INTERSECTION_CLASS,[],[])
-	}
-
-	protected attachChildren() {
-		this.attachAll([this.a1,this.a2,this.b1,this.b2],"pos");
+		super(name,ctx,POINT_AT_INTERSECTION_CLASS,[a1,a2,b1,b2])
 	}
 
 	protected updated(other: ModelPoint, attr: EPointAttr) {

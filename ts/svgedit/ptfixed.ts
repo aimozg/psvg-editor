@@ -1,15 +1,15 @@
-import {ModelElement, ModelLoader, CModelPoint, DisplayMode, Value, ModelContext} from "./api";
+import {ModelElement, ModelLoader, CModelPoint, DisplayMode, ModelContext} from "./api";
 import {TXY, SvgDragEvent, IXY} from "../svg";
 import {ValueFloat} from "./vfloat";
 import svg = require("../svg");
 
 export const POINT_FIXED_TYPE = 'F';
-export class FixedPoint extends CModelPoint<any> {
+export class FixedPoint extends CModelPoint {
 	constructor(name: string|undefined,
 				ctx: ModelContext,
 				public readonly x:ValueFloat,
 				public readonly y:ValueFloat) {
-		super(name, ctx,'fixed_pt', [],[x,y]);
+		super(name, ctx,'fixed_pt',[x,y]);
 	}
 
 	protected draw(mode:DisplayMode): SVGGElement|null {
@@ -47,13 +47,7 @@ export class FixedPoint extends CModelPoint<any> {
 		return [this.x.get(), this.y.get()];
 	}
 
-	protected attachChildren() {
-	}
-
 	protected updated(other: ModelElement, attr: string) {
-	}
-
-	public valueUpdated<T>(value: Value<T>) {
 		this.set(this.x.get(),this.y.get());
 	}
 
@@ -87,7 +81,7 @@ export const POINT_FIXED_LOADER:ModelLoader = {
 		} else {
 			[name,x,y] = [json['name'], json['pt'][0],json['pt'][1]];
 		}
-		return new FixedPoint(name,ctx,ValueFloat.load('x',x),ValueFloat.load('y',y))
+		return new FixedPoint(name,ctx,ctx.loadFloat('x',x),ctx.loadFloat('y',y))
 	}
 };
 ModelContext.registerLoader(POINT_FIXED_LOADER);

@@ -1,10 +1,10 @@
 import svg = require("../svg");
 import dom = require("../dom");
 import {TXY, DNode, IXY} from "../svg";
-import {CModelNode, ModelPoint, DisplayMode, ENodeAttr, Value, ItemDeclaration, Part, ModelContext} from "./api";
+import {CModelNode, ModelPoint, DisplayMode, ENodeAttr, ItemDeclaration, ModelContext} from "./api";
 import {SVGItem} from "../dom";
 
-export abstract class CommonNode<CHILD extends Part> extends CModelNode<any> {
+export abstract class CommonNode extends CModelNode {
 	protected l1: SVGLineElement|null;
 	protected l2: SVGLineElement|null;
 	protected u0: SVGUseElement|null;
@@ -14,14 +14,8 @@ export abstract class CommonNode<CHILD extends Part> extends CModelNode<any> {
 				ctx: ModelContext,
 				public pos: ModelPoint,
 				private gclass: string,
-				items: ItemDeclaration<CHILD>[],
-				values: Value<any>[]) {
-		super(name, ctx, items,values);
-	}
-
-	protected attachChildren() {
-		super.attachChildren();
-		this.attach(this.pos, "pos");
+				items: ItemDeclaration[]) {
+		super(name, ctx, items.concat([pos]));
 	}
 
 	protected draw(mode:DisplayMode): SVGElement|null {

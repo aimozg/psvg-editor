@@ -4,23 +4,18 @@ import {CommonNode} from "./ncommon";
 import svg = require("../svg");
 
 export const NODE_CUSP_TYPE = 'cusp';
-export class CuspNode extends CommonNode<ModelPoint> {
+export class CuspNode extends CommonNode {
 	constructor(name:string|undefined,
 				ctx: ModelContext,
 				pos: ModelPoint,
 				public h1: ModelPoint|null,
 				public h2: ModelPoint|null) {
-		super(name,ctx,pos, 'cusp_node', [],[]);
+		super(name,ctx,pos, 'cusp_node', [h1,h2]);
 	}
 
 	protected updated(other: ModelPoint, attr: EPointAttr) {
 		if (other == this.pos) this.update("pos");
 		else  this.update("handle");
-	}
-
-	protected attachChildren() {
-		super.attachChildren();
-		this.attachAll([this.h1, this.h2], "pos");
 	}
 
 	protected draw(mode:DisplayMode): SVGElement|null {

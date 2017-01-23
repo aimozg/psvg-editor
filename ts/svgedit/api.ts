@@ -2,6 +2,7 @@ import {TXY, IXY, DNode} from "../svg";
 import {SVGItem, updateElement} from "../dom";
 import {ModelPath} from "./path";
 import {ModelParam} from "./param";
+import {ValueFloat} from "./vfloat";
 import svg = require("../svg");
 import dom = require("../dom");
 import Dictionary = _.Dictionary;
@@ -26,7 +27,7 @@ export class ModelContext {
 	public findPoint(name:string):ModelPoint|null {
 		return _.find(this.parts, x => (x instanceof CModelPoint && x.name == name)) as ModelPoint;
 	}
-	public updated<A2 extends string>(part:CPart<A2>,attr:A2) {
+	public updated<A2 extends string>(part:CPart<any,A2>,attr:A2) {
 		this.onUpdate(part,attr);
 	}
 	private loadPart(cat: EPartCategory, json: any, ...args:any[]): Part {
@@ -63,6 +64,9 @@ export class ModelContext {
 	public loadParam(json: any): ModelParam {
 		return this.loadPart('Param', json) as ModelParam;
 	}
+	public loadFloat(name:string,json:any,def?:number):ValueFloat {
+		return ValueFloat.load(name,this,json,def);
+	}
 	public static registerLoader(loader: ModelLoader) {
 		let lib: LoaderLib = ModelContext.loaders[loader.cat] || {
 				bytypefield: {},
@@ -93,19 +97,40 @@ export class ModelContext {
 }
 
 export type EPartCategory = "Point"|"Node"|"Path"|"Model"|"Param"|"Value";
-export type Part = CPart<any>;
-export abstract class CPart<ATTR extends string> {
+export type Part = CPart<any,string>;
+export type PartDependency<A extends string> = [A,CPart<any,A>];
+export type ItemDeclaration = null|Part|[(Part|(()=>Part)),string|undefined];
+export abstract class CPart<PARENT extends Part,ATTR extends string> {
 	private static GCounter = 1;
 	public readonly gid = '' + CPart.GCounter++;
 	public id:number;
-	public owner: Part;
-	public readonly children: Part[];
+	public owner: PARENT;
+	public readonly children: Part[] = [];
+	protected dependants: PartDependency<string>[] = [];
 
 	constructor(public name: string|undefined,
 				public readonly ctx:ModelContext,
-				public readonly values: Value<any>[]) {
-		for (let v of values) v.owner = this;
+				items: ItemDeclaration[]) {
 		this.id = ctx.id++;
+		this.ctx.parts[this.id] = this;
+		for (let icd of items) {
+			if (icd === null) continue;
+			let item:Part|(()=>Part);
+			let dependency:string|undefined;
+			if (icd instanceof CPart) {
+				item = icd;
+				dependency = '*';
+			} else {
+				[item,dependency] = icd;
+			}
+			if (typeof item != 'function') {
+				if (item.owner == null) {
+					this.children.push(item);
+					item.owner = this;
+				}
+			}
+			if (dependency) this.dependOn(item,dependency);
+		}
 	}
 
 	protected uhref():string {
@@ -116,8 +141,13 @@ export abstract class CPart<ATTR extends string> {
 		return this.constructor['name']||'ModelPart';
 	}
 
-	protected attached(parent: Part) {
-		this.owner = parent;
+	protected dependOn<A2 extends string>(other: CPart<any,A2> | (() => CPart<any,A2>),
+										  attr: A2) {
+		if (typeof other === 'function') {
+			this.ctx.queuePostload(() => this.dependOn(other(),attr))
+		} else if (other != this) {
+			other.dependants.push([attr, this]);
+		} else throw "Self-dependency in "+this.treeNodeText()
 	}
 
 	public treeNodeId(): string {
@@ -136,25 +166,30 @@ export abstract class CPart<ATTR extends string> {
 	}
 
 	public update(attr: ATTR|"*"='*') {
+		this.fireUpdated(attr);
+	}
 
+	protected fireUpdated(attr: ATTR|"*") {
+		for (let dep of this.dependants) if (attr == '*' || dep[0] == '*' || attr == dep[0]) dep[1].updated(this, attr);
+		this.ctx.updated(this, attr)
 	}
 
 	public treeNodeFull(): JSTreeNodeInit {
 		let self = this.treeNodeSelf();
-		self.children = this.children.map(c => c.treeNodeFull());
+		self.children = this.children.filter(c=>!(c instanceof Value)).map(c => c.treeNodeFull());
 		return self;
 	}
 
-	public valueUpdated<T>(value:Value<T>){}
+	protected updated<A2 extends string>(other: CPart<any,A2>, attr: A2){}
 
 	public abstract save():any;
 }
 export type EValueAttr = "*";
-export abstract class Value<T> {
-	public owner:Part;
-	constructor(public readonly name:string){
+export abstract class Value<T> extends CPart<Part,EValueAttr> {
+	constructor(name:string,
+				ctx:ModelContext){
+		super(name,ctx,[]);
 	}
-	public get index():number { return this.owner.values.indexOf(this); }
 	public abstract get():T;
 	public abstract editorElement():HTMLElement;
 	public abstract save():any;
@@ -176,52 +211,19 @@ export const VALUE_FIXNUM_LOADER:ModelLoader = {
 };
 ModelCtx.registerLoader(VALUE_FIXNUM_LOADER);*/
 
-export type ModelElement = CModelElement<any,any,any>;
-export type ItemDeclaration<CHILD extends CPart<any>> = [(CHILD|(()=>CHILD)),string|undefined];
+export type ModelElement = CModelElement<any,string>;
 export abstract class CModelElement<
 	PARENT extends Part,
-	CHILD extends ModelElement,
-	ATTR extends string> extends CPart<ATTR> {
-	public owner: PARENT;
+	ATTR extends string> extends CPart<PARENT,ATTR> {
 	public graphic: SVGElement|null;
-	protected dependants: [string, ModelElement][] = [];
-	public readonly children: CHILD[] = [];
 
 	constructor(name: string|any,
 				ctx: ModelContext,
-				items: ItemDeclaration<CHILD>[],
-				values: Value<any>[]) {
-		super(name, ctx, values);
-		for (let icd of items) {
-			const [item,dependency] = icd;
-			if (typeof item != 'function') this.attach(item);
-			if (dependency) this.dependOn(item,dependency);
-		}
+				items: ItemDeclaration[]) {
+		super(name, ctx, items);
 	}
 
-	public attached(parent: PARENT) {
-		super.attached(parent);
-		this.ctx.parts[this.id] = this;
-		this.attachChildren();
-	}
 
-	protected attach(child: CHILD, dependency?: string) {
-		this.children.push(child);
-		child.attached(this);
-		if (dependency) this.dependOn(child,dependency);
-	}
-
-	protected attachAll(...items:[CHILD,string][]);
-	protected attachAll(items:[CHILD|null],dependency?:string);
-	protected attachAll() {
-		if (typeof arguments[1] == 'string') {
-			let items = arguments[0] as (CHILD|null)[];
-			for (let obj of items) if (obj) this.attach(obj, arguments[1]);
-		} else {
-			let items = arguments as List<[CHILD,string]>;
-			_.each(items,obj=>{if (obj[0]) this.attach(obj[0], obj[1])});
-		}
-	}
 
 	public display(addclass?:string): SVGElement|null {
 		if (!this.graphic) {
@@ -235,35 +237,21 @@ export abstract class CModelElement<
 		return this.graphic;
 	}
 
-	protected dependOn<A2 extends string>(other: CModelElement<any,any,A2> | (() => CModelElement<any,any,A2>),
-										  attr: A2) {
-		if (typeof other === 'function') this.ctx.queuePostload(() => other().dependants.push([attr, this]));
-		else other.dependants.push([attr, this]);
-	}
 
 	public update(attr: ATTR|"*"='*') {
 		super.update(attr);
 		this.redraw(attr,this.ctx.mode);
-		this.fireUpdated(attr);
-	}
-
-	protected fireUpdated(attr: ATTR|"*") {
-		for (let dep of this.dependants) if (attr == '*' || dep[0] == '*' || attr == dep[0]) dep[1].updated(this, attr);
-		this.ctx.updated(this, attr)
 	}
 
 	protected abstract draw(mode:DisplayMode): SVGElement|null;
 
 	protected abstract redraw(attr: ATTR|"*",mode:DisplayMode);
 
-	protected abstract attachChildren();
-
-	protected abstract updated<A2 extends string>(other: CModelElement<any,any,A2>, attr: A2);
 }
 
 export type EPointAttr = '*'|'pos';
-export type ModelPoint = CModelPoint<any>;
-export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElement<any,CHILD,EPointAttr> {
+export type ModelPoint = CModelPoint;
+export abstract class CModelPoint extends CModelElement<any,EPointAttr> {
 	public xy: TXY = [0, 0];
 	public g: SVGGElement|null;
 	private use: SVGUseElement|null;
@@ -271,9 +259,8 @@ export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElem
 	constructor(name: string|undefined,
 				ctx: ModelContext,
 				public readonly cssclass: string,
-				items: ItemDeclaration<CHILD>[],
-				values: Value<any>[]) {
-		super(name, ctx, items, values);
+				items: ItemDeclaration[]) {
+		super(name, ctx, items);
 	}
 
 	calculate(): TXY {
@@ -309,10 +296,35 @@ export abstract class CModelPoint<CHILD extends ModelElement> extends CModelElem
 }
 
 export type ENodeAttr = '*'|'pos'|'handle';
-export type ModelNode = CModelNode<any>;
-export abstract class CModelNode<CHILD extends ModelElement> extends CModelElement<ModelPath,CHILD,ENodeAttr> {
+export type ModelNode = CModelNode;
+export abstract class CModelNode extends CModelElement<ModelPath,ENodeAttr> {
+	constructor(name: string|any, ctx: ModelContext, items: ItemDeclaration[]) {
+		super(name, ctx, items);
+	}
 
-	public index: number;
+	private _first: boolean;
+	private _last: boolean;
+	private _index: number;
+	private _loaded = false;
+	private _load() {
+		this._index = this.owner.nodes.indexOf(this);
+		this._first = !this.owner.closed && this._index == 0;
+		this._last = !this.owner.closed && this._index == this.owner.nodes.length - 1;
+		this._loaded = true;
+	}
+
+	get index(): number {
+		if (!this._loaded) this._load();
+		return this._index;
+	}
+	get last(): boolean {
+		if (!this._loaded) this._load();
+		return this._last;
+	}
+	get first(): boolean {
+		if (!this._loaded) this._load();
+		return this._first;
+	}
 
 	protected prevNode(): ModelNode {
 		let n = this.owner.nodes.length;
@@ -324,16 +336,6 @@ export abstract class CModelNode<CHILD extends ModelElement> extends CModelEleme
 		return this.owner.nodes[(this.index + 1) % n];
 	}
 
-	protected first: boolean;
-	protected last: boolean;
-
-	protected attachChildren() {
-		this.index = this.owner.nodes.indexOf(this);
-		let parent = this.owner;
-		this.first = !parent.closed && +this.index == 0;
-		this.last = !parent.closed && +this.index == parent.nodes.length - 1;
-	}
-
 	public abstract center(): IXY;
 
 	public abstract save(): any;
@@ -343,7 +345,7 @@ export abstract class CModelNode<CHILD extends ModelElement> extends CModelEleme
 
 
 export type EModelAttr = "*";
-export class Model extends CModelElement<Model,any,EModelAttr> {
+export class Model extends CModelElement<any,EModelAttr> {
 	public readonly g: SVGGElement = SVGItem('g', {'class': 'model'});
 
 	constructor(name:string|undefined,ctx:ModelContext,
@@ -351,7 +353,7 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 				private readonly params:ModelParam[]
 	) {
 		super(name,ctx,
-			paths.map(p=>[p,'*'] as [ModelPath,string]), []);
+			paths.map(p=>[p,'*'] as [ModelPath,string]));
 	}
 
 	public save(): any {
@@ -375,9 +377,6 @@ export class Model extends CModelElement<Model,any,EModelAttr> {
 		return m;
 	}
 
-
-	protected attachChildren() {
-	}
 
 	public display(addclass?:string): SVGElement {
 		return super.display(addclass)!!

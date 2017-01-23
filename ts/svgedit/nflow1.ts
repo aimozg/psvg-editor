@@ -1,4 +1,13 @@
-import {ModelPoint, ModelElement, ModelLoader, CModelPoint, CModelNode, DisplayMode, Value, ModelContext} from "./api";
+import {
+	ModelPoint,
+	ModelElement,
+	ModelLoader,
+	CModelPoint,
+	CModelNode,
+	DisplayMode,
+	ModelContext,
+	ItemDeclaration
+} from "./api";
 import {TXY} from "../svg";
 import {norm2fixed} from "./ptnorm";
 import {CommonNode} from "./ncommon";
@@ -6,33 +15,28 @@ import {ValueFloat} from "./vfloat";
 import svg = require("../svg");
 
 export const NODE_FLOW1_TYPE = "flow1";
-export class Flow1Node extends CommonNode<ModelPoint> {
+export class Flow1Node extends CommonNode {
 	constructor(name: string|undefined,
 				ctx: ModelContext,
 				pos: ModelPoint,
 				private h1ab: [ValueFloat, ValueFloat]|undefined,
 				private h2ab: [ValueFloat, ValueFloat]|undefined) {
-		super(name, ctx, pos, 'flow1_node',[],
-			(h1ab ? [h1ab[0], h1ab[1]] : []).concat(h2ab ? [h2ab[0], h2ab[1]]:[])
+		super(name, ctx, pos, 'flow1_node',
+			(h1ab
+				? [h1ab[0], h1ab[1], [() => this.prevNode(), 'pos'] as ItemDeclaration]
+				: []).concat(
+				h2ab
+					? [h2ab[0], h2ab[1], [() => this.nextNode(), 'pos'] as ItemDeclaration]
+					: [])
 		);
 	}
 
 
-	public valueUpdated<T>(value: Value<T>) {
-		this.update("handle");
-	}
-
 	protected updated(other: ModelElement, attr: string) {
 		if (other instanceof CModelPoint) this.update("*");
-		if (other instanceof CModelNode && (attr == "pos" || attr == "*")) {
+		if (other instanceof CModelNode && (attr == "pos" || attr == "*") || (other instanceof ValueFloat)) {
 			this.update("handle");
 		}
-	}
-
-	protected attachChildren(): any {
-		super.attachChildren();
-		if (this.h1ab) this.dependOn(this.prevNode(), "pos");
-		if (this.h2ab) this.dependOn(this.nextNode(), "pos");
 	}
 
 	protected draw(mode: DisplayMode): SVGElement|null {
@@ -64,13 +68,13 @@ export const NODE_FLOW1_LOADER: ModelLoader = {
 	cat: 'Node',
 	name: 'Flow1Node',
 	typename: NODE_FLOW1_TYPE,
-	loaderfn: (m: ModelContext, json: any) => new Flow1Node(json['name'],m,
-		m.loadPoint(json['pos']),
+	loaderfn: (ctx: ModelContext, json: any) => new Flow1Node(json['name'], ctx,
+		ctx.loadPoint(json['pos']),
 		json['h1ab'] ? [
-				ValueFloat.load('prev_tangent', json['h1ab'][0]),
-				ValueFloat.load('prev_normal', json['h1ab'][1])] : undefined,
+				ctx.loadFloat('prev_tangent', json['h1ab'][0]),
+				ctx.loadFloat('prev_normal', json['h1ab'][1])] : undefined,
 		json['h2ab'] ? [
-				ValueFloat.load('next_tangent', json['h2ab'][0]),
-				ValueFloat.load('next_normal', json['h2ab'][1])] : undefined)
+				ctx.loadFloat('next_tangent', json['h2ab'][0]),
+				ctx.loadFloat('next_normal', json['h2ab'][1])] : undefined)
 };
 ModelContext.registerLoader(NODE_FLOW1_LOADER);

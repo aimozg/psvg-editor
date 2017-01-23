@@ -2,7 +2,7 @@ import dom = require('./dom');
 import svg = require("./svg");
 require("jstree-css");
 
-import {Model, Part, CModelElement, DisplayMode, ModelContext} from "./svgedit/api";
+import {Model, Part, CModelElement, DisplayMode, ModelContext, Value} from "./svgedit/api";
 import {ALL_LOADERS} from "./svgedit/_all";
 import {FixedPoint} from "./svgedit/ptfixed";
 import {CreateElementAttrs, updateElement} from "./dom";
@@ -214,7 +214,7 @@ export class Editor {
 		}
 		this.objviewDiv.innerHTML = '';
 		updateElement(this.objviewDiv,{
-			items:(part?part.values:[]).map(v=>v.editorElement())
+			items:(part?part.children:[]).map(v=>(v instanceof Value)?v.editorElement():undefined)
 		});
 	}
 

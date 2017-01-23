@@ -6,7 +6,7 @@ import {SVGItem} from "../dom";
 
 export const POINT_AT_PROJECTION_TYPE = 'PROJ';
 export const POINT_AT_PROJECTION_CLASS = 'pt_proj';
-export class PointAtProjection extends CModelPoint<ModelPoint> {
+export class PointAtProjection extends CModelPoint {
 	protected lab: SVGLineElement|null;
 	protected lpq: SVGLineElement|null;
 	constructor(name: string|undefined,
@@ -14,14 +14,9 @@ export class PointAtProjection extends CModelPoint<ModelPoint> {
 				public a:ModelPoint,
 				public b:ModelPoint,
 				public p:ModelPoint) {
-		super(name,ctx,POINT_AT_PROJECTION_CLASS,[
-			[a,"pos"],[b,"pos"],[p,"pos"]
-		],[])
+		super(name,ctx,POINT_AT_PROJECTION_CLASS,[a,b,p])
 	}
 	
-	protected attachChildren() {
-	}
-
 	protected updated(other: ModelPoint, attr: EPointAttr) {
 		this.update("pos");
 	}

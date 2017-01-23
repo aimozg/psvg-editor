@@ -1,9 +1,9 @@
 import svg = require("../svg");
-import {ModelLoader, Value, CPart, ModelContext} from "./api";
+import {ModelLoader, CPart, ModelContext} from "./api";
 import {ValueFloat} from "./vfloat";
 
 export type EParamAttr="*"|"meta"|"value";
-export class ModelParam extends CPart<EParamAttr> {
+export class ModelParam extends CPart<any,EParamAttr> {
 	constructor(name: string,
 				ctx: ModelContext,
 				public readonly defVal: ValueFloat,
@@ -12,9 +12,10 @@ export class ModelParam extends CPart<EParamAttr> {
 		super(name, ctx,[defVal, minVal, maxVal]);
 	}
 
-	public valueUpdated<T>(value: Value<T>) {
+	protected updated<A2 extends string>(other: CPart<any, A2>, attr: A2) {
 		this.update("meta");
 	}
+
 	public save(): any {
 		return {
 			name: this.name,
@@ -30,8 +31,8 @@ export const PARAM_LOADER: ModelLoader = {
 	objtypes: ['object'],
 	loaderfn: (m: ModelContext, json: any, strict: boolean) =>
 		new ModelParam(json['name'],m,
-			ValueFloat.load('default',json['defVal']||0.5),
-			ValueFloat.load('min',json['minVal']||0),
-			ValueFloat.load('max',json['maxVal']||1))
+			m.loadFloat('default',json['defVal'],0.5),
+			m.loadFloat('min',json['minVal'],0),
+			m.loadFloat('max',json['maxVal'],1))
 };
 ModelContext.registerLoader(PARAM_LOADER);
