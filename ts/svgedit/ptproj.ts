@@ -53,7 +53,7 @@ export class PointAtProjection extends ModelPoint {
 			this.g.insertBefore(this.lab, this.g.firstChild);
 			this.lpq = SVGItem('line', {
 				x1: p[0], x2: q[0],
-				y1: p[1], y2: q[1], 'class': 'handle2'
+				y1: p[1], y2: q[1], 'class': 'handle'
 			});
 			this.g.insertBefore(this.lpq, this.g.firstChild);
 		}

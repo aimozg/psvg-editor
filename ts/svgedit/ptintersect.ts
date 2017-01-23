@@ -52,12 +52,12 @@ export class PointAtIntersect extends ModelPoint {
 			this.l1 = this.l2 = null;
 			this.l1 = SVGItem('line', {
 				x1: a1[0], x2: a2[0],
-				y1: a1[1], y2: a2[1], 'class': 'handle1'
+				y1: a1[1], y2: a2[1], 'class': 'handle'
 			});
 			this.g.insertBefore(this.l1, this.g.firstChild);
 			this.l2 = SVGItem('line', {
 				x1: b1[0], x2: b2[0],
-				y1: b1[1], y2: b2[1], 'class': 'handle2'
+				y1: b1[1], y2: b2[1], 'class': 'handle'
 			});
 			this.g.insertBefore(this.l2, this.g.firstChild);
 		}

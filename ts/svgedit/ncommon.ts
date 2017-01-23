@@ -58,14 +58,14 @@ export abstract class CommonNode extends ModelNode {
 			if (!this.first) {
 				this.l1 = dom.SVGItem('line', {
 					x1: pxy[0], x2: h12xy[0][0],
-					y1: pxy[1], y2: h12xy[0][1], 'class': 'handle1'
+					y1: pxy[1], y2: h12xy[0][1], 'class': 'handle'
 				});
 				this.g.insertBefore(this.l1, this.g.firstChild);
 			}
 			if (!this.last) {
 				this.l2 = dom.SVGItem('line', {
 					x1: pxy[0], x2: h12xy[1][0],
-					y1: pxy[1], y2: h12xy[1][1], 'class': 'handle2'
+					y1: pxy[1], y2: h12xy[1][1], 'class': 'handle'
 				});
 				this.g.insertBefore(this.l2, this.g.firstChild);
 			}

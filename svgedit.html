@@ -79,35 +79,29 @@
 			stroke-width:2;
 			stroke:transparent;
 		}
-		.modelpane-edit line.handle1,.modelpane-edit line.handle2,.modelpane-edit  line.lineref {
-			stroke-width:2;
+		line.handle,
+		line.lineref{
+			stroke-width: 2;
 			stroke-opacity: 1;
 			vector-effect:non-scaling-stroke;
 		}
-		.modelpane-edit .point.pt_handle, .node > line.handle1 {
-			stroke:#00a060;
-			fill:#00a060;
-		}
-		.modelpane-edit .node > line.handle2 {
-			stroke:#0060a0;
-		}
-		.modelpane-edit .node line.lineref {
-			stroke:#008080;
+		line.lineref {
 			stroke-dasharray: 2 2;
 		}
-		.modelpane-edit .node > use {
-			stroke: #000000;
+		.handles-visible .pt_handle,
+		.handles-visible line.handle,
+		.refs-visible line.lineref,
+		.nodes-visible .node > use
+		{
+			stroke:#000;
 		}
-		.node.-selected > line.handle1,
-		.node.-selected > line.handle2,
-		.path.-selected > path,
-		.node.-selected > use,
-		.point.-selected,
-		.point.-selected > use{
+		.-selected line.handle,
+		.-selected .path > path,
+		.-selected use,
+		.-selected{
 			stroke:#800000;
 		}
-		.node.-selected.-primary > line.handle1,
-		.node.-selected.-primary > line.handle2,
+		.node.-selected.-primary > line.handle,
 		.node.-selected.-primary > use,
 		.path.-selected.-primary > path,
 		.point.-selected.-primary,
@@ -122,7 +116,7 @@
 			stroke:#000000;
 		}
 		use[href="#svg_FixedPoint"]:hover {
-			stroke:#ffff00;
+			fill:#ffff00;
 		}
 		#svg_CuspNode, #svg_SmoothNode, #svg_Flow1Node {
 			fill:transparent;
@@ -142,7 +136,7 @@
 			margin: 0 4px;
 		}
 		.Value > input.-error {
-			color: #800000;
+			color: #ff0000;
 		}
 	</style>
 </head>
