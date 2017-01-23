@@ -7,6 +7,7 @@ import {ALL_LOADERS} from "./svgedit/_all";
 import {FixedPoint} from "./svgedit/ptfixed";
 import {CreateElementAttrs, updateElement} from "./dom";
 import {ModelContext} from "./svgedit/_ctx";
+import {ValueFloat} from "./svgedit/vfloat";
 
 //noinspection JSUnusedGlobalSymbols
 export const importz = {dom, svg, ALL_LOADERS};
@@ -175,13 +176,17 @@ export class Editor {
 		this.editPane.ctx.onUpdate = (obj: Part) => {
 			//console.log(obj);
 			let id = obj.id;
-			for (let m of this.previews) {
-				let p = m.ctx.parts[id];
-				//console.log(obj,id,p);
-				if (p instanceof FixedPoint && obj instanceof FixedPoint) {
-					p.set(obj.x.get(),obj.y.get());
+			if (obj instanceof ValueFloat || obj instanceof FixedPoint) {
+				for (let m of this.previews) {
+					let p = m.ctx.parts[id];
+					//console.log(obj,id,p);
+					if (p instanceof FixedPoint && obj instanceof FixedPoint) {
+						p.set(obj.x.get(), obj.y.get());
+					} else if (p instanceof ValueFloat && obj instanceof ValueFloat) {
+						p.set(obj.get())
+					}
+					// if (p) p.update();
 				}
-				// if (p) p.update();
 			}
 			this.tree.rename_node(obj.treeNodeId(), obj.treeNodeText());
 		};
