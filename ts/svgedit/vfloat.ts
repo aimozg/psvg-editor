@@ -1,6 +1,8 @@
 import {createElement} from "../dom";
 import {Value} from "./api";
 import {ModelContext} from "./_ctx";
+import {TinyColorEx} from "../tinycolor-ex";
+TinyColorEx
 export class ValueFloat extends Value<number> {
 	private input: HTMLInputElement|null = null;
 	constructor(name:string,

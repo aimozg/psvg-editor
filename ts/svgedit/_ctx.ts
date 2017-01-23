@@ -2,17 +2,7 @@ import svg = require("../svg");
 import dom = require("../dom");
 import Dictionary = _.Dictionary;
 import List = _.List;
-import {
-	Part,
-	DisplayMode,
-	ModelPoint,
-	CModelPoint,
-	CPart,
-	EPartCategory,
-	LoaderLib,
-	ModelNode,
-	ModelLoader
-} from "./api";
+import {Part, DisplayMode, ModelPoint, EPartCategory, LoaderLib, ModelNode, ModelLoader} from "./api";
 import {ModelPath} from "./path";
 import {ModelParam} from "./param";
 import {ValueFloat} from "./vfloat";
@@ -29,9 +19,9 @@ export class ModelContext {
 	}
 
 	public findPoint(name:string):ModelPoint|null {
-		return _.find(this.parts, x => (x instanceof CModelPoint && x.name == name)) as ModelPoint;
+		return _.find(this.parts, x => (x instanceof ModelPoint && x.name == name)) as ModelPoint;
 	}
-	public updated<A2 extends string>(part:CPart<any,A2>,attr:A2) {
+	public updated(part:Part,attr:string) {
 		this.onUpdate(part,attr);
 	}
 	private loadPart(cat: EPartCategory, json: any, ...args:any[]): Part {

@@ -1,4 +1,4 @@
-import {ModelPoint, ModelElement, ModelLoader, CModelPoint, CModelNode, DisplayMode, ItemDeclaration} from "./api";
+import {ModelPoint, ModelElement, ModelLoader, ModelNode, DisplayMode, ItemDeclaration} from "./api";
 import {TXY} from "../svg";
 import {norm2fixed} from "./ptnorm";
 import {CommonNode} from "./ncommon";
@@ -25,8 +25,8 @@ export class Flow1Node extends CommonNode {
 
 
 	protected updated(other: ModelElement, attr: string) {
-		if (other instanceof CModelPoint) this.update("*");
-		if (other instanceof CModelNode && (attr == "pos" || attr == "*") || (other instanceof ValueFloat)) {
+		if (other instanceof ModelPoint) this.update("*");
+		if (other instanceof ModelNode && (attr == "pos" || attr == "*") || (other instanceof ValueFloat)) {
 			this.update("handle");
 		}
 	}

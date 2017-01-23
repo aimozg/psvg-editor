@@ -1,14 +1,5 @@
 import {TXY} from "../svg";
-import {
-	ModelPoint,
-	ModelNode,
-	EPointAttr,
-	ENodeAttr,
-	ModelLoader,
-	CModelPoint,
-	CModelNode,
-	ItemDeclaration
-} from "./api";
+import {ModelPoint, EPointAttr, ENodeAttr, ModelLoader, ModelNode, ItemDeclaration} from "./api";
 import {CommonNode} from "./ncommon";
 import {ValueFloat} from "./vfloat";
 import {ModelContext} from "./_ctx";
@@ -30,8 +21,8 @@ export class SmoothNode extends CommonNode {
 	}
 
 	protected updated(other: ModelPoint|ModelNode, attr: EPointAttr|ENodeAttr) {
-		if (other instanceof CModelPoint) this.update("*");
-		if (other instanceof CModelNode && (attr == "pos" || attr == "*") || (other instanceof ValueFloat)) {
+		if (other instanceof ModelPoint) this.update("*");
+		if (other instanceof ModelNode && (attr == "pos" || attr == "*") || (other instanceof ValueFloat)) {
 			this.update("handle");
 		}
 	}

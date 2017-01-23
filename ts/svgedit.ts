@@ -2,7 +2,7 @@ import dom = require('./dom');
 import svg = require("./svg");
 require("jstree-css");
 
-import {Model, Part, CModelElement, DisplayMode, Value} from "./svgedit/api";
+import {Model, Part, ModelElement, DisplayMode, Value} from "./svgedit/api";
 import {ALL_LOADERS} from "./svgedit/_all";
 import {FixedPoint} from "./svgedit/ptfixed";
 import {CreateElementAttrs, updateElement} from "./dom";
@@ -205,15 +205,15 @@ export class Editor {
 	select(part: Part|null) {
 		if (this.selection == part) return;
 		let model = this.editPane.model;
-		for (let s = this.selection; s && s instanceof CModelElement && s != model; s = s.owner) {
+		for (let s = this.selection; s && s instanceof ModelElement && s != model; s = s.owner) {
 			if (s.graphic) s.graphic.classList.remove('-selected', '-primary');
 		}
 		this.tree.deselect_all(true);
 		this.selection = part;
-		if (part && part instanceof CModelElement && part != model) {
+		if (part && part instanceof ModelElement && part != model) {
 			this.tree.select_node(part.treeNodeId(), true);
 			if (part.graphic) part.graphic.classList.add('-selected', '-primary');
-			for (let s = part; s && s instanceof CModelElement && s != model; s = s.owner) {
+			for (let s:Part = part; s && s instanceof ModelElement && s != model; s = s.owner) {
 				const g = s.graphic;
 				if (g) {
 					g.classList.add('-selected');

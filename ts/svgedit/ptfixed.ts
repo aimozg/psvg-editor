@@ -1,11 +1,11 @@
-import {ModelElement, ModelLoader, CModelPoint, DisplayMode} from "./api";
+import {ModelElement, ModelLoader, ModelPoint, DisplayMode} from "./api";
 import {ModelContext} from "./_ctx";
 import {TXY, SvgDragEvent, IXY} from "../svg";
 import {ValueFloat} from "./vfloat";
 import svg = require("../svg");
 
 export const POINT_FIXED_TYPE = 'F';
-export class FixedPoint extends CModelPoint {
+export class FixedPoint extends ModelPoint {
 	constructor(name: string|undefined,
 				ctx: ModelContext,
 				public readonly x:ValueFloat,

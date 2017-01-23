@@ -1,9 +1,9 @@
-import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode} from "./api";
+import {ModelPoint, EPointAttr, ModelLoader, DisplayMode} from "./api";
 import {ModelContext} from "./_ctx";
 import {TXY} from "../svg";
 
 export const POINT_REF_TYPE = '@';
-export class PointRef extends CModelPoint {
+export class PointRef extends ModelPoint {
 	constructor(name: string|undefined, ctx:ModelContext, public readonly ref: string) {
 		super(name,ctx, 'ref_pt',[
 			[() => this.obj(), 'pos']

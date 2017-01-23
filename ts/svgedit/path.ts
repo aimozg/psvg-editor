@@ -1,12 +1,11 @@
-import {Model, ModelLoader, CModelElement, ModelNode, DisplayMode} from "./api";
+import {ModelLoader, ModelElement, ModelNode, DisplayMode} from "./api";
 import {ModelContext} from "./_ctx";
 import {SVGItem, updateElement} from "../dom";
 import {NodePath} from "../svg";
 import svg = require("../svg");
 
 export type EPathAttr = "*"|"d";
-export type ModelPath = CModelPath;
-export class CModelPath extends CModelElement<Model,EPathAttr> {
+export class ModelPath extends ModelElement {
 	private g: SVGGElement|null;
 	private p: SVGPathElement;
 
@@ -72,7 +71,7 @@ export const PATH_LOADER: ModelLoader = {
 	cat: 'Path',
 	name: 'Path',
 	objtypes: ['object'],
-	loaderfn: (m: ModelContext, json: any, strict: boolean) => new CModelPath(
+	loaderfn: (m: ModelContext, json: any, strict: boolean) => new ModelPath(
 		json['name'] as string,m,
 		json['nodes'].map(j => m.loadNode(j)),
 		json['style']||{},

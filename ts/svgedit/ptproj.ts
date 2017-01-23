@@ -1,13 +1,13 @@
 import svg = require("../svg");
 import dom = require("../dom");
-import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode} from "./api";
+import {ModelPoint, EPointAttr, ModelLoader, DisplayMode} from "./api";
 import {ModelContext} from "./_ctx";
 import {TXY} from "../svg";
 import {SVGItem} from "../dom";
 
 export const POINT_AT_PROJECTION_TYPE = 'PROJ';
 export const POINT_AT_PROJECTION_CLASS = 'pt_proj';
-export class PointAtProjection extends CModelPoint {
+export class PointAtProjection extends ModelPoint {
 	protected lab: SVGLineElement|null;
 	protected lpq: SVGLineElement|null;
 	constructor(name: string|undefined,

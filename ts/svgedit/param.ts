@@ -1,10 +1,10 @@
 import svg = require("../svg");
-import {ModelLoader, CPart} from "./api";
+import {ModelLoader, Part} from "./api";
 import {ModelContext} from "./_ctx";
 import {ValueFloat} from "./vfloat";
 
 export type EParamAttr="*"|"meta"|"value";
-export class ModelParam extends CPart<any,EParamAttr> {
+export class ModelParam extends Part {
 	constructor(name: string,
 				ctx: ModelContext,
 				public readonly defVal: ValueFloat,
@@ -13,7 +13,7 @@ export class ModelParam extends CPart<any,EParamAttr> {
 		super(name, ctx,[defVal, minVal, maxVal]);
 	}
 
-	protected updated<A2 extends string>(other: CPart<any, A2>, attr: A2) {
+	protected updated(other: Part, attr: string) {
 		this.update("meta");
 	}
 

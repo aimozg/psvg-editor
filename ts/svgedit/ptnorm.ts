@@ -1,4 +1,4 @@
-import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode, EValueAttr} from "./api";
+import {ModelPoint, EPointAttr, ModelLoader, DisplayMode, EValueAttr} from "./api";
 import {ModelContext} from "./_ctx";
 import {TXY, solve2, vsub, vrot90, IXY, vlinj} from "../svg";
 import {ValueFloat} from "./vfloat";
@@ -6,7 +6,7 @@ import svg = require("../svg");
 
 export const POINT_FROM_NORMAL_TYPE = 'N';
 export const POINT_FROM_NORMAL_CLASS = 'pt_norm';
-export class PointFromNormal extends CModelPoint {
+export class PointFromNormal extends ModelPoint {
 	constructor(name: string|undefined,
 				ctx: ModelContext,
 				public readonly pt0: ModelPoint,

@@ -1,13 +1,13 @@
 import svg = require("../svg");
 import dom = require("../dom");
-import {ModelPoint, EPointAttr, ModelLoader, CModelPoint, DisplayMode} from "./api";
+import {ModelPoint, EPointAttr, ModelLoader, DisplayMode} from "./api";
 import {ModelContext} from "./_ctx";
 import {TXY} from "../svg";
 import {SVGItem} from "../dom";
 
 export const POINT_AT_INTERSECTION_TYPE = 'I';
 export const POINT_AT_INTERSECTION_CLASS = 'pt_intsec';
-export class PointAtIntersect extends CModelPoint {
+export class PointAtIntersect extends ModelPoint {
 	protected l1: SVGLineElement|null;
 	protected l2: SVGLineElement|null;
 	constructor(name: string|undefined,
