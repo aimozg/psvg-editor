@@ -91,16 +91,19 @@ export class Editor {
 		this.scaledown = [];
 		document.addEventListener('wheel', ev => {
 			if (ev.ctrlKey) {
-				ev.preventDefault();
-				this.modZoom(ev.deltaY < 0 ? 1 : -1);
+				let panes = [this.editPane].concat(this.previews);
+				for (let t:EventTarget|null = ev.target; t && t instanceof Element; t = t.parentElement) {
+					for (let p of panes.filter(p=>p.div == t)) {
+						ev.preventDefault();
+						let steps = ev.deltaY < 0 ? 1 : -1;
+						let zf = p.zoomfact = (p.zoomfact*=Math.pow(1.1, steps));
+						if (p == this.editPane) {
+							for (let obj of this.scaledown) obj.transform.baseVal.initialize(svg.tfscale(1.0 / zf));
+						}
+					}
+				}
 			}
 		});
-	}
-
-	modZoom(steps: number) {
-		let zf = this.editPane.zoomfact = (this.editPane.zoomfact*=Math.pow(1.1, steps));
-		for (let pv of this.previews) pv.zoomfact = zf;
-		for (let obj of this.scaledown) obj.transform.baseVal.initialize(svg.tfscale(1.0 / zf));
 	}
 
 	recreateView(model:Model) {

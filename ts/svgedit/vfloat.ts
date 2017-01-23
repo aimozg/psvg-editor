@@ -6,7 +6,7 @@ export class ValueFloat extends Value<number> {
 	constructor(name:string,
 				ctx:ModelContext,
 				private value:number,
-				public readonly def:number,
+				public readonly def:number|undefined,
 				public readonly min:number,
 				public readonly max:number
 	) {
@@ -36,8 +36,8 @@ export class ValueFloat extends Value<number> {
 		const handler = (e:Event)=>{
 			const input = (e.target as HTMLInputElement);
 			const s = input.value.trim();
-			const value = (s === '') ? this.def : +s;
-			if (!this.validate(value)) {
+			const value = (s === '' && this.def !== undefined) ? this.def : +s;
+			if (this.validate(value)) {
 				this.set(value);
 				input.classList.remove('-error');
 			} else {
@@ -68,7 +68,7 @@ export class ValueFloat extends Value<number> {
 	public static load(name:string,
 					   ctx:ModelContext,
 					   json:any,
-					   def:number,
+					   def:number|undefined,
 					   min:number,
 					   max:number): ValueFloat {
 		let x:number;

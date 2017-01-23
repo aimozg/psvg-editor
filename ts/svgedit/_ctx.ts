@@ -68,7 +68,7 @@ export class ModelContext {
 	public loadParam(json: any): ModelParam {
 		return this.loadPart('Param', json) as ModelParam;
 	}
-	public loadFloat(name:string,json:any,def:number=0,min:number=-Infinity,max:number=Infinity):ValueFloat {
+	public loadFloat(name:string,json:any,def:number|undefined=undefined,min:number=-Infinity,max:number=Infinity):ValueFloat {
 		return ValueFloat.load(name,this,json,def,min,max);
 	}
 	public static registerLoader(loader: ModelLoader) {
