@@ -131,7 +131,12 @@
       },
       "nodes" : [
         { "type": "smooth", "pos": [-3, 13] },
-        { "type": "smooth", "pos": [-14, 3] },
+        {
+          "type": "cusp",
+          "pos": ["eyer_corneri", -14, 7],
+          "handle1": [-11, 12],
+          "handle2": [-14, 3]
+        },
         { "type": "smooth", "pos": [-3, 0] },
         {
           "type": "cusp",
