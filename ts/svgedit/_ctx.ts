@@ -2,10 +2,31 @@ import svg = require("../svg");
 import dom = require("../dom");
 import Dictionary = _.Dictionary;
 import List = _.List;
-import {Part, DisplayMode, ModelPoint, EPartCategory, LoaderLib, ModelNode, ModelLoader} from "./api";
+import {Part, DisplayMode, ModelPoint, EPartCategory, ModelNode, ModelLoader} from "./api";
 import {ModelPath} from "./path";
 import {ModelParam} from "./param";
 import {ValueFloat} from "./vfloat";
+class LoaderLib {
+	all: ModelLoader[] = [];
+	byjstype: Dictionary<ModelLoader[]> = {};/*{
+	 //TODO [index:JsTypename]
+	 [index:string]:ModelElementLoader[]
+	 }*/
+	bytypefield: Dictionary<ModelLoader> = {};
+	constructor(){}
+	public put(loader:ModelLoader) {
+		this.all.push(loader);
+		if (loader.typename) {
+			this.bytypefield[loader.typename] = loader;
+		}
+		for (let ot of loader.objtypes || []) {
+			let byjt: ModelLoader[] = this.byjstype[ot] || [];
+			byjt.push(loader);
+			this.byjstype[ot] = byjt;
+		}
+	}
+}
+
 export class ModelContext {
 	public id: number = 0;
 	public readonly parts: {
@@ -32,13 +53,13 @@ export class ModelContext {
 			};
 		if (type == 'object') {
 			let tfloader = loaders.bytypefield[json['type']];
-			if (tfloader) return tfloader.loaderfn(this, json, true, ...args)!!;
+			if (tfloader) return tfloader.loadStrict(this, json, ...args)!!;
 		}
 		let jtloaders = loaders.byjstype[type];
 		if (!jtloaders || jtloaders.length == 0) throw "No loaders for " + cat + " "
 		+ type + " " + JSON.stringify(json);
 		for (let loader of jtloaders) {
-			let ele = loader.loaderfn(this, json, false, ...args);
+			let ele = loader.loadRelaxed(this, json, ...args);
 			if (ele) return ele;
 		}
 		throw JSON.stringify(json)
@@ -62,18 +83,8 @@ export class ModelContext {
 		return ValueFloat.load(name,this,json,def,min,max);
 	}
 	public static registerLoader(loader: ModelLoader) {
-		let lib: LoaderLib = ModelContext.loaders[loader.cat] || {
-				bytypefield: {},
-				byjstype: {}
-			};
-		if (loader.typename) {
-			lib.bytypefield[loader.typename] = loader;
-		}
-		for (let ot of loader.objtypes || []) {
-			let byjt: ModelLoader[] = lib.byjstype[ot] || [];
-			byjt.push(loader);
-			lib.byjstype[ot] = byjt;
-		}
+		let lib: LoaderLib = ModelContext.loaders[loader.cat] || new LoaderLib();
+		lib.put(loader);
 		ModelContext.loaders[loader.cat] = lib;
 	}
 	public doPostload() {
@@ -83,7 +94,9 @@ export class ModelContext {
 	public queuePostload(code: () => any) {
 		this.postloadQueue.push(code);
 	}
-
+	public static loadersFor(category:EPartCategory):ModelLoader[] {
+		return ModelContext.loaders[category].all.concat([]);
+	}
 	private static loaders: {
 		//TODO [index:EModelElementCategory]: {
 		[index: string]: LoaderLib;

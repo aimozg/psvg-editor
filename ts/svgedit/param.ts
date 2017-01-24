@@ -1,10 +1,13 @@
 import svg = require("../svg");
-import {ModelLoader, Part} from "./api";
+import {ModelLoader, Part, EPartCategory} from "./api";
 import {ModelContext} from "./_ctx";
 import {ValueFloat} from "./vfloat";
 
-export type EParamAttr="*"|"meta"|"value";
 export class ModelParam extends Part {
+	public get category(): EPartCategory {
+		return "Param";
+	}
+
 	constructor(name: string,
 				ctx: ModelContext,
 				public readonly defVal: ValueFloat,
@@ -26,14 +29,13 @@ export class ModelParam extends Part {
 		}
 	}
 }
-export const PARAM_LOADER: ModelLoader = {
-	cat: 'Param',
-	name: 'Param',
-	objtypes: ['object'],
-	loaderfn: (m: ModelContext, json: any, strict: boolean) =>
-		new ModelParam(json['name'],m,
+export const PARAM_LOADER: ModelLoader = new class extends ModelLoader{
+	loadStrict(m: ModelContext, json: any): ModelParam {
+		return new ModelParam(json['name'],m,
 			m.loadFloat('default',json['defVal'],0.5),
 			m.loadFloat('min',json['minVal'],0),
-			m.loadFloat('max',json['maxVal'],1))
-};
+			m.loadFloat('max',json['maxVal'],1));
+	}
+
+}('Param','Param',null,['object']);
 ModelContext.registerLoader(PARAM_LOADER);

@@ -1,4 +1,4 @@
-import {ModelLoader, ModelElement, ModelNode, DisplayMode} from "./api";
+import {ModelLoader, ModelElement, ModelNode, DisplayMode, EPartCategory} from "./api";
 import {ModelContext} from "./_ctx";
 import {SVGItem, updateElement} from "../dom";
 import {NodePath} from "../svg";
@@ -8,6 +8,11 @@ export type EPathAttr = "*"|"d";
 export class ModelPath extends ModelElement {
 	private g: SVGGElement|null;
 	private p: SVGPathElement;
+
+
+	public get category(): EPartCategory {
+		return "Path";
+	}
 
 	constructor(name: string|undefined,
 				ctx: ModelContext,
@@ -67,15 +72,16 @@ export class ModelPath extends ModelElement {
 	}
 
 }
-export const PATH_LOADER: ModelLoader = {
-	cat: 'Path',
-	name: 'Path',
-	objtypes: ['object'],
-	loaderfn: (m: ModelContext, json: any, strict: boolean) => new ModelPath(
-		json['name'] as string,m,
-		json['nodes'].map(j => m.loadNode(j)),
-		json['style']||{},
-		!!json['closed'])
-};
+export const PATH_LOADER: ModelLoader = new class extends ModelLoader{
+	loadStrict(ctx: ModelContext, json: any): ModelPath {
+		return new ModelPath(
+			json['name'] as string,ctx,
+			json['nodes'].map(j => ctx.loadNode(j)),
+			json['style']||{},
+			!!json['closed'])
+	}
+
+
+}('Path','Path',null,['object']);
 ModelContext.registerLoader(PATH_LOADER);
 

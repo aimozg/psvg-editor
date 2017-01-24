@@ -72,14 +72,13 @@ export class PointAtProjection extends ModelPoint {
 
 
 }
-export const POINT_AT_PROJECTION_LOADER:ModelLoader = {
-	cat:'Point',
-	name:'PointAtProjection',
-	typename:POINT_AT_PROJECTION_TYPE,
-	loaderfn:(ctx:ModelContext, json:any)=>new PointAtProjection(json['name'],ctx,
-		ctx.loadPoint(json['a']),
-		ctx.loadPoint(json['b']),
-		ctx.loadPoint(json['p'])
-	)
-};
+export const POINT_AT_PROJECTION_LOADER:ModelLoader = new class extends ModelLoader{
+	loadStrict(ctx: ModelContext, json: any):PointAtProjection {
+		return new PointAtProjection(json['name'], ctx,
+			ctx.loadPoint(json['a']),
+			ctx.loadPoint(json['b']),
+			ctx.loadPoint(json['p'])
+		);
+	}
+}('Point','PointAtProjection',POINT_AT_PROJECTION_TYPE);
 ModelContext.registerLoader(POINT_AT_PROJECTION_LOADER);

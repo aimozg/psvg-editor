@@ -12,7 +12,7 @@ export type JsTypename = 'object'|'function'|'undefined'|'string'|'number'|'bool
 
 export type DisplayMode = 'edit'|'view';
 
-export type EPartCategory = "Point"|"Node"|"Path"|"Model"|"Param"|"Value";
+export type EPartCategory = "Point"|"Node"|"Path"|"Model"|"Param"|"ValueFloat";
 export type PartDependency = [string,Part];
 export type ItemDeclaration = null|Part|[(Part|(()=>Part)),string|undefined];
 export abstract class Part {
@@ -22,6 +22,7 @@ export abstract class Part {
 	public owner: Part;
 	public readonly children: Part[] = [];
 	protected dependants: PartDependency[] = [];
+	public abstract get category(): EPartCategory;
 
 	constructor(public name: string|undefined,
 				public readonly ctx:ModelContext,
@@ -146,6 +147,10 @@ export abstract class ModelPoint extends ModelElement {
 	public g: SVGGElement|null;
 	private use: SVGUseElement|null;
 
+	public get category(): EPartCategory {
+		return 'Point';
+	}
+
 	constructor(name: string|undefined,
 				ctx: ModelContext,
 				public readonly cssclass: string,
@@ -187,6 +192,11 @@ export abstract class ModelPoint extends ModelElement {
 
 export type ENodeAttr = '*'|'pos'|'handle';
 export abstract class ModelNode extends ModelElement {
+
+	public get category(): EPartCategory {
+		return "Node";
+	}
+
 	constructor(name: string|any, ctx: ModelContext, items: ItemDeclaration[]) {
 		super(name, ctx, items);
 	}
@@ -237,6 +247,10 @@ export abstract class ModelNode extends ModelElement {
 export type EModelAttr = "*";
 export class Model extends ModelElement {
 	public readonly g: SVGGElement = SVGItem('g', {'class': 'model'});
+
+	public get category(): EPartCategory {
+		return 'Model';
+	}
 
 	constructor(name:string|undefined,ctx:ModelContext,
 				private readonly paths:ModelPath[],
@@ -302,20 +316,18 @@ export class Model extends ModelElement {
 
 }
 
-export interface LoaderLib {
-	byjstype: Dictionary<ModelLoader[]>/*{
-	 //TODO [index:JsTypename]
-	 [index:string]:ModelElementLoader[]
-	 }*/
-	;
-	bytypefield: Dictionary<ModelLoader>;
-}
-
-export interface ModelLoader {
-	cat: EPartCategory;
-	name: string;
-	loaderfn(ctx: ModelContext, json: any, strict: boolean, ...args:any[]):Part|null;
-	typename?: string;
-	objtypes?: JsTypename[];
+export abstract class ModelLoader {
+	constructor(
+		public readonly cat: EPartCategory,
+		public readonly name: string,
+		public readonly typename: string|null,
+		public readonly objtypes: JsTypename[] = []
+	) {
+	}
+	abstract loadStrict(ctx:ModelContext,json:any,...args:any[]):Part;
+	//noinspection JSMethodCanBeStatic
+	loadRelaxed(ctx:ModelContext,json:any,...args:any[]):Part|null {
+		return this.loadStrict(ctx,json,...args);
+	}
 }
 

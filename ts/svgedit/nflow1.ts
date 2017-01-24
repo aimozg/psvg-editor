@@ -56,17 +56,16 @@ export class Flow1Node extends CommonNode {
 		}
 	}
 }
-export const NODE_FLOW1_LOADER: ModelLoader = {
-	cat: 'Node',
-	name: 'Flow1Node',
-	typename: NODE_FLOW1_TYPE,
-	loaderfn: (ctx: ModelContext, json: any) => new Flow1Node(json['name'], ctx,
-		ctx.loadPoint(json['pos']),
-		json['h1ab'] ? [
-				ctx.loadFloat('prev_tangent', json['h1ab'][0]),
-				ctx.loadFloat('prev_normal', json['h1ab'][1])] : undefined,
-		json['h2ab'] ? [
-				ctx.loadFloat('next_tangent', json['h2ab'][0]),
-				ctx.loadFloat('next_normal', json['h2ab'][1])] : undefined)
-};
+export const NODE_FLOW1_LOADER: ModelLoader = new class extends ModelLoader {
+	loadStrict(ctx: ModelContext, json: any) {
+		return new Flow1Node(json['name'], ctx,
+			ctx.loadPoint(json['pos']),
+			json['h1ab'] ? [
+					ctx.loadFloat('prev_tangent', json['h1ab'][0]),
+					ctx.loadFloat('prev_normal', json['h1ab'][1])] : undefined,
+			json['h2ab'] ? [
+					ctx.loadFloat('next_tangent', json['h2ab'][0]),
+					ctx.loadFloat('next_normal', json['h2ab'][1])] : undefined);
+	}
+}('Node','Flow1Node',NODE_FLOW1_TYPE);
 ModelContext.registerLoader(NODE_FLOW1_LOADER);

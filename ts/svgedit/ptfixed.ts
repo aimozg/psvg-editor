@@ -65,24 +65,23 @@ export class FixedPoint extends ModelPoint {
 	}
 
 }
-export const POINT_FIXED_LOADER:ModelLoader = {
-	cat:'Point',
-	name:'FixedPoint',
-	typename:POINT_FIXED_TYPE,
-	objtypes:['object'], // arrays supported
-	loaderfn:(ctx:ModelContext, json:any, strict:boolean)=>{
-		let x:any,y:any,name:string|undefined = undefined;
-		if (!strict) {
-			const length = json['length'];
-			if (length === 2) {
-				[x,y] = [json[0],json[1]];
-			} else if (length === 3) {
-				[name,x,y] = [''+json[0], json[1], json[2]];
-			} else return null;
-		} else {
-			[name,x,y] = [json['name'], json['pt'][0],json['pt'][1]];
-		}
-		return new FixedPoint(name,ctx,ctx.loadFloat('x',x),ctx.loadFloat('y',y))
+export const POINT_FIXED_LOADER:ModelLoader = new class extends ModelLoader{
+
+	loadRelaxed(ctx: ModelContext, json: any): FixedPoint|null {
+		let x: any, y: any, name: string|undefined = undefined;
+		const length = json['length'];
+		if (length === 2) {
+			[x, y] = [json[0], json[1]];
+		} else if (length === 3) {
+			[name, x, y] = ['' + json[0], json[1], json[2]];
+		} else return null;
+		return new FixedPoint(name, ctx, ctx.loadFloat('x', x), ctx.loadFloat('y', y))
 	}
-};
+
+	loadStrict(ctx: ModelContext, json: any, strict: boolean):FixedPoint {
+		let x: any, y: any, name: string|undefined = undefined;
+		[name, x, y] = [json['name'], json['pt'][0], json['pt'][1]];
+		return new FixedPoint(name, ctx, ctx.loadFloat('x', x), ctx.loadFloat('y', y))
+	}
+}('Point','FixedPoint',POINT_FIXED_TYPE,['object']);
 ModelContext.registerLoader(POINT_FIXED_LOADER);

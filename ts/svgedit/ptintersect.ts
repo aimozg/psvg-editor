@@ -74,14 +74,13 @@ export class PointAtIntersect extends ModelPoint {
 		}
 	}
 }
-export const POINT_AT_INTERSECTION_LOADER:ModelLoader = {
-	cat:'Point',
-	name:'PointAtIntersection',
-	typename:POINT_AT_INTERSECTION_TYPE,
-	loaderfn:(ctx:ModelContext, json:any)=>new PointAtIntersect(json['name'],ctx,
-		ctx.loadPoint(json['a1']),
-		ctx.loadPoint(json['a2']),
-		ctx.loadPoint(json['b1']),
-		ctx.loadPoint(json['b2']))
-};
+export const POINT_AT_INTERSECTION_LOADER:ModelLoader = new class extends ModelLoader {
+	loadStrict(ctx: ModelContext, json: any):PointAtIntersect {
+		return new PointAtIntersect(json['name'], ctx,
+			ctx.loadPoint(json['a1']),
+			ctx.loadPoint(json['a2']),
+			ctx.loadPoint(json['b1']),
+			ctx.loadPoint(json['b2']));
+	}
+}('Point','PointAtIntersection',POINT_AT_INTERSECTION_TYPE);
 ModelContext.registerLoader(POINT_AT_INTERSECTION_LOADER);

@@ -5,6 +5,13 @@
   ],
   "paths" : [
     {
+      "name"  : "_vaxis",
+      "closed": false,
+      "nodes" : [
+        { "type": "cusp", "pos": ["_vtop", 0, -80] },
+        { "type": "cusp", "pos": ["_vbottom", 0, 50] }
+      ]
+    }, {
       "name"  : "face",
       "closed": true,
       "style" : {

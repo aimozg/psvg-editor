@@ -221,9 +221,19 @@ export class Editor {
 				}
 			}
 		}
-		this.objviewDiv.innerHTML = '';
 		updateElement(this.objviewDiv,{
-			items:(part?part.children:[]).map(v=>(v instanceof Value)?v.editorElement():undefined)
+			items: [
+				{
+					tag:'div','class':'partValues',
+					items: (part?part.children:[]).map(v=>(v instanceof Value)?v.editorElement():undefined)
+				},{
+					tag:'div','class':'partReplace',
+					items: (part?ModelContext.loadersFor(part.category):[]).map(l=>({
+						tag:'div',
+						text:'Replace with '+l.name
+					}))
+				}
+			],
 		});
 	}
 

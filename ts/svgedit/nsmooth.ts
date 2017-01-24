@@ -47,15 +47,13 @@ export class SmoothNode extends CommonNode {
 	}
 
 }
-export const NODE_SMOOTH_LOADER: ModelLoader = {
-	cat: 'Node',
-	name: 'SmoothNode',
-	typename: NODE_SMOOTH_TYPE,
-	loaderfn: (m: ModelContext, json: any) =>
-		new SmoothNode(json['name'],m,
+export const NODE_SMOOTH_LOADER: ModelLoader = new class extends ModelLoader {
+	loadStrict(m: ModelContext, json: any):SmoothNode {
+		return new SmoothNode(json['name'], m,
 			m.loadPoint(json['pos']),
-			m.loadFloat('prev',json['b'],0.3),
-			m.loadFloat('next',json['c'],0.3),
-			m.loadFloat('rotation',json['rot'],0))
-};
+			m.loadFloat('prev', json['b'], 0.3),
+			m.loadFloat('next', json['c'], 0.3),
+			m.loadFloat('rotation', json['rot'], 0));
+	}
+}('Node', 'SmoothNode',NODE_SMOOTH_TYPE);
 ModelContext.registerLoader(NODE_SMOOTH_LOADER);

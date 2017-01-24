@@ -60,14 +60,13 @@ export function norm2fixed(a:IXY, b:IXY, alpha:number, beta:number):TXY {
 	let v2 = vrot90(v1);
 	return vlinj([1,a],[alpha,v1],[beta,v2]);
 }
-export const POINT_FROM_NORMAL_LOADER:ModelLoader = {
-	cat:'Point',
-	name:'PointFromNormal',
-	typename:POINT_FROM_NORMAL_TYPE,
-	loaderfn:(ctx:ModelContext, json:any)=> new PointFromNormal(json['name'],ctx,
-		ctx.loadPoint(json['pt0']),
-		ctx.loadPoint(json['pt1']),
-		ctx.loadFloat('tangent',json['alpha'],0),
-		ctx.loadFloat('normal',json['beta'],0))
-};
+export const POINT_FROM_NORMAL_LOADER:ModelLoader = new class extends ModelLoader{
+	loadStrict(ctx: ModelContext, json: any) {
+		return new PointFromNormal(json['name'], ctx,
+			ctx.loadPoint(json['pt0']),
+			ctx.loadPoint(json['pt1']),
+			ctx.loadFloat('tangent', json['alpha'], 0),
+			ctx.loadFloat('normal', json['beta'], 0));
+	}
+}('Point','PointFromNormal',POINT_FROM_NORMAL_TYPE);
 ModelContext.registerLoader(POINT_FROM_NORMAL_LOADER);
