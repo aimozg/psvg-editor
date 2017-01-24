@@ -10,13 +10,13 @@ export const POINT_AT_INTERSECTION_CLASS = 'pt_intsec';
 export class PointAtIntersect extends ModelPoint {
 	protected l1: SVGLineElement|null;
 	protected l2: SVGLineElement|null;
-	constructor(name: string|undefined,
-				ctx: ModelContext,
+	constructor(ctx:ModelContext,
+				name:string|undefined,
 				public a1:ModelPoint,
 				public a2:ModelPoint,
 				public b1:ModelPoint,
 				public b2:ModelPoint) {
-		super(name,ctx,POINT_AT_INTERSECTION_CLASS,[a1,a2,b1,b2])
+		super(ctx,name,POINT_AT_INTERSECTION_CLASS,[a1,a2,b1,b2])
 	}
 
 	protected updated(other: ModelPoint, attr: EPointAttr) {
@@ -76,7 +76,7 @@ export class PointAtIntersect extends ModelPoint {
 }
 export const POINT_AT_INTERSECTION_LOADER:ModelLoader = new class extends ModelLoader {
 	loadStrict(ctx: ModelContext, json: any):PointAtIntersect {
-		return new PointAtIntersect(json['name'], ctx,
+		return new PointAtIntersect(ctx,json['name'],
 			ctx.loadPoint(json['a1']),
 			ctx.loadPoint(json['a2']),
 			ctx.loadPoint(json['b1']),

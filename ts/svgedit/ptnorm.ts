@@ -7,13 +7,13 @@ import svg = require("../svg");
 export const POINT_FROM_NORMAL_TYPE = 'N';
 export const POINT_FROM_NORMAL_CLASS = 'pt_norm';
 export class PointFromNormal extends ModelPoint {
-	constructor(name: string|undefined,
-				ctx: ModelContext,
+	constructor(ctx:ModelContext,
+				name:string|undefined,
 				public readonly pt0: ModelPoint,
 				public readonly pt1: ModelPoint,
 				public readonly alpha: ValueFloat,
 				public readonly beta: ValueFloat) {
-		super(name,ctx, POINT_FROM_NORMAL_CLASS,[pt0,pt1,alpha,beta])
+		super(ctx,name, POINT_FROM_NORMAL_CLASS,[pt0,pt1,alpha,beta])
 	}
 
 	protected draw(mode:DisplayMode): SVGGElement|null {
@@ -62,7 +62,7 @@ export function norm2fixed(a:IXY, b:IXY, alpha:number, beta:number):TXY {
 }
 export const POINT_FROM_NORMAL_LOADER:ModelLoader = new class extends ModelLoader{
 	loadStrict(ctx: ModelContext, json: any) {
-		return new PointFromNormal(json['name'], ctx,
+		return new PointFromNormal(ctx,json['name'],
 			ctx.loadPoint(json['pt0']),
 			ctx.loadPoint(json['pt1']),
 			ctx.loadFloat('tangent', json['alpha'], 0),

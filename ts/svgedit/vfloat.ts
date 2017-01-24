@@ -9,14 +9,14 @@ export class ValueFloat extends Value<number> {
 		return "ValueFloat";
 	}
 
-	constructor(name:string,
-				ctx:ModelContext,
+	constructor(ctx:ModelContext,
+				name:string|undefined,
 				private value:number,
 				public readonly def:number|undefined,
 				public readonly min:number,
 				public readonly max:number
 	) {
-		super(name,ctx);
+		super(ctx,name);
 		if (def<min || def>max || min>max) throw `Illegal bounds for ${name}: def=${def} min=${min} max=${max}`
 	}
 
@@ -86,7 +86,7 @@ export class ValueFloat extends Value<number> {
 			x = +json;
 			if (!isFinite(x)) throw JSON.stringify(json);
 		} else throw JSON.stringify(json);
-		return new ValueFloat(name,ctx,x,def,min,max);
+		return new ValueFloat(ctx,name,x,def,min,max);
 	}
 
 }

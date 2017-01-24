@@ -1,4 +1,4 @@
-import {ModelLoader, ModelElement, ModelNode, DisplayMode, EPartCategory} from "./api";
+import {ModelLoader, ModelElement, ModelNode, DisplayMode, EPartCategory, ModelPoint} from "./api";
 import {ModelContext} from "./_ctx";
 import {SVGItem, updateElement} from "../dom";
 import {NodePath} from "../svg";
@@ -14,16 +14,17 @@ export class ModelPath extends ModelElement {
 		return "Path";
 	}
 
-	constructor(name: string|undefined,
-				ctx: ModelContext,
+	constructor(ctx: ModelContext,
+				name: string|undefined,
+				ownOrigin: ModelPoint|null,
 				public nodes: ModelNode[],
 				public style: any,
-				public closed: boolean = true) {
-		super(name,ctx, nodes);
+				public closed: boolean) {
+		super(ctx, name, ownOrigin, nodes);
 	}
 
-	protected draw(mode:DisplayMode): SVGElement {
-		this.p = SVGItem('path',{
+	protected draw(mode: DisplayMode): SVGElement {
+		this.p = SVGItem('path', {
 			d: this.toSvgD(),
 		});
 		if (mode == 'edit') {
@@ -38,11 +39,11 @@ export class ModelPath extends ModelElement {
 		}
 	}
 
-	public redraw(attr: EPathAttr,mode:DisplayMode) {
+	public redraw(attr: EPathAttr, mode: DisplayMode) {
 		this.p.setAttribute('d', this.toSvgD());
-		updateElement(this.p,{
+		updateElement(this.p, {
 			d: this.toSvgD(),
-			style: mode=='edit'?{}:this.style
+			style: mode == 'edit' ? {} : this.style
 		});
 	}
 
@@ -66,22 +67,25 @@ export class ModelPath extends ModelElement {
 		return {
 			name: this.name,
 			closed: this.closed,
-			style: this.style||{},
-			nodes: this.nodes.map(n => n.save())
+			style: this.style || {},
+			nodes: this.nodes.map(n => n.save()),
+			origin: this.ownOrigin ? this.ownOrigin.save() : undefined
 		};
 	}
 
 }
-export const PATH_LOADER: ModelLoader = new class extends ModelLoader{
+export const PATH_LOADER: ModelLoader = new class extends ModelLoader {
 	loadStrict(ctx: ModelContext, json: any): ModelPath {
-		return new ModelPath(
-			json['name'] as string,ctx,
+		return new ModelPath(ctx,
+			json['name'] as string,
+			json['origin'] ? ctx.loadPoint(json['origin']) : null,
 			json['nodes'].map(j => ctx.loadNode(j)),
-			json['style']||{},
-			!!json['closed'])
+			json['style'] || {},
+			!!json['closed']
+		)
 	}
 
 
-}('Path','Path',null,['object']);
+}('Path', 'Path', null, ['object']);
 ModelContext.registerLoader(PATH_LOADER);
 

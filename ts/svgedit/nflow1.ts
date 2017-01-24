@@ -8,12 +8,13 @@ import svg = require("../svg");
 
 export const NODE_FLOW1_TYPE = "flow1";
 export class Flow1Node extends CommonNode {
-	constructor(name: string|undefined,
-				ctx: ModelContext,
+	constructor(ctx:ModelContext,
+				name:string|undefined,
+				ownOrigin: ModelPoint|null,
 				pos: ModelPoint,
 				private h1ab: [ValueFloat, ValueFloat]|undefined,
 				private h2ab: [ValueFloat, ValueFloat]|undefined) {
-		super(name, ctx, pos, 'flow1_node',
+		super(ctx, name, ownOrigin, pos, 'flow1_node',
 			(h1ab
 				? [h1ab[0], h1ab[1], [() => this.prevNode(), 'pos'] as ItemDeclaration]
 				: []).concat(
@@ -58,7 +59,9 @@ export class Flow1Node extends CommonNode {
 }
 export const NODE_FLOW1_LOADER: ModelLoader = new class extends ModelLoader {
 	loadStrict(ctx: ModelContext, json: any) {
-		return new Flow1Node(json['name'], ctx,
+		return new Flow1Node(ctx,
+			json['name'],
+			json['origin']?ctx.loadPoint(json['origin']):json['origin'],
 			ctx.loadPoint(json['pos']),
 			json['h1ab'] ? [
 					ctx.loadFloat('prev_tangent', json['h1ab'][0]),

@@ -4,8 +4,10 @@ import {TXY} from "../svg";
 
 export const POINT_REF_TYPE = '@';
 export class PointRef extends ModelPoint {
-	constructor(name: string|undefined, ctx:ModelContext, public readonly ref: string) {
-		super(name,ctx, 'ref_pt',[
+	constructor(ctx:ModelContext,
+				name:string|undefined,
+				public readonly ref: string) {
+		super(ctx, name,'ref_pt',[
 			[() => this.obj(), 'pos']
 		]);
 	}
@@ -40,13 +42,13 @@ export class PointRef extends ModelPoint {
 export const POINT_REF_LOADER:ModelLoader = new class extends ModelLoader {
 
 	loadRelaxed(ctx: ModelContext, json: any, ...args): PointRef|any {
-		if (typeof json == 'string') return new PointRef(undefined, ctx, json.substr(1));
-		if (json['type'][0] == '@') return new PointRef(json['name'], ctx, json['type'].substr(1));
+		if (typeof json == 'string') return new PointRef(ctx, undefined, json.substr(1));
+		if (json['type'][0] == '@') return new PointRef(ctx,json['name'], json['type'].substr(1));
 		return null;
 	}
 
-	loadStrict(m: ModelContext, json: any):PointRef {
-		return new PointRef(json['name'], m, json['ref']);
+	loadStrict(ctx: ModelContext, json: any):PointRef {
+		return new PointRef(ctx, json['name'], json['ref']);
 	}
 }('Point','PointRef',POINT_REF_TYPE,['string','object']);
 ModelContext.registerLoader(POINT_REF_LOADER);

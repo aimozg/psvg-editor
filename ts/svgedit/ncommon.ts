@@ -11,12 +11,13 @@ export abstract class CommonNode extends ModelNode {
 	protected u0: SVGUseElement|null;
 	protected g: SVGGElement|null;
 
-	constructor(name: string|undefined,
-				ctx: ModelContext,
+	constructor(ctx:ModelContext,
+				name:string|undefined,
+				ownOrigin: ModelPoint|null,
 				public pos: ModelPoint,
 				private gclass: string,
 				items: ItemDeclaration[]) {
-		super(name, ctx, items.concat([pos]));
+		super(ctx, name, ownOrigin, items.concat([pos]));
 	}
 
 	protected draw(mode:DisplayMode): SVGElement|null {

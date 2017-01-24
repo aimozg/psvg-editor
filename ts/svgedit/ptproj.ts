@@ -10,12 +10,12 @@ export const POINT_AT_PROJECTION_CLASS = 'pt_proj';
 export class PointAtProjection extends ModelPoint {
 	protected lab: SVGLineElement|null;
 	protected lpq: SVGLineElement|null;
-	constructor(name: string|undefined,
-				ctx: ModelContext,
+	constructor(ctx:ModelContext,
+				name:string|undefined,
 				public a:ModelPoint,
 				public b:ModelPoint,
 				public p:ModelPoint) {
-		super(name,ctx,POINT_AT_PROJECTION_CLASS,[a,b,p])
+		super(ctx,name,POINT_AT_PROJECTION_CLASS,[a,b,p])
 	}
 	
 	protected updated(other: ModelPoint, attr: EPointAttr) {
@@ -74,7 +74,7 @@ export class PointAtProjection extends ModelPoint {
 }
 export const POINT_AT_PROJECTION_LOADER:ModelLoader = new class extends ModelLoader{
 	loadStrict(ctx: ModelContext, json: any):PointAtProjection {
-		return new PointAtProjection(json['name'], ctx,
+		return new PointAtProjection(ctx,json['name'],
 			ctx.loadPoint(json['a']),
 			ctx.loadPoint(json['b']),
 			ctx.loadPoint(json['p'])

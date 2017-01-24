@@ -6,6 +6,7 @@ import {Part, DisplayMode, ModelPoint, EPartCategory, ModelNode, ModelLoader} fr
 import {ModelPath} from "./path";
 import {ModelParam} from "./param";
 import {ValueFloat} from "./vfloat";
+import {TXY} from "../svg";
 class LoaderLib {
 	all: ModelLoader[] = [];
 	byjstype: Dictionary<ModelLoader[]> = {};/*{
@@ -33,6 +34,7 @@ export class ModelContext {
 		[id: string]: Part;
 	} = {};
 	public onUpdate: (obj: Part,attr:string) => any = (x => void(0));
+	public origin: TXY = [0,0];
 	private readonly postloadQueue: (() => any)[] = [];
 	constructor(
 		public readonly mode:DisplayMode

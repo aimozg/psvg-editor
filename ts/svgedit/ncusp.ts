@@ -6,12 +6,13 @@ import svg = require("../svg");
 
 export const NODE_CUSP_TYPE = 'cusp';
 export class CuspNode extends CommonNode {
-	constructor(name: string|undefined,
-				ctx: ModelContext,
+	constructor(ctx:ModelContext,
+				name:string|undefined,
+				ownOrigin: ModelPoint|null,
 				pos: ModelPoint,
 				public h1: ModelPoint|null,
 				public h2: ModelPoint|null) {
-		super(name, ctx, pos, 'cusp_node', [h1, h2]);
+		super(ctx, name, ownOrigin, pos, 'cusp_node', [h1, h2]);
 	}
 
 	protected updated(other: ModelPoint, attr: EPointAttr) {
@@ -47,6 +48,7 @@ export class CuspNode extends CommonNode {
 			type: NODE_CUSP_TYPE,
 			pos: this.pos.save(),
 			name: this.name,
+			origin: this.ownOrigin?this.ownOrigin.save():undefined,
 			handle1: this.h1 ? this.h1.save() : undefined,
 			handle2: this.h2 ? this.h2.save() : undefined
 		}
@@ -55,7 +57,9 @@ export class CuspNode extends CommonNode {
 }
 export const NODE_CUSP_LOADER: ModelLoader = new class extends ModelLoader {
 	loadStrict(ctx: ModelContext, json: any): CuspNode {
-		return new CuspNode(json['name'], ctx,
+		return new CuspNode(ctx,
+			json['name'],
+			json['origin']?ctx.loadPoint(json['origin']):null,
 			ctx.loadPoint(json['pos']),
 			json['handle1'] ? ctx.loadPoint(json['handle1']) : null,
 			json['handle2'] ? ctx.loadPoint(json['handle2']) : null

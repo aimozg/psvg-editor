@@ -24,8 +24,8 @@ export abstract class Part {
 	protected dependants: PartDependency[] = [];
 	public abstract get category(): EPartCategory;
 
-	constructor(public name: string|undefined,
-				public readonly ctx:ModelContext,
+	constructor(public readonly ctx:ModelContext,
+				public name: string|undefined,
 				items: ItemDeclaration[]) {
 		this.id = ctx.id++;
 		this.ctx.parts[this.id] = this;
@@ -101,9 +101,9 @@ export abstract class Part {
 }
 export type EValueAttr = "*";
 export abstract class Value<T> extends Part {
-	constructor(name:string,
-				ctx:ModelContext){
-		super(name,ctx,[]);
+	constructor(ctx:ModelContext,
+				name:string|undefined){
+		super(ctx,name,[]);
 	}
 	public abstract get():T;
 	public abstract editorElement():HTMLElement;
@@ -113,10 +113,23 @@ export abstract class Value<T> extends Part {
 export abstract class ModelElement extends Part {
 	public graphic: SVGElement|null;
 
-	constructor(name: string|any,
-				ctx: ModelContext,
+	constructor(ctx: ModelContext,
+				name: string|any,
+				public ownOrigin:ModelPoint|null,
 				items: ItemDeclaration[]) {
-		super(name, ctx, items);
+		super(ctx, name,ownOrigin?items.concat([[ownOrigin,'pos']]):items);
+	}
+
+	public get ownerElement():ModelElement|null {
+		for (let o = this.owner; o && o != this; o = o.owner) {
+			if (o instanceof ModelElement) return o;
+		}
+		return null;
+	}
+	public get origin():TXY {
+		let o1 = this.ownOrigin;
+		let oe = this.ownerElement;
+		return svg.vadd(o1?o1.calculate():[0,0],oe?oe.origin:this.ctx.origin);
 	}
 
 	public display(addclass?:string): SVGElement|null {
@@ -125,7 +138,12 @@ export abstract class ModelElement extends Part {
 			if (this.graphic) {
 				this.graphic.setAttribute('data-partid', ''+this.id);
 				if (addclass) this.graphic.classList.add(addclass);
+				if (this.ownOrigin) {
+					let g = this.ownOrigin.display();
+					if (g) this.graphic.appendChild(g);
+				}
 				this.redraw("*", this.ctx.mode);
+				this.translate();
 			}
 		}
 		return this.graphic;
@@ -134,6 +152,16 @@ export abstract class ModelElement extends Part {
 	public update(attr: string='*') {
 		super.update(attr);
 		this.redraw(attr,this.ctx.mode);
+		this.translate();
+	}
+
+	private translate() {
+		const g = this.graphic as (SVGTransformable|null);
+		const oo = this.ownOrigin;
+		if (g && g['transform'] && oo) {
+			let [x, y] = oo.calculate();
+			svg.tf2list(svg.tftranslate(x, y), g.transform.baseVal);
+		}
 	}
 
 	protected abstract draw(mode:DisplayMode): SVGElement|null;
@@ -151,11 +179,11 @@ export abstract class ModelPoint extends ModelElement {
 		return 'Point';
 	}
 
-	constructor(name: string|undefined,
-				ctx: ModelContext,
+	constructor(ctx: ModelContext,
+				name: string|undefined,
 				public readonly cssclass: string,
 				items: ItemDeclaration[]) {
-		super(name, ctx, items);
+		super(ctx, name, null, items);
 	}
 
 	calculate(): TXY {
@@ -197,8 +225,11 @@ export abstract class ModelNode extends ModelElement {
 		return "Node";
 	}
 
-	constructor(name: string|any, ctx: ModelContext, items: ItemDeclaration[]) {
-		super(name, ctx, items);
+	constructor(ctx:ModelContext,
+				name:string|undefined,
+				ownOrigin: ModelPoint|null,
+				items: ItemDeclaration[]) {
+		super(ctx, name, ownOrigin, items);
 	}
 
 	private _first: boolean;
@@ -252,11 +283,13 @@ export class Model extends ModelElement {
 		return 'Model';
 	}
 
-	constructor(name:string|undefined,ctx:ModelContext,
+	constructor(ctx:ModelContext,
+				ownOrigin: ModelPoint|null,
+				name:string|undefined,
 				private readonly paths:ModelPath[],
 				private readonly params:ModelParam[]
 	) {
-		super(name,ctx,
+		super(ctx,name,ownOrigin,
 			paths.map(p=>[p,'*'] as [ModelPath,string]));
 		ctx.doPostload();
 	}
@@ -273,7 +306,7 @@ export class Model extends ModelElement {
 	}
 
 	public static load(ctx:ModelContext, json: any): Model {
-		return new Model(json['name'] || 'unnamed', ctx,
+		return new Model(ctx,null,json['name'] || 'unnamed',
 			(json['paths'] || []).map(j => ctx.loadPath(j)),
 			(json['params'] || []).map(j => ctx.loadParam(j))
 		);

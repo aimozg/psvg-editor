@@ -13,7 +13,7 @@ export class ModelParam extends Part {
 				public readonly defVal: ValueFloat,
 				public readonly minVal: ValueFloat,
 				public readonly maxVal: ValueFloat) {
-		super(name, ctx,[defVal, minVal, maxVal]);
+		super(ctx, name, [defVal, minVal, maxVal]);
 	}
 
 	protected updated(other: Part, attr: string) {
@@ -29,13 +29,13 @@ export class ModelParam extends Part {
 		}
 	}
 }
-export const PARAM_LOADER: ModelLoader = new class extends ModelLoader{
+export const PARAM_LOADER: ModelLoader = new class extends ModelLoader {
 	loadStrict(m: ModelContext, json: any): ModelParam {
-		return new ModelParam(json['name'],m,
-			m.loadFloat('default',json['defVal'],0.5),
-			m.loadFloat('min',json['minVal'],0),
-			m.loadFloat('max',json['maxVal'],1));
+		return new ModelParam(json['name'], m,
+			m.loadFloat('default', json['defVal'], 0.5),
+			m.loadFloat('min', json['minVal'], 0),
+			m.loadFloat('max', json['maxVal'], 1));
 	}
 
-}('Param','Param',null,['object']);
+}('Param', 'Param', null, ['object']);
 ModelContext.registerLoader(PARAM_LOADER);

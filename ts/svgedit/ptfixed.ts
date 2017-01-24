@@ -6,11 +6,11 @@ import svg = require("../svg");
 
 export const POINT_FIXED_TYPE = 'F';
 export class FixedPoint extends ModelPoint {
-	constructor(name: string|undefined,
-				ctx: ModelContext,
+	constructor(ctx:ModelContext,
+				name:string|undefined,
 				public readonly x:ValueFloat,
 				public readonly y:ValueFloat) {
-		super(name, ctx,'fixed_pt',[x,y]);
+		super(ctx,name,'fixed_pt',[x,y]);
 	}
 
 	protected draw(mode:DisplayMode): SVGGElement|null {
@@ -75,13 +75,13 @@ export const POINT_FIXED_LOADER:ModelLoader = new class extends ModelLoader{
 		} else if (length === 3) {
 			[name, x, y] = ['' + json[0], json[1], json[2]];
 		} else return null;
-		return new FixedPoint(name, ctx, ctx.loadFloat('x', x), ctx.loadFloat('y', y))
+		return new FixedPoint(ctx, name,  ctx.loadFloat('x', x), ctx.loadFloat('y', y))
 	}
 
 	loadStrict(ctx: ModelContext, json: any, strict: boolean):FixedPoint {
 		let x: any, y: any, name: string|undefined = undefined;
 		[name, x, y] = [json['name'], json['pt'][0], json['pt'][1]];
-		return new FixedPoint(name, ctx, ctx.loadFloat('x', x), ctx.loadFloat('y', y))
+		return new FixedPoint(ctx, name, ctx.loadFloat('x', x), ctx.loadFloat('y', y))
 	}
 }('Point','FixedPoint',POINT_FIXED_TYPE,['object']);
 ModelContext.registerLoader(POINT_FIXED_LOADER);
