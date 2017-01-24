@@ -97,6 +97,7 @@
 		}
 		.-selected line.handle,
 		.-selected .path > path,
+		.-selected.path > path,
 		.-selected use,
 		.-selected{
 			stroke:#800000;
@@ -105,17 +106,20 @@
 		.node.-selected.-primary > use,
 		.path.-selected.-primary > path,
 		.point.-selected.-primary,
-		.point.-selected.-primary > use[href="#svg_FixedPoint"] {
+		.point.-selected.-primary > line.handle,
+		.point.-selected.-primary > line.lineref,
+		.point.-selected.-primary > use {
 			stroke:#ff0000;
 		}
 		.modelpane-edit .point > use {
-			fill:#00ffff;
+			fill:#000000;
 		}
-		use[href="#svg_FixedPoint"] {
+		.modelpane-edit .point > use[href="#svg_FixedPoint"] {
+			fill:#00ffff;
 			stroke-width:2;
 			stroke:#000000;
 		}
-		use[href="#svg_FixedPoint"]:hover {
+		.modelpane-edit .point > use[href="#svg_FixedPoint"]:hover {
 			fill:#ffff00;
 		}
 		#svg_CuspNode, #svg_SmoothNode, #svg_Flow1Node {

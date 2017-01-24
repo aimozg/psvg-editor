@@ -136,7 +136,7 @@ export class Editor {
 			}, {
 				tag: 'rect',
 				id: 'svgpt_box_sm',
-				x: -2.5, y: -2.5, width: 5, height: 5,
+				x: -3, y: -3, width: 6, height: 6,
 				style: {'any': 'inherit'},
 				callback: (e) => this.scaledown.push(e as any as SVGTransformable)
 			}, {
@@ -146,7 +146,13 @@ export class Editor {
 				style: {'any': 'inherit'},
 				callback: (e) => this.scaledown.push(e as any as SVGTransformable)
 			}, {
-				tag: 'use', id: 'svg_FixedPoint', href: '#svgpt_box_sm'
+				tag: 'use', id: 'svg_FixedPoint', href: '#svgpt_box'
+			}, {
+				tag: 'use', id: 'svg_PointAtProjection', href: '#svgpt_box_sm'
+			}, {
+				tag: 'use', id: 'svg_PointAtIntersection', href: '#svgpt_box_sm'
+			}, {
+				tag: 'use', id: 'svg_PointFromNormal', href: '#svgpt_box_sm'
 			}, {
 				tag: 'use', id: 'svg_CuspNode', href: '#svgpt_diamond'
 			}, {
