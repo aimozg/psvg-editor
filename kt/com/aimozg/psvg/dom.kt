@@ -1,7 +1,10 @@
 package com.aimozg.psvg
 
 import org.w3c.dom.DOMTokenList
-import org.w3c.dom.svg.*
+import org.w3c.dom.Element
+import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLElement
+import org.w3c.dom.css.CSSStyleDeclaration
 import kotlin.browser.document
 
 /**
@@ -9,42 +12,15 @@ import kotlin.browser.document
  * Confidential
  */
 
-operator fun DOMTokenList.plusAssign(value:String) = add(value)
+operator fun DOMTokenList.plusAssign(value: String) = add(value)
 
+var CSSStyleDeclaration.any: String
+	get() = getPropertyValue("any")
+	set(value) = setProperty("any", value)
 
-const val SVGNS = "http://www.w3.org/2000/svg"
+inline fun HTMLDivElement(init: HTMLDivElement.() -> Unit): HTMLDivElement = (document.createElement("div") as HTMLDivElement).apply(init)
 
-private val svgsvg = document.createElementNS(SVGNS,"svg")
-
-inline fun SVGDefsElement(init: SVGDefsElement.() -> Unit): SVGDefsElement = (document.createElementNS(SVGNS, "defs") as SVGDefsElement).apply(init)
-inline fun SVGGElement(init: SVGGElement.() -> Unit): SVGGElement = (document.createElementNS(SVGNS, "g") as SVGGElement).apply(init)
-inline fun SVGRectElement(init: SVGRectElement.() -> Unit): SVGRectElement = (document.createElementNS(SVGNS, "rect") as SVGRectElement).apply(init)
-inline fun SVGSVGElement(init: SVGSVGElement.() -> Unit): SVGSVGElement = (document.createElementNS(SVGNS, "svg") as SVGSVGElement).apply(init)
-inline fun SVGUseElement(init: SVGUseElement.() -> Unit): SVGUseElement = (document.createElementNS(SVGNS, "use") as SVGUseElement).apply(init)
-
-fun SVGAnimatedRect.set(x:Double,y:Double,width:Double,height:Double) {
-	baseVal.x = x
-	baseVal.y = y
-	baseVal.width = width
-	baseVal.height = height
-}
-var SVGAnimatedLength.px: Float
-	get() {
-		baseVal.convertToSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX)
-		return baseVal.valueInSpecifiedUnits
-	}
-	set(value) {
-		baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX, value)
-	}
-var SVGAnimatedLength.percent: Float
-	get() {
-		baseVal.convertToSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PERCENTAGE)
-		return baseVal.valueInSpecifiedUnits
-	}
-	set(value) {
-		baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PERCENTAGE, value)
-	}
-
-fun SVGElement.appendAll(vararg children: SVGElement?) {
+fun HTMLElement.appendAll(vararg children: Element?) {
 	for (child in children) if (child != null) appendChild(child)
 }
+

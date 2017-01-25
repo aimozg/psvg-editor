@@ -12,3 +12,4 @@ inline fun jsobject(init: dynamic.() -> Unit): dynamic {
 inline fun<T> jsobject2(init: T.() -> Unit): T {
 	return (Object().asDynamic() as T).apply(init)
 }
+fun String.toInt():Int = parseInt(this)

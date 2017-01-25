@@ -1,4 +1,4 @@
-import {Model, DisplayMode} from "../svgedit/api";
+import {Model, DisplayMode, Part} from "../svgedit/api";
 import {ModelContext} from "../svgedit/_ctx";
 declare namespace kotlinjs {
 	namespace com {
@@ -19,6 +19,21 @@ declare namespace kotlinjs {
 								div: HTMLElement,
 								defs?: (Element|undefined)[])
 				}
+
+				class Editor {
+					readonly model: Model;
+					selection: Part|null;
+
+					constructor(canvasDiv: HTMLElement,
+								treeDiv: HTMLElement,
+								previewDivs: HTMLElement[],
+								objviewDiv: HTMLElement);
+
+					select(part: Part|null);
+					save(): any;
+					loadJson(json: any);
+				}
+
 			}
 		}
 	}

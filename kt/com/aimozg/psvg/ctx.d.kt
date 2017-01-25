@@ -7,5 +7,9 @@ package com.aimozg.psvg
  */
 typealias DisplayMode = String
 external class ModelContext(mode: DisplayMode) {
-
+	var onUpdate: (part:Part) -> Unit
+	val parts: Array<Part?>
+	companion object {
+		fun loadersFor(category:String):Array<ModelLoader>
+	}
 }
