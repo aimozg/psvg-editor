@@ -23,7 +23,7 @@ export function hide(el: HTMLElement|HTMLElement[]|null) {
 	else if (el) for (let e of el) e.style.display = "none";
 }
 
-export function clone(el: HTMLElement, ext?: (old: HTMLElement, copy: HTMLElement) => void) {
+export function clone(el: HTMLElement, ext?: (old: HTMLElement, copy: HTMLElement) => void):HTMLElement {
 	let e2 = document.createElement(el.tagName);
 	for (let an of attrsToList(el.attributes)) {
 		if (an.name != 'id') e2.setAttribute(an.name, an.value);
@@ -130,9 +130,12 @@ export function attrsToList(nl: NamedNodeMap): Attr[] {
  return j;
  } else return $(selector);
  }*/
+export interface CEAStyle {
+	[index: string]: any;
+}
 export interface CreateElementAttrsLite {
 	tag?: string;
-	parent?: HTMLElement;
+	parent?: Element;
 	items?: (CreateElementAttrs|Element|undefined|null)[];
 	text?: string;
 	style?: CEAStyle;
@@ -161,9 +164,6 @@ export interface CEASvgUse extends CreateElementAttrs {
 	x?: number;
 	y?: number;
 	callback?: (el:SVGUseElement,attrs:CEASvgUse)=>any;
-}
-export interface CEAStyle {
-	[index: string]: any;
 }
 export function merge1d<T>(dst: T, ...src: (any|undefined)[]): T {
 	for (let s of src) if (s) for (let k of Object.keys(s)) dst[k] = s[k];

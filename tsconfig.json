@@ -2,6 +2,13 @@
   "compilerOptions": {
     "module"          : "commonjs",
     "target"          : "es5",
+    "moduleResolution": "classic",
+    "baseUrl"         : ".",
+    "paths"           : {
+      "jquery": ["typings/globals/jquery/index.d.ts"],
+      "underscore": ["typings/globals/underscore/index.d.ts"],
+      "kotlinjs": ["ts/typings-custom/kotlin.d.ts"]
+    },
     "noImplicitAny"   : false,
     "sourceMap"       : true,
     "rootDir"         : ".",

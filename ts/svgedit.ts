@@ -2,23 +2,26 @@ import dom = require('./dom');
 import svg = require("./svg");
 require("jstree-css");
 
-import {Model, Part, ModelElement, DisplayMode, Value} from "./svgedit/api";
+import {Model, Part, ModelElement, Value} from "./svgedit/api";
 import {ALL_LOADERS} from "./svgedit/_all";
 import {FixedPoint} from "./svgedit/ptfixed";
-import {CreateElementAttrs, updateElement} from "./dom";
+import {updateElement} from "./dom";
 import {ModelContext} from "./svgedit/_ctx";
 import {ValueFloat} from "./svgedit/vfloat";
+import kotlinjs = require("kotlinjs");
+import ModelPane = kotlinjs.com.aimozg.psvg.ModelPane;
 
 //noinspection JSUnusedGlobalSymbols
 export const importz = {dom, svg, ALL_LOADERS};
 
-class ModelPane {
+/*class ModelPane {
+
 	public readonly model: Model;
 	public readonly eModel: SVGElement;
 	public readonly ctx: ModelContext;
-	private zoombox: SVGGElement;
-	private svg: SVGSVGElement;
-	private _zoomfact:number=1;
+	private readonly zoombox: SVGGElement;
+	private readonly svg: SVGSVGElement;
+	private _zoomfact: number = 1;
 	get zoomfact(): number {
 		return this._zoomfact;
 	}
@@ -41,7 +44,7 @@ class ModelPane {
 		this.svg = dom.SVG({
 			width: width,
 			height: height,
-			'class': 'modelpane-'+mode,
+			'class': 'modelpane-' + mode,
 			items: [defs.length == 0 ? undefined : {
 					tag: 'defs',
 					items: defs
@@ -51,12 +54,7 @@ class ModelPane {
 				height: '100%',
 				width: '100%',
 				'class': 'viewport'
-			}, {
-				tag: 'g',
-				//transform:'scale('+this.zoomfact+')',
-				callback: el => this.zoombox = el as SVGGElement,
-				items: []
-			}]
+			}, this.zoombox = SVGItem('g')]
 		}, [x0, y0, width, height]);
 		this.svg.setAttribute('tabindex', '0');
 		div.appendChild(this.svg);
@@ -74,14 +72,16 @@ class ModelPane {
 		this.svg.width.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX, brect.width);
 		this.svg.height.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX, brect.height);
 	}
-}
-
+}*/
 export class Editor {
 	private tree: JSTree;
 	private editPane: ModelPane;
 	private previews: ModelPane[] = [];
 	private scaledown: SVGTransformable[];
-	get model(): Model { return this.editPane.model }
+
+	get model(): Model {
+		return this.editPane.model
+	}
 
 	selection: Part|null = null;
 
@@ -93,11 +93,11 @@ export class Editor {
 		document.addEventListener('wheel', ev => {
 			if (ev.ctrlKey) {
 				let panes = [this.editPane].concat(this.previews);
-				for (let t:EventTarget|null = ev.target; t && t instanceof Element; t = t.parentElement) {
-					for (let p of panes.filter(p=>p.div == t)) {
+				for (let t: EventTarget|null = ev.target; t && t instanceof Element; t = t.parentElement) {
+					for (let p of panes.filter(p => p.div == t)) {
 						ev.preventDefault();
 						let steps = ev.deltaY < 0 ? 1 : -1;
-						let zf = p.zoomfact = (p.zoomfact*=Math.pow(1.1, steps));
+						let zf = p.zoomfact = (p.zoomfact *= Math.pow(1.1, steps));
 						if (p == this.editPane) {
 							for (let obj of this.scaledown) obj.transform.baseVal.initialize(svg.tfscale(1.0 / zf));
 						}
@@ -107,7 +107,7 @@ export class Editor {
 		});
 	}
 
-	recreateView(model:Model) {
+	recreateView(model: Model) {
 		this.editPane = new ModelPane(model, 'edit', this.canvasDiv,
 			[{
 				tag: 'path',
@@ -163,7 +163,7 @@ export class Editor {
 				tag: 'use', id: 'svg_SymmetricNode', href: '#svgpt_box'
 			}]);
 		for (let pd of this.previewDivs) {
-			this.previews.push(new ModelPane(model,'view',pd));
+			this.previews.push(new ModelPane(model, 'view', pd));
 		}
 
 		if (this.tree) this.tree.destroy();
@@ -219,7 +219,7 @@ export class Editor {
 		if (part && part instanceof ModelElement && part != model) {
 			this.tree.select_node(part.treeNodeId(), true);
 			if (part.graphic) part.graphic.classList.add('-selected', '-primary');
-			for (let s:Part = part; s && s instanceof ModelElement && s != model; s = s.owner) {
+			for (let s: Part = part; s && s instanceof ModelElement && s != model; s = s.owner) {
 				const g = s.graphic;
 				if (g) {
 					g.classList.add('-selected');
@@ -227,16 +227,16 @@ export class Editor {
 				}
 			}
 		}
-		updateElement(this.objviewDiv,{
+		updateElement(this.objviewDiv, {
 			items: [
 				{
-					tag:'div','class':'partValues',
-					items: (part?part.children:[]).map(v=>(v instanceof Value)?v.editorElement():undefined)
-				},{
-					tag:'div','class':'partReplace',
-					items: (part?ModelContext.loadersFor(part.category):[]).map(l=>({
-						tag:'div',
-						text:'Replace with '+l.name
+					tag: 'div', 'class': 'partValues',
+					items: (part ? part.children : []).map(v => (v instanceof Value) ? v.editorElement() : undefined)
+				}, {
+					tag: 'div', 'class': 'partReplace',
+					items: (part ? ModelContext.loadersFor(part.category) : []).map(l => ({
+						tag: 'div',
+						text: 'Replace with ' + l.name
 					}))
 				}
 			],
@@ -248,7 +248,7 @@ export class Editor {
 	}
 
 	public loadJson(json: any) {
-		this.recreateView(Model.load(new ModelContext('edit'),json));
+		this.recreateView(Model.load(new ModelContext('edit'), json));
 	}
 
 	/*loadSvgStruct(el: SVGElement) {

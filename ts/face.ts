@@ -4,6 +4,7 @@ import {tinycolor_ex as TCX, TinyColorEx} from "./tinycolor-ex";
 import {IXY} from "./svg";
 import svg = require("./svg");
 import _ = require("underscore");
+_.allKeys(_);
 type Dictionary<T> = _.Dictionary<T>;
 
 export namespace Colors {

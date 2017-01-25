@@ -26,7 +26,13 @@ module.exports = {
             "tinycolor2": path.join(node_dir,'tinycolor2/dist/tinycolor-min.js'),
             "underscore": path.join(node_dir,'underscore/underscore-min.js'),
             "jstree-css": path.join(node_dir,'jstree/dist/themes/default/style.css'),
-            "jstree": path.join(node_dir,'jstree/dist/jstree.js')
+            "jstree": path.join(node_dir,'jstree/dist/jstree.js'),
+            "kotlinjs": path.join(__dirname, 'out/production/tfgame/tfgame.js'),
+            "kotlin": path.join(__dirname, 'out/production/tfgame/lib/kotlin.js'),
+            "dom": path.join(__dirname, 'ts/dom.ts'),
+            "svg": path.join(__dirname, 'ts/svg.ts'),
+            "svgedit-api": path.join(__dirname, 'ts/svgedit/api.ts'),
+            "svgedit-ctx": path.join(__dirname, 'ts/svgedit/_ctx.ts')
         }
     },
     plugins: [
