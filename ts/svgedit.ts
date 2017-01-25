@@ -5,7 +5,7 @@ require("jstree-css");
 import {Model, Part, ModelElement, Value} from "./svgedit/api";
 import {ALL_LOADERS} from "./svgedit/_all";
 import {FixedPoint} from "./svgedit/ptfixed";
-import {updateElement} from "./dom";
+import {updateElement, SVGItem} from "./dom";
 import {ModelContext} from "./svgedit/_ctx";
 import {ValueFloat} from "./svgedit/vfloat";
 import kotlinjs = require("kotlinjs");
@@ -14,65 +14,6 @@ import ModelPane = kotlinjs.com.aimozg.psvg.ModelPane;
 //noinspection JSUnusedGlobalSymbols
 export const importz = {dom, svg, ALL_LOADERS};
 
-/*class ModelPane {
-
-	public readonly model: Model;
-	public readonly eModel: SVGElement;
-	public readonly ctx: ModelContext;
-	private readonly zoombox: SVGGElement;
-	private readonly svg: SVGSVGElement;
-	private _zoomfact: number = 1;
-	get zoomfact(): number {
-		return this._zoomfact;
-	}
-	set zoomfact(value: number) {
-		this._zoomfact = value;
-		this.resizeView();
-	}
-
-	constructor(model: Model,
-				public readonly mode: DisplayMode,
-				public readonly div: HTMLElement,
-				defs: (CreateElementAttrs|Element|undefined)[] = []) {
-		this.ctx = new ModelContext(mode);
-		this.model = model.clone(this.ctx);
-		div.innerHTML = '';
-		let width = 100;
-		let height = 100;
-		let x0 = -Math.floor(width / 2);
-		let y0 = -Math.floor(height / 2);
-		this.svg = dom.SVG({
-			width: width,
-			height: height,
-			'class': 'modelpane-' + mode,
-			items: [defs.length == 0 ? undefined : {
-					tag: 'defs',
-					items: defs
-				}, {
-				tag: 'rect',
-				x: '-50%', y: '-50%',
-				height: '100%',
-				width: '100%',
-				'class': 'viewport'
-			}, this.zoombox = SVGItem('g')]
-		}, [x0, y0, width, height]);
-		this.svg.setAttribute('tabindex', '0');
-		div.appendChild(this.svg);
-		this.eModel = this.model.display();
-		this.zoombox.appendChild(this.eModel);
-		this.resizeView();
-	}
-
-	private resizeView() {
-		//svg.tf2list(svg.tfscale(this.zoomfact),this.zoombox.transform.baseVal);
-		let brect = svg.rect_cpy(this.zoombox.getBBox());
-		svg.rect_expand(brect, 50);
-		svg.rect_cpy(brect, this.svg.viewBox.baseVal);
-		svg.rect_scale(brect, this._zoomfact);
-		this.svg.width.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX, brect.width);
-		this.svg.height.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX, brect.height);
-	}
-}*/
 export class Editor {
 	private tree: JSTree;
 	private editPane: ModelPane;
@@ -109,59 +50,59 @@ export class Editor {
 
 	recreateView(model: Model) {
 		this.editPane = new ModelPane(model, 'edit', this.canvasDiv,
-			[{
+			[SVGItem({
 				tag: 'path',
 				id: 'svgpt_diamond_sm',
 				d: 'M -5 0 0 -5 5 0 0 5 z',
 				style: {'any': 'inherit'},
 				callback: (e) => this.scaledown.push(e as any as SVGTransformable)
-			}, {
+			}), SVGItem({
 				tag: 'path',
 				id: 'svgpt_diamond',
 				d: 'M -10 0 0 -10 10 0 0 10 z',
 				style: {'any': 'inherit'},
 				callback: (e) => this.scaledown.push(e as any as SVGTransformable)
-			}, {
+			}), SVGItem({
 				tag: 'circle',
 				id: 'svgpt_circle_sm',
 				cx: 0, cy: 0, r: 5,
 				style: {'any': 'inherit'},
 				callback: (e) => this.scaledown.push(e as any as SVGTransformable)
-			}, {
+			}), SVGItem({
 				tag: 'circle',
 				id: 'svgpt_circle',
 				cx: 0, cy: 0, r: 10,
 				style: {'any': 'inherit'},
 				callback: (e) => this.scaledown.push(e as any as SVGTransformable)
-			}, {
+			}), SVGItem({
 				tag: 'rect',
 				id: 'svgpt_box_sm',
 				x: -3, y: -3, width: 6, height: 6,
 				style: {'any': 'inherit'},
 				callback: (e) => this.scaledown.push(e as any as SVGTransformable)
-			}, {
+			}), SVGItem({
 				tag: 'rect',
 				id: 'svgpt_box',
 				x: -5, y: -5, width: 10, height: 10,
 				style: {'any': 'inherit'},
 				callback: (e) => this.scaledown.push(e as any as SVGTransformable)
-			}, {
+			}), SVGItem({
 				tag: 'use', id: 'svg_FixedPoint', href: '#svgpt_box'
-			}, {
+			}), SVGItem({
 				tag: 'use', id: 'svg_PointAtProjection', href: '#svgpt_box_sm'
-			}, {
+			}), SVGItem({
 				tag: 'use', id: 'svg_PointAtIntersection', href: '#svgpt_box_sm'
-			}, {
+			}), SVGItem({
 				tag: 'use', id: 'svg_PointFromNormal', href: '#svgpt_box_sm'
-			}, {
+			}), SVGItem({
 				tag: 'use', id: 'svg_CuspNode', href: '#svgpt_diamond'
-			}, {
+			}), SVGItem({
 				tag: 'use', id: 'svg_Flow1Node', href: '#svgpt_circle'
-			}, {
+			}), SVGItem({
 				tag: 'use', id: 'svg_SmoothNode', href: '#svgpt_circle'
-			}, {
+			}), SVGItem({
 				tag: 'use', id: 'svg_SymmetricNode', href: '#svgpt_box'
-			}]);
+			})]);
 		for (let pd of this.previewDivs) {
 			this.previews.push(new ModelPane(model, 'view', pd));
 		}

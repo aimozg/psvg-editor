@@ -4,8 +4,7 @@ package com.aimozg.psvg
  * Created by aimozg on 25.01.2017.
  * Confidential
  */
-external open class Object {
-}
+external open class Object
 
 inline fun jsobject(init: dynamic.() -> Unit): dynamic {
 	return (Object()).apply(init)
