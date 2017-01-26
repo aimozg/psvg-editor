@@ -1,6 +1,6 @@
 @file:JsModule("dom")
 
-package com.aimozg.psvg
+package com.aimozg.psvg.d
 
 //	fun escape(s:String):String
 //	fun byId(id:String):HTMLElement?

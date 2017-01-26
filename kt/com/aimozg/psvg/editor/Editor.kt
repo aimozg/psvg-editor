@@ -1,67 +1,18 @@
-package com.aimozg.psvg
+package com.aimozg.psvg.editor
 
+import com.aimozg.psvg.*
+import com.aimozg.psvg.d.JSTree
+import com.aimozg.psvg.d.JSTreeNodeEvent
+import com.aimozg.psvg.d.tfscale
+import com.aimozg.psvg.d.withPlugins
+import com.aimozg.psvg.parts.*
 import jquery.jq
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.WheelEvent
-import org.w3c.dom.svg.*
+import org.w3c.dom.svg.SVGGraphicsElement
 import kotlin.browser.document
-import kotlin.dom.asList
-
-class ModelPane(
-		model1: Model,
-		val mode: DisplayMode,
-		val div: HTMLElement,
-		vararg defs: SVGElement
-) {
-	val ctx: ModelContext = ModelContext(mode)
-	val model: Model = model1.clone(ctx)
-	val eModel: SVGElement = model.display()
-	private val zoombox: SVGGElement = SVGGElement {
-		appendChild(eModel)
-	}
-	private val svg: SVGSVGElement = SVGSVGElement {
-		width.px = 100f
-		height.px = 100f
-		viewBox.set(-50.0, -50.0, 100.0, 100.0)
-		classList += "modelpane-$mode"
-		tabIndex = 0
-		appendAll(
-				if (defs.isEmpty()) null else SVGDefsElement { appendAll(*defs) },
-				SVGRectElement {
-					x.percent = -50f
-					y.percent = -50f
-					height.percent = 100f
-					width.percent = 100f
-					classList += "viewport"
-				},
-				zoombox
-		)
-	}
-	private var _zoomfact = 1.0
-	var zoomfact: Double
-		get() = _zoomfact
-		set(value) {
-			_zoomfact = value
-			resizeView()
-		}
-
-	init {
-		div.innerHTML = ""
-		div.appendChild(svg)
-		resizeView()
-	}
-
-	private fun resizeView() {
-		val brect = rect_cpy(zoombox.getBBox())
-		rect_expand(brect, 50)
-		rect_cpy(brect, svg.viewBox.baseVal)
-		rect_scale(brect, _zoomfact)
-		svg.width.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX, brect.width.toFloat())
-		svg.height.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX, brect.height.toFloat())
-	}
-}
 
 class Editor(
 		private val canvasDiv: HTMLElement,
@@ -90,7 +41,7 @@ class Editor(
 						p.zoomfact *= Math.pow(1.1, steps)
 						val zf = p.zoomfact
 						if (p == editPane) {
-							for (obj in scaledown) obj.transform.baseVal.initialize(tfscale(1.0 / zf))
+							for (obj in scaledown) obj.transform.set(tfscale(1.0 / zf))
 						}
 					}
 					t = t.parentElement
@@ -100,7 +51,7 @@ class Editor(
 	}
 
 	private fun recreateView(model: Model) {
-		editPane = ModelPane(model, "edit", canvasDiv,
+		editPane = ModelPane(model, DisplayMode.EDIT, canvasDiv,
 				SVGPathElement {
 					id = "svgpt_diamond_sm"
 					d = "M -5 0 0 -5 5 0 0 5 z"
@@ -137,7 +88,7 @@ class Editor(
 				SVGUseElement("#svgpt_box") { id = "svg_SymmetricNode" })
 
 		for (pd in previewDivs) {
-			previews.add(ModelPane(model, "view", pd))
+			previews.add(ModelPane(model, DisplayMode.VIEW, pd))
 		}
 
 		tree?.destroy()
@@ -156,7 +107,7 @@ class Editor(
 			})
 			Unit
 		}
-		editPane.ctx.onUpdate = { obj ->
+		editPane.ctx.onUpdate = { obj,_ ->
 			//console.log(obj);
 			val id = obj.id
 			if (obj is ValueFloat || obj is FixedPoint) {
@@ -213,7 +164,7 @@ class Editor(
 				p2 = p2.owner
 			}
 		}
-		for (n in objviewDiv.childNodes.asList()) objviewDiv.removeChild(n)
+		objviewDiv.innerHTML = ""
 		if (part != null) {
 			objviewDiv.appendAll(
 					HTMLDivElement {
@@ -241,7 +192,7 @@ class Editor(
 
 	@JsName("loadJson")
 	fun loadJson(json: dynamic) {
-		recreateView(Model.load(ModelContext("edit"), json))
+		recreateView(Model.load(ModelContext(DisplayMode.EDIT), json))
 	}
 
 	/*loadSvgStruct(el: SVGElement) {

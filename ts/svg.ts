@@ -1,4 +1,4 @@
-import {CEASvgUse, merge1d, CreateElementAttrsLite} from "./dom";
+import {CEASvgUse, CreateElementAttrsLite, merge1d} from "./dom";
 export const SVGNS = 'http://www.w3.org/2000/svg';
 export type TXY = [number, number];
 export type IXY = TXY|number[];
@@ -209,14 +209,11 @@ export function nodestoels(path: NodePath): PathDEl[] {
 	if (pts.length == 1) return [M, {c: 'z', p: []} as PathDEl];
 	let rslt: PathDEl[] = pts.map(a => ({c: 'C', p: [[0, 0], [0, 0], [0, 0]]as TXY[]}));
 	let n = pts.length;
-	let i0 = path.z ? 0 : 1;
 	rslt[0].p[0] = [pts[0].p[0], pts[0].p[1]];
 	for (let i = 0; i < n; i++) {
 		let el = rslt[i], node = pts[i],
 			prevIdx = (i + n - 1) % n,
-			nextIdx = (i + 1) % n,
-			prevEl = rslt[prevIdx],
-			nextEl = rslt[nextIdx];
+			prevEl = rslt[prevIdx];
 		prevEl.p[1] = [node.h1[0], node.h1[1]];
 		prevEl.p[2] = [node.p[0], node.p[1]];
 		el.p[0] = [node.h2[0], node.h2[1]];
@@ -353,8 +350,8 @@ export function makeDraggable(el: SVGLocatableElement) {
 		if (e.button != 0) return;
 		let svg = el.ownerSVGElement;
 		if (el.parentNode) el.parentNode.appendChild(el); // move to top
-		const x = el.tagName == 'circle' ? 'cx' : 'x';
-		const y = el.tagName == 'circle' ? 'cy' : 'y';
+		//const x = el.tagName == 'circle' ? 'cx' : 'x';
+		//const y = el.tagName == 'circle' ? 'cy' : 'y';
 		const mouseStart = unproject(svg, e.clientX, e.clientY);
 		let matrix0 = el.transform.baseVal.consolidate().matrix.translate(0, 0);
 		start.x = matrix0.e;

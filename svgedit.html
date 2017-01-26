@@ -185,7 +185,7 @@
         var n = document.body.firstChild;
         var purge = [];
         do {
-            if (n.nodeType == Node.TEXT_NODE) purge.push(n);
+            if (n.nodeType === Node.TEXT_NODE) purge.push(n);
         } while (n = n.nextSibling);
         for (var i = 0; i < purge.length; i++)document.body.removeChild(purge[i]);
         var canvas = $('.canvas-editor');

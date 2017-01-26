@@ -30,9 +30,7 @@ module.exports = {
             "kotlinjs": path.join(__dirname, 'out/production/tfgame/tfgame.js'),
             "kotlin": path.join(__dirname, 'out/production/tfgame/lib/kotlin.js'),
             "dom": path.join(__dirname, 'ts/dom.ts'),
-            "svg": path.join(__dirname, 'ts/svg.ts'),
-            "svgedit-api": path.join(__dirname, 'ts/svgedit/api.ts'),
-            "svgedit-ctx": path.join(__dirname, 'ts/svgedit/_ctx.ts')
+            "svg": path.join(__dirname, 'ts/svg.ts')
         }
     },
     plugins: [

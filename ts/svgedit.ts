@@ -2,15 +2,12 @@ import dom = require('./dom');
 import svg = require("./svg");
 require("jstree-css");
 
-import {ALL_LOADERS} from "./svgedit/_all";
 import kotlinjs = require("kotlinjs");
-import ModelPane = kotlinjs.com.aimozg.psvg.ModelPane;
-import Editor = kotlinjs.com.aimozg.psvg.Editor;
+import Editor = kotlinjs.com.aimozg.psvg.editor.Editor;
+import ALL_LOADERS = kotlinjs.com.aimozg.psvg.parts.ALL_LOADERS;
 
 //noinspection JSUnusedGlobalSymbols
-export const importz = {dom, svg, ALL_LOADERS};
-
-
+export const importz = {dom, svg, ALL_LOADERS, kotlinjs};
 
 //noinspection JSUnusedGlobalSymbols
 export function setup(editorDiv: HTMLElement,

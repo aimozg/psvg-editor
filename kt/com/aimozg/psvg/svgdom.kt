@@ -9,7 +9,7 @@ import kotlin.browser.document
  */
 const val SVGNS = "http://www.w3.org/2000/svg"
 
-private val svgsvg = document.createElementNS(SVGNS, "svg")
+private val svgsvg = document.createElementNS(SVGNS, "svg") as SVGSVGElement
 
 inline fun SVGCircleElement(cx0: Number? = null,
                             cy0: Number? = null,
@@ -23,6 +23,19 @@ inline fun SVGCircleElement(cx0: Number? = null,
 
 inline fun SVGDefsElement(init: SVGDefsElement.() -> Unit): SVGDefsElement = (document.createElementNS(SVGNS, "defs") as SVGDefsElement).apply(init)
 inline fun SVGGElement(init: SVGGElement.() -> Unit): SVGGElement = (document.createElementNS(SVGNS, "g") as SVGGElement).apply(init)
+inline fun SVGLineElement(x1: Number? = null,
+                          y1: Number? = null,
+                          x2: Number? = null,
+                          y2: Number? = null,
+                          init: SVGLineElement.() -> Unit): SVGLineElement =
+		(document.createElementNS(SVGNS, "line") as SVGLineElement).apply {
+			if (x1 != null) this.x1.u = x1.toFloat()
+			if (y1 != null) this.y1.u = y1.toFloat()
+			if (x2 != null) this.x2.u = x2.toFloat()
+			if (y2 != null) this.y2.u = y2.toFloat()
+			init()
+		}
+
 inline fun SVGPathElement(init: SVGPathElement.() -> Unit): SVGPathElement = (document.createElementNS(SVGNS, "path") as SVGPathElement).apply(init)
 inline fun SVGRectElement(x0: Number? = null,
                           y0: Number? = null,
@@ -37,6 +50,7 @@ inline fun SVGRectElement(x0: Number? = null,
 			init()
 		}
 
+
 inline fun SVGSVGElement(init: SVGSVGElement.() -> Unit): SVGSVGElement = (document.createElementNS(SVGNS, "svg") as SVGSVGElement).apply(init)
 inline fun SVGUseElement(href0: String? = null,
                          init: SVGUseElement.() -> Unit): SVGUseElement = (document.createElementNS(SVGNS, "use") as SVGUseElement).apply {
@@ -45,7 +59,7 @@ inline fun SVGUseElement(href0: String? = null,
 }
 
 var SVGPathElement.d: String
-	get() = getAttribute("d")?:""
+	get() = getAttribute("d") ?: ""
 	set(value) = setAttribute("d", value)
 
 fun SVGAnimatedRect.set(x: Double, y: Double, width: Double, height: Double) {
@@ -83,6 +97,14 @@ var SVGAnimatedLength.u: Float
 		baseVal.value = value
 	}
 
-fun SVGElement.appendAll(vararg children: SVGElement?) {
+fun<T:SVGElement> T.appendAll(vararg children: SVGElement?):T {
 	for (child in children) if (child != null) appendChild(child)
+	return this
 }
+
+fun SVGAnimatedTransformList.set(tf: SVGTransform) = baseVal.initialize(tf)
+
+
+data class DNode(val p: TXY, val h1: TXY, val h2: TXY)
+
+fun tftranslate(dxy: TXY): SVGTransform = svgsvg.createSVGTransform().apply { setTranslate(dxy.x.toFloat(), dxy.y.toFloat()) }

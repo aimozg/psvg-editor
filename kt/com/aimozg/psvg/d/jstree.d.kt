@@ -1,6 +1,6 @@
 @file:Suppress("unused", "UNUSED_PARAMETER")
 
-package com.aimozg.psvg
+package com.aimozg.psvg.d
 
 import jquery.JQuery
 import org.w3c.dom.Element
@@ -111,7 +111,7 @@ external class JSTreeNodeEvent : Event {
 external interface JSTreePlugin  {
 	fun jstree(options: JSTreeOptions): JQuery
 	fun jstree(): JSTree
-	fun<T> on(type:String,handler:(e:Event,data:T)->Any?): JQuery
+	fun<T> on(type:String,handler:(e: Event, data:T)->Any?): JQuery
 }
 @Suppress("UNCHECKED_CAST_TO_NATIVE_INTERFACE", "CAST_NEVER_SUCCEEDS")
 inline val JQuery.withPlugins: JSTreePlugin
