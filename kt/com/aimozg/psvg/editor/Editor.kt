@@ -122,6 +122,11 @@ class Editor(
 					// if (p) p.update();
 				}
 			}
+			if (obj is Path) {
+				for (m in previews) {
+
+				}
+			}
 			tree?.rename_node(obj.treeNodeId(), obj.treeNodeText())
 		}
 		editPane.eModel.addEventListener("click", { e: Event ->
@@ -145,22 +150,20 @@ class Editor(
 		if (selection == part) return
 		val model = editPane.model
 		var s = selection
-		while (s != null && s is ModelElement && s != model) {
-			s.graphic?.classList?.remove("-selected", "-primary")
+		while (s != null && s is VisiblePart && s != model) {
+			s.graphic.classList.remove("-selected", "-primary")
 			s = s.owner
 		}
 		tree?.deselect_all(true)
 		selection = part
-		if (part != null && part is ModelElement && part != model) {
+		if (part != null && part is VisiblePart && part != model) {
 			tree?.select_node(part.treeNodeId(), true)
-			part.graphic?.classList?.add("-selected", "-primary")
+			part.graphic.classList.add("-selected", "-primary")
 			var p2: Part? = part
-			while (p2 != null && p2 is ModelElement && p2 != model) {
+			while (p2 != null && p2 is VisiblePart && p2 != model) {
 				val g = p2.graphic
-				if (g != null) {
-					g.classList.add("-selected")
-					g.parentElement?.appendChild(g)
-				}
+				g.classList.add("-selected")
+				g.parentElement?.appendChild(g)
 				p2 = p2.owner
 			}
 		}
@@ -174,7 +177,7 @@ class Editor(
 						}
 					}, HTMLDivElement {
 				className = "partReplace"
-				for (v in ModelContext.loadersFor(part.category)) {
+				for (v in Context.loadersFor(part.category)) {
 					appendChild(HTMLDivElement {
 						textContent = v.name
 					})
@@ -192,7 +195,7 @@ class Editor(
 
 	@JsName("loadJson")
 	fun loadJson(json: dynamic) {
-		recreateView(Model.load(ModelContext(DisplayMode.EDIT), json))
+		recreateView(Context().loadModel(json))
 	}
 
 	/*loadSvgStruct(el: SVGElement) {
@@ -220,7 +223,7 @@ class Editor(
 	 //console.log(paths);
 	 let m = new Model("edit");
 	 for (let p of paths) {
-	 m.addPath(new ModelPath(p.name,
+	 m.addPath(new Path(p.name,
 	 p.np.nodes.map(node => {
 	 return new CuspNode(undefined,
 	 new FixedPoint(undefined, node.p),

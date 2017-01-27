@@ -60,7 +60,7 @@ fun smoothHandles(b: TXY, a: TXY, c: TXY, abq: Number = 0.3, acq: Number = 0.3, 
 	val ab = b - a
 	val ac = c - a
 	val ablen = ab.vlength
-	val aclen = ab.vlength
+	val aclen = ac.vlength
 	val dir = vnormbisect(ab, ac, ablen, aclen).toUnit().rotate(rot)
 	return a - dir * (ablen * abq.toDouble()) to a + dir * (aclen * acq.toDouble())
 }

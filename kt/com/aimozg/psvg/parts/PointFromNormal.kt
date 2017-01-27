@@ -1,6 +1,6 @@
 package com.aimozg.psvg.parts
 
-import com.aimozg.psvg.ModelLoader
+import com.aimozg.psvg.PartLoader
 import com.aimozg.psvg.appendAll
 import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.norm2fixed
@@ -10,18 +10,20 @@ import org.w3c.dom.svg.SVGGElement
  * Created by aimozg on 26.01.2017.
  * Confidential
  */
-class PointFromNormal(ctx:ModelContext,
+class PointFromNormal(ctx: Context,
                       name:String?,
-                      val pt0: ModelPoint,
-                      val pt1: ModelPoint,
+                      val pt0: Point,
+                      val pt1: Point,
                       val alpha:ValueFloat,
                       val beta:ValueFloat):
-ModelPoint(ctx,name,listOf(pt0.asPosDependency,pt1.asPosDependency,alpha.asValDependency,beta.asValDependency)){
-	override fun draw(): SVGGElement {
-		return super.draw().appendAll(pt0.graphic,pt1.graphic)
+Point(ctx,name,listOf(pt0.asPosDependency,pt1.asPosDependency,alpha.asValDependency,beta.asValDependency)){
+	override fun draw(g: SVGGElement) {
+		super.draw(g)
+		g.appendAll(pt0.graphic,pt1.graphic)
 	}
 
 	override fun updated(other: Part, attr: String) {
+		super.updated(other, attr)
 		update("pos")
 	}
 
@@ -37,8 +39,8 @@ ModelPoint(ctx,name,listOf(pt0.asPosDependency,pt1.asPosDependency,alpha.asValDe
 	}
 	companion object {
 		const val POINT_FROM_NORMAL_TYPE = "N"
-		val POINT_FROM_NORMAL_LOADER = object:ModelLoader(PartCategory.POINT,"PointFromNormal", POINT_FROM_NORMAL_TYPE) {
-			override fun loadStrict(ctx: ModelContext, json: dynamic, vararg args: Any?) = PointFromNormal(ctx,json.name,
+		val POINT_FROM_NORMAL_LOADER = object: PartLoader(Category.POINT,"PointFromNormal", POINT_FROM_NORMAL_TYPE) {
+			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) = PointFromNormal(ctx,json.name,
 					ctx.loadPoint(json.pt0),
 					ctx.loadPoint(json.pt1),
 					ctx.loadFloat("tangent",json.alpha,0),

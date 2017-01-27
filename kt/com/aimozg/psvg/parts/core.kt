@@ -27,7 +27,7 @@ enum class DisplayMode {
 	VIEW
 }
 
-enum class PartCategory {
+enum class Category {
 	POINT,
 	NODE,
 	PATH,
@@ -44,7 +44,7 @@ sealed class ItemDeclaration {
 }
 
 abstract class Part(
-		val ctx: ModelContext,
+		val ctx: Context,
 		val name: String?,
 		items: List<ItemDeclaration?>
 ) {
@@ -54,7 +54,7 @@ abstract class Part(
 	private val _children = ArrayList<Part>()
 	val children: List<Part> get() = _children
 	protected val dependants = ArrayList<PartDependency>()
-	abstract val category: PartCategory
+	abstract val category: Category
 	val asDependency get() = ItemDeclaration.Instant(this, "*")
 
 	init {
@@ -104,14 +104,14 @@ abstract class Part(
 	}
 
 	fun treeNodeId(): String = "ModelPart_$id"
-	val classname = this::class.simpleName
+	val classname = this::class.simpleName?:"Part<?>"
 
 	fun treeNodeText(): String = (name?.wrap("\"") ?: "#$id") + " (" + classname + ")"
 
 	abstract fun save(): dynamic
 }
 
-abstract class Value<T>(ctx: ModelContext,
+abstract class Value<T>(ctx: Context,
                         name: String?,
                         declarations:List<ItemDeclaration> =emptyList()) : Part(ctx, name, declarations) {
 	val asValDependency get() = ItemDeclaration.Instant(this,"val")

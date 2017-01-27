@@ -1,6 +1,6 @@
 package com.aimozg.psvg.parts
 
-import com.aimozg.psvg.ModelLoader
+import com.aimozg.psvg.PartLoader
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.norm2fixed
@@ -10,10 +10,10 @@ import org.w3c.dom.svg.SVGGElement
  * Created by aimozg on 26.01.2017.
  * Confidential
  */
-class Flow1Node(ctx:ModelContext,
+class Flow1Node(ctx: Context,
                 name:String?,
-                ownOrigin: ModelPoint?,
-                pos: ModelPoint,
+                ownOrigin: Point?,
+                pos: Point,
                 val h1a: ValueFloat?,
                 val h1b: ValueFloat?,
                 val h2a: ValueFloat?,
@@ -26,12 +26,13 @@ CommonNode(ctx,name,ownOrigin,pos,listOf(
 		ItemDeclaration.Deferred{(it as Flow1Node).asPosDependency})){
 
 	override fun updated(other: Part, attr: String) {
-		if (other is ModelPoint) update("*")
-		if (other is ModelNode && (attr == "pos" || attr=="*") || other is ValueFloat) update("handle")
+		super.updated(other, attr)
+		if (other is Point) update("*")
+		if (other is PathNode && (attr == "pos" || attr=="*") || other is ValueFloat) update("handle")
 	}
 
-	override fun draw(): SVGGElement {
-		return super.draw() // TODO draggable ctrl points
+	override fun draw(g: SVGGElement) {
+		super.draw(g) // TODO draggable ctrl points
 	}
 
 	override fun calcHandles(): Pair<TXY, TXY> {
@@ -56,8 +57,8 @@ CommonNode(ctx,name,ownOrigin,pos,listOf(
 
 	companion object {
 		const val NODE_FLOW1_TYPE = "flow1"
-		val NODE_FLOW1_LOADER = object: ModelLoader(PartCategory.NODE,"Flow1Node", NODE_FLOW1_TYPE) {
-			override fun loadStrict(ctx: ModelContext, json: dynamic, vararg args: Any?) = Flow1Node(
+		val NODE_FLOW1_LOADER = object: PartLoader(Category.NODE,"Flow1Node", NODE_FLOW1_TYPE) {
+			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) = Flow1Node(
 					ctx,
 					json.name,
 					ctx.loadPointOrNull(json.origin),

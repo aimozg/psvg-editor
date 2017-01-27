@@ -1,6 +1,6 @@
 package com.aimozg.psvg.parts
 
-import com.aimozg.psvg.ModelLoader
+import com.aimozg.psvg.PartLoader
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.smoothHandles
@@ -9,10 +9,10 @@ import com.aimozg.psvg.smoothHandles
  * Created by aimozg on 26.01.2017.
  * Confidential
  */
-class SmoothNode(ctx: ModelContext,
+class SmoothNode(ctx: Context,
                  name: String?,
-                 ownOrigin: ModelPoint?,
-                 pos: ModelPoint,
+                 ownOrigin: Point?,
+                 pos: Point,
                  val abq: ValueFloat,
                  val acq: ValueFloat,
                  val rot: ValueFloat) :
@@ -20,11 +20,12 @@ class SmoothNode(ctx: ModelContext,
 				listOf(abq.asValDependency,
 						acq.asValDependency,
 						rot.asValDependency,
-						ItemDeclaration.Deferred { (it as ModelNode).prevNode.asPosDependency},
-						ItemDeclaration.Deferred { (it as ModelNode).nextNode.asPosDependency})) {
+						ItemDeclaration.Deferred { (it as PathNode).prevNode.asPosDependency},
+						ItemDeclaration.Deferred { (it as PathNode).nextNode.asPosDependency})) {
 	override fun updated(other: Part, attr: String) {
-		if (other is ModelPoint) update("*")
-		if (other is ModelNode && (attr == "pos" || attr=="*") || other is ValueFloat) update("handle")
+		super.updated(other, attr)
+		if (other is Point) update("*")
+		if (other is PathNode && (attr == "pos" || attr=="*") || other is ValueFloat) update("handle")
 	}
 
 	override fun calcHandles(): Pair<TXY, TXY> = smoothHandles(
@@ -46,8 +47,8 @@ class SmoothNode(ctx: ModelContext,
 	}
 	companion object {
 		const val NODE_SMOOTH_TYPE = "smooth"
-		val NODE_SMOOTH_LOADER = object:ModelLoader(PartCategory.NODE, "SmoothNode", NODE_SMOOTH_TYPE) {
-			override fun loadStrict(ctx: ModelContext, json: dynamic, vararg args: Any?): Part {
+		val NODE_SMOOTH_LOADER = object: PartLoader(Category.NODE, "SmoothNode", NODE_SMOOTH_TYPE) {
+			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): Part {
 				return SmoothNode(ctx,
 						json.name,
 						ctx.loadPointOrNull(json.origin),

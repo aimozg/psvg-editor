@@ -101,6 +101,10 @@ fun<T:SVGElement> T.appendAll(vararg children: SVGElement?):T {
 	for (child in children) if (child != null) appendChild(child)
 	return this
 }
+fun<T:SVGElement> T.appendAll(children: Iterable<SVGElement?>):T {
+	for (child in children) if (child != null) appendChild(child)
+	return this
+}
 
 fun SVGAnimatedTransformList.set(tf: SVGTransform) = baseVal.initialize(tf)
 

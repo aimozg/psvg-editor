@@ -1,45 +1,49 @@
 package com.aimozg.psvg.parts
 
 import com.aimozg.psvg.SVGGElement
+import com.aimozg.psvg.appendAll
 import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.set
-import org.w3c.dom.svg.SVGGraphicsElement
+import org.w3c.dom.svg.SVGGElement
 
-class Model(ctx: ModelContext,
+class Model(ctx: Context,
             name: String?,
-            ownOrigin: ModelPoint?,
-            val paths: List<ModelPath>,
-            val params: List<ModelParam>) :
-		ModelElement(ctx, name, ownOrigin, paths.map(ModelPath::asDependency)) {
-	override val category: PartCategory = PartCategory.MODEL
+            ownOrigin: Point?,
+            val paths: List<Path>,
+            val parameters: List<Parameter>) :
+		VisiblePart(ctx, name, ownOrigin, paths.map(Path::asDependency)) {
+	override val category: Category = Category.MODEL
 	override fun save(): dynamic = jsobject {
 		it.name = name
 		it.paths = paths.map { it.save() }.toTypedArray()
-		it.params = params.map { it.save() }.toTypedArray()
+		it.params = parameters.map { it.save() }.toTypedArray()
 	}
 
 	override fun updated(other: Part, attr: String) {}
 
-	override fun draw() = SVGGElement {
+	override fun draw(g: SVGGElement) {
+		/*g.style["stroke"] = "transparent"
+		g.style["fill"] = "transparent"
+		g.style["stroke-opacity"] = "1"
+		g.style["fill-opacity"] = "1"
+		g.style["opacity"] = "1"
+		g.style["stroke-width"] = "1"*/
+		g.appendAll(paths.map{it.graphic})
+	}
+
+	override fun display() = SVGGElement {
 		style["stroke"] = "transparent"
 		style["fill"] = "transparent"
 		style["stroke-opacity"] = "1"
 		style["fill-opacity"] = "1"
 		style["opacity"] = "1"
 		style["stroke-width"] = "1"
-		for (path in paths) append(path.graphic)
+		appendAll(paths.map{it.display()})
 	}
 
-	override fun redraw(attr: String, graphic: SVGGraphicsElement?) {
+	override fun redraw(attr: String, g: SVGGElement) {
 	}
 
-	fun clone(ctx: ModelContext): Model = load(ctx, save()) // TODO optimize
+	fun clone(ctx: Context): Model = ctx.loadModel(save()) // TODO optimize
 
-	companion object {
-		fun load(ctx: ModelContext, json: dynamic) = Model(ctx,
-				json.name ?: "unnamed",
-				null,
-				(json["paths"] as Array<dynamic>?)?.map { ctx.loadPath(it) } ?: emptyList(),
-				(json["params"] as Array<dynamic>?)?.map { ctx.loadParam(it) } ?: emptyList())
-	}
 }

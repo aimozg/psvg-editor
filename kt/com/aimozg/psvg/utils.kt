@@ -4,7 +4,11 @@ package com.aimozg.psvg
  * Created by aimozg on 25.01.2017.
  * Confidential
  */
-external open class Object
+external open class Object {
+	companion object {
+		fun keys(o:Object):Array<String>
+	}
+}
 
 inline fun jsobject(init: (jso:dynamic) -> Unit): dynamic {
 	return (Object()).apply {init(this)}

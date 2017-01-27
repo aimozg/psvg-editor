@@ -2,7 +2,6 @@ package com.aimozg.psvg.parts
 
 import com.aimozg.psvg.*
 import org.w3c.dom.svg.SVGGElement
-import org.w3c.dom.svg.SVGGraphicsElement
 import org.w3c.dom.svg.SVGLineElement
 import org.w3c.dom.svg.SVGUseElement
 
@@ -11,32 +10,29 @@ import org.w3c.dom.svg.SVGUseElement
  * Confidential
  */
 abstract class CommonNode(
-		ctx: ModelContext,
+		ctx: Context,
 		name: String?,
-		ownOrigin: ModelPoint?,
-		val pos: ModelPoint,
+		ownOrigin: Point?,
+		val pos: Point,
 		items: List<ItemDeclaration?>
-) : ModelNode(ctx, name, ownOrigin, items + pos.asPosDependency) {
+) : PathNode(ctx, name, ownOrigin, items + pos.asPosDependency) {
 	protected var l1: SVGLineElement? = null
 	protected var l2: SVGLineElement? = null
 	protected var u0: SVGUseElement? = null
 
-	override fun draw(): SVGGElement {
+	override fun draw(g: SVGGElement) {
 		l1 = null
 		l2 = null
-		return SVGGElement {
-			classList += "node"
-			u0 = SVGUseElement("#svg_$classname"){}
-			appendAll(u0,pos.graphic)
-		}
+		u0 = SVGUseElement("#svg_$classname"){}
+		g.appendAll(u0,pos.graphic)
 	}
 
 	override fun center(): TXY = pos.calculate()
 
-	override fun redraw(attr: String, graphic: SVGGraphicsElement?) {
+	override fun redraw(attr: String, g: SVGGElement) {
 		val u0 = u0
 		val xy = pos.calculate()
-		if (graphic!=null && u0!=null){
+		if (u0!=null){
 			u0.transform.set(tftranslate(xy))
 			val (h1,h2) = calcHandles()
 			l1?.remove()
@@ -46,13 +42,13 @@ abstract class CommonNode(
 			if (!first) {
 				l1 = SVGLineElement(xy.x,xy.y,h1.x,h1.y) {
 					classList += "handle"
-					graphic.insertBefore(this,graphic.firstChild)
+					g.insertBefore(this,g.firstChild)
 				}
 			}
 			if (!last) {
 				l2 = SVGLineElement(xy.x,xy.y,h2.x,h2.y) {
 					classList += "handle"
-					graphic.insertBefore(this,graphic.firstChild)
+					g.insertBefore(this,g.firstChild)
 				}
 			}
 		}

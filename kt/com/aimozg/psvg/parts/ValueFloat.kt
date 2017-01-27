@@ -10,19 +10,19 @@ import org.w3c.dom.events.Event
  * Confidential
  */
 class ValueFloat(
-		ctx:ModelContext,
-        name:String?,
-        private var value:Double,
-        val def:Double?,
-        val min:Double,
-        val max:Double
+		ctx: Context,
+		name:String?,
+		private var value:Double,
+		val def:Double?,
+		val min:Double,
+		val max:Double
 ) : Value<Double>(ctx,name) {
 	init {
 		if (def?:min<min || def?:max>max || min>max) error("Illegal bounds for $name: def=$def min=$min max=$max")
 	}
 	private var input:HTMLInputElement? = null
 
-	override val category: PartCategory = PartCategory.VALUEFLOAT
+	override val category: Category = Category.VALUEFLOAT
 	override fun updated(other: Part, attr: String) {}
 
 	override fun save(): dynamic {
@@ -47,11 +47,12 @@ class ValueFloat(
 		val vid = "valuefloat_${this.id}"
 		val vname = name
 		return HTMLDivElement {
-			classList.add("Value","ValueFloat")
+			classList.add("Value",classname)
 			appendAll(HTMLLabelElement {
 				htmlFor = vid
 				textContent = vname
 			},HTMLInputElement("text") {
+				input = this
 				placeholder = def?.toString()?:""
 				id = vid
 				value = if (vval == def) "" else vval.toString()
@@ -70,9 +71,9 @@ class ValueFloat(
 	fun validate(x:Number):Boolean = x.toDouble().let { it.isFinite() && it>=min && it<=max }
 
 	companion object {
-		val VALUEFLOAD_LOADER = object:ModelLoader(PartCategory.VALUEFLOAT,"ValueFloat",null,JsTypename.NUMBER,JsTypename.STRING,JsTypename.UNDEFINED) {
-			override fun loadStrict(ctx: ModelContext, json: dynamic, vararg args: Any?): ValueFloat = loadRelaxed(ctx,json,*args) ?: error("Cannot load VALUEFLOAT ${JsTypename.of(json)} ${JSON.stringify(json)}")
-			override fun loadRelaxed(ctx: ModelContext, json: dynamic, vararg args: Any?): ValueFloat? {
+		val VALUEFLOAD_LOADER = object: PartLoader(Category.VALUEFLOAT,"ValueFloat",null,JsTypename.NUMBER,JsTypename.STRING,JsTypename.UNDEFINED) {
+			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): ValueFloat = loadRelaxed(ctx,json,*args) ?: error("Cannot load VALUEFLOAT ${JsTypename.of(json)} ${JSON.stringify(json)}")
+			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): ValueFloat? {
 				val name = args[0] as String?
 				val def = args[1] as Number?
 				val min = args[2] as Number

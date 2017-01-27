@@ -4,14 +4,14 @@ import com.aimozg.psvg.*
 import org.w3c.dom.svg.SVGGElement
 
 
-class FixedPoint(ctx:ModelContext,
+class FixedPoint(ctx: Context,
                  name:String?,
                  val x: ValueFloat,
                  val y: ValueFloat) :
-		ModelPoint(ctx,name,listOf(x.asValDependency,y.asValDependency)) {
+		Point(ctx,name,listOf(x.asValDependency,y.asValDependency)) {
 
-	override fun draw(): SVGGElement {
-		val g = super.draw()
+	override fun draw(g: SVGGElement) {
+		super.draw(g)
 		g.makeDraggable()
 		g.onsdragstart { _, d ->
 			val pos = calculate()
@@ -22,7 +22,6 @@ class FixedPoint(ctx:ModelContext,
 			e.preventDefault()
 			set(d.start.x+d.movement.x,d.start.y+d.movement.y)
 		}
-		return g
 	}
 
 	fun set(x:Double, y:Double) {
@@ -37,6 +36,7 @@ class FixedPoint(ctx:ModelContext,
 	override fun calculate(): TXY = TXY(x.get(),y.get())
 
 	override fun updated(other: Part, attr: String) {
+		super.updated(other, attr)
 		set(x.get(),y.get())
 	}
 
@@ -46,13 +46,13 @@ class FixedPoint(ctx:ModelContext,
 	}
 
 	companion object {
-		val POINT_FIXED_LOADER = object:ModelLoader(PartCategory.POINT,"FixedPoint","F",JsTypename.OBJECT) {
-			override fun loadStrict(ctx: ModelContext, json: dynamic, vararg args: Any?): Part = FixedPoint(ctx,
+		val POINT_FIXED_LOADER = object: PartLoader(Category.POINT,"FixedPoint","F",JsTypename.OBJECT) {
+			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): Part = FixedPoint(ctx,
 					json.name,
 					ctx.loadFloat("x",json.pt[0]),
 					ctx.loadFloat("y",json.pt[1]))
 
-			override fun loadRelaxed(ctx: ModelContext, json: dynamic, vararg args: Any?): Part? {
+			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): Part? {
 				val name:String?
 				val x:dynamic
 				val y:dynamic
