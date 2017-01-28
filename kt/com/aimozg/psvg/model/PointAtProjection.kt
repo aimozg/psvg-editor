@@ -5,15 +5,15 @@ import org.w3c.dom.svg.SVGGElement
 import org.w3c.dom.svg.SVGLineElement
 
 /**
- * Created by aimozg on 26.01.2017.
- * Confidential
+ * Projects 'p' onto the line 'ab' into point 'q', and stretches 'pq' by factor 'scale'
  */
 class PointAtProjection(ctx: Context,
                         name: String?,
                         val a: Point,
                         val b: Point,
-                        val p: Point) :
-		Point(ctx, name, listOf(a.asPosDependency, b.asPosDependency, p.asPosDependency)) {
+                        val p: Point,
+                        val scale: ValueFloat) :
+		Point(ctx, name, listOf(a.asPosDependency, b.asPosDependency, p.asPosDependency, scale.asValDependency)) {
 	private var lab:SVGLineElement? = null
 	private var lpq:SVGLineElement? = null
 	companion object {
@@ -22,7 +22,8 @@ class PointAtProjection(ctx: Context,
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) = PointAtProjection(ctx,json.name,
 					ctx.loadPoint(json.a),
 					ctx.loadPoint(json.b),
-					ctx.loadPoint(json.p))
+					ctx.loadPoint(json.p),
+					ctx.loadFloat("scale",json.scale,1.0))
 		}.register()
 	}
 
@@ -31,7 +32,11 @@ class PointAtProjection(ctx: Context,
 		update("pos")
 	}
 
-	override fun calculate() = ptproj(a.calculate(),b.calculate(),p.calculate())
+	override fun calculate():TXY {
+		val p = p.calculate()
+		val q = ptproj(a.calculate(),b.calculate(), p)
+		return p + (q-p)*scale.get()
+	}
 
 	override fun draw(g: SVGGElement) {
 		super.draw(g)
@@ -64,5 +69,6 @@ class PointAtProjection(ctx: Context,
 		it.a = a.save()
 		it.b = b.save()
 		it.p = p.save()
+		it.scale = scale.save()
 	}
 }

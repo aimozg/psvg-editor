@@ -8,7 +8,8 @@
       "path", false, null, null,
       { "type": "cusp", "pos": ["_vtop", 0, -80] },
       { "type": "cusp", "pos": ["_vbottom", 0, 50] }
-    ]
+    ],
+    "eyer_origin": ["point", 25, -16]
   },
   "paths" : [
     [
@@ -42,18 +43,12 @@
     }, {
       "type"   : "flow1",
       "pos"    : {
-        "type" : "N",
         "name" : "noseleft",
-        "xy"   : [-8, 15],
-        "pt0"  : "@noseright",
-        "pt1"  : {
-          "type": "PROJ",
-          "a"   : "@nosetop",
-          "b"   : "@nosetip",
-          "p"   : "@noseright"
-        },
-        "alpha": 2,
-        "beta" : 0
+        "type" : "PROJ",
+        "a"    : "@nosetop",
+        "b"    : "@nosetip",
+        "p"    : "@noseright",
+        "scale": 2
       },
       "h1ab"   : [0.7, 0.1],
       "handle1": [-6, 17]
@@ -62,13 +57,12 @@
     [
       "nosefill", true, {
       "fill": "hsla(26, 49%, 32%, 0.5)"
-    },null,
-      {
-        "type": "flow1",
-        "pos" : ["nosetop", 0, -3],
-        "h1ab": [0.8247422680412371, -0.14432989690721648],
-        "h2ab": [0, 0]
-      }, {
+    }, null, {
+      "type": "flow1",
+      "pos" : ["nosetop", 0, -3],
+      "h1ab": [0.8247422680412371, -0.14432989690721648],
+      "h2ab": [0, 0]
+    }, {
       "type": "flow1",
       "pos" : ["nosetip", 0, 19],
       "h1ab": [0.8181818181818182, -0.09090909090909091],
@@ -84,7 +78,7 @@
       "mouth", false, {
       "stroke"      : "hsl(26, 49%, 16%)",
       "stroke-width": 0.5
-    }, null,{
+    }, null, {
       "type": "flow1",
       "pos" : [-9, 28],
       "h2ab": [0.023529411764705882, 0.10588235294117647]
@@ -105,11 +99,13 @@
     ], [
       "eyer_white", true, {
         "fill": "#fff"
-      }, ["eyer_origin", 25, -16],
+      }, "@eyer_origin",
       { "type": "smooth", "pos": [-3, 13] },
       {
-        "type"   : "cusp",
+        "type"   : "flow1",
         "pos"    : ["eyer_corneri", -14, 7],
+        "h1ab"   : [0.5987261146496816, 0.23566878980891717],
+        "h2ab"   : [0.1647058823529412, 0.25882352941176473],
         "handle1": [-11, 12],
         "handle2": [-14, 3]
       },

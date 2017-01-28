@@ -1,9 +1,8 @@
 package com.aimozg.psvg.model
 
-import com.aimozg.psvg.TXY
-import com.aimozg.psvg.jsobject
-import com.aimozg.psvg.norm2fixed
+import com.aimozg.psvg.*
 import org.w3c.dom.svg.SVGGElement
+import org.w3c.dom.svg.SVGLineElement
 
 /**
  * Created by aimozg on 26.01.2017.
@@ -22,7 +21,12 @@ CommonNode(ctx,name,ownOrigin,pos,listOf(
 		h1b?.asValDependency,
 		h2a?.asValDependency,
 		h2b?.asValDependency,
-		ItemDeclaration.Deferred{(it as Flow1Node).asPosDependency})){
+		ItemDeclaration.Deferred{(it as Flow1Node).prevNode.asPosDependency},
+		ItemDeclaration.Deferred{(it as Flow1Node).nextNode.asPosDependency})){
+	private var ltan1: SVGLineElement? = null
+	private var lnorm1: SVGLineElement? = null
+	private var ltan2: SVGLineElement? = null
+	private var lnorm2: SVGLineElement? = null
 
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
@@ -32,6 +36,49 @@ CommonNode(ctx,name,ownOrigin,pos,listOf(
 
 	override fun draw(g: SVGGElement) {
 		super.draw(g) // TODO draggable ctrl points
+		ltan1 = null
+		lnorm1 = null
+		ltan2 = null
+		lnorm2 = null
+	}
+
+	override fun redraw(attr: String, g: SVGGElement) {
+		super.redraw(attr, g)
+		val pos = center()
+		ltan1?.remove()
+		lnorm1?.remove()
+		val a1 = h1a?.get()
+		val b1 = h1b?.get()
+		if (a1 != null && b1 != null) {
+			val prev = prevNode.center()
+			val tan = prev+(pos-prev)*a1
+			ltan1 = SVGLineElement(prev.x, prev.y, tan.x, tan.y) {
+				classList += "lineref"
+				g.insertBefore(this, g.firstChild)
+			}
+			val norm = tan+(pos-prev).rot90()*b1
+			lnorm1 = SVGLineElement(tan.x, tan.y, norm.x, norm.y) {
+				classList += "lineref"
+				g.insertBefore(this, g.firstChild)
+			}
+		}
+		val a2 = h2a?.get()
+		val b2 = h2b?.get()
+		ltan2?.remove()
+		lnorm2?.remove()
+		if (a2 != null && b2 != null) {
+			val next = nextNode.center()
+			val tan = pos+(next-pos)*a2
+			ltan2 = SVGLineElement(pos.x, pos.y, tan.x, tan.y) {
+				classList += "lineref"
+				g.insertBefore(this, g.firstChild)
+			}
+			val norm = tan+(next-pos).rot90()*b2
+			lnorm2 = SVGLineElement(tan.x, tan.y, norm.x, norm.y) {
+				classList += "lineref"
+				g.insertBefore(this, g.firstChild)
+			}
+		}
 	}
 
 	override fun calcHandles(): Pair<TXY, TXY> {

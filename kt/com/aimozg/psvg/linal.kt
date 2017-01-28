@@ -110,7 +110,7 @@ inline operator fun Vector3.get(index: Int) = when (index) {
 	else -> error("Vector3.get($index)")
 }
 
-fun solve2(v1: TXY, v2: TXY, vc: TXY) = solve2(v1.x, v2.x, v1.y, v2.y, vc.x, vc.y)
+fun solve2(v1: TXY, v2: TXY, vc: TXY) = solve2(v1.x, v2.x, vc.x, v1.y, v2.y, vc.y)
 /**
  * a*v1x + b*v2x = cx
  * a*v1y + b*v2y = cy
