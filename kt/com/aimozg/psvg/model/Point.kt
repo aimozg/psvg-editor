@@ -1,4 +1,4 @@
-package com.aimozg.psvg.parts
+package com.aimozg.psvg.model
 
 import com.aimozg.psvg.SVGUseElement
 import com.aimozg.psvg.TXY
@@ -11,7 +11,7 @@ import kotlin.dom.appendTo
 abstract class Point(ctx: Context,
                      name: String?,
                      items: List<ItemDeclaration?>) :
-		VisiblePart(ctx, name, null, items) {
+		VisibleElement(ctx, name, null, items) {
 	private var use: SVGUseElement? = null
 	override val category: Category = Category.POINT
 	abstract fun calculate(): TXY

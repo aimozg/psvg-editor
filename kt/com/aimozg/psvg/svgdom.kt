@@ -98,11 +98,15 @@ var SVGAnimatedLength.u: Float
 	}
 
 fun<T:SVGElement> T.appendAll(vararg children: SVGElement?):T {
-	for (child in children) if (child != null) appendChild(child)
+	children
+			.filterNotNull()
+			.forEach { appendChild(it) }
 	return this
 }
 fun<T:SVGElement> T.appendAll(children: Iterable<SVGElement?>):T {
-	for (child in children) if (child != null) appendChild(child)
+	children
+			.filterNotNull()
+			.forEach { appendChild(it) }
 	return this
 }
 

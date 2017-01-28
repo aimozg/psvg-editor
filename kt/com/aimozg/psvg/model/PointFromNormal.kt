@@ -1,6 +1,5 @@
-package com.aimozg.psvg.parts
+package com.aimozg.psvg.model
 
-import com.aimozg.psvg.PartLoader
 import com.aimozg.psvg.appendAll
 import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.norm2fixed
@@ -22,14 +21,14 @@ Point(ctx,name,listOf(pt0.asPosDependency,pt1.asPosDependency,alpha.asValDepende
 		g.appendAll(pt0.graphic,pt1.graphic)
 	}
 
-	override fun updated(other: Part, attr: String) {
+	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
 		update("pos")
 	}
 
 	override fun calculate() = norm2fixed(pt0.calculate(),pt1.calculate(),alpha.get(),beta.get())
 
-	override fun save() = jsobject {
+	override fun save(): dynamic = jsobject {
 		it.type = POINT_FROM_NORMAL_TYPE
 		it.name = name
 		it.pt0 = pt0.save()

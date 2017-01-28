@@ -1,4 +1,4 @@
-package com.aimozg.psvg.parts
+package com.aimozg.psvg.model
 
 
 /**

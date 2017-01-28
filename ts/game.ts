@@ -24,9 +24,9 @@ export function displayPassage(passage:TPassage){
     jPassage.html('').append(typeof p.body == 'string' ? 
         dom.createElement({tag:'div',text:p.body}) : p.body);
     jActions.html('').append(p.actions.map(a=>{
-        let text = a[0]||(a as PassageAction).name
+        let text = a[0]||(a as PassageAction).name;
         let options = SetOf((a[2]||'').split(''));
-        let disabled = options['d']||(a as PassageAction).disabled
+        let disabled = options['d']||(a as PassageAction).disabled;
         let action = a[1]||(a as PassageAction).action;
         return $(dom.createElement({
             tag:'button',

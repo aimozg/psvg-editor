@@ -1,4 +1,4 @@
-package com.aimozg.psvg.parts
+package com.aimozg.psvg.model
 
 import com.aimozg.psvg.*
 import org.w3c.dom.svg.SVGGElement
@@ -7,11 +7,11 @@ import kotlin.dom.appendTo
 
 class Path(ctx: Context,
            name: String?,
-           ownOrigin: Point?,
-           val nodes: List<PathNode>,
+           val closed: Boolean,
            val style: dynamic,
-           val closed: Boolean) :
-		VisiblePart(ctx, name, ownOrigin, nodes.map { it.asDependency }) {
+           ownOrigin: Point?,
+           val nodes: List<PathNode>) :
+		VisibleElement(ctx, name, ownOrigin, nodes.map { it.asDependency }) {
 	private var p: SVGPathElement? = null
 	override val category = Category.PATH
 
@@ -36,7 +36,7 @@ class Path(ctx: Context,
 		p?.d = toSvgD()
 	}
 
-	override fun updated(other: Part, attr: String) {
+	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
 		if (other is PathNode && (attr == "handle" || attr == "pos" || attr == "*")) update("*")
 	}
@@ -57,23 +57,28 @@ class Path(ctx: Context,
 		return M + " " + rslt.subList(0, rslt.size - 1).joinToString(" ")
 	}
 
-	override fun save() = jsobject {
-		it.name = name
-		it.closed = closed
-		it.style = style ?: jsobject {}
-		it.nodes = nodes.map { it.save() }.toTypedArray()
-		it.origin = ownOrigin?.save()
-	}
+	override fun save() =
+			arrayOf(name, closed, style ?: jsobject {}, ownOrigin?.save()) + nodes.map { it.save() }
 
 	companion object {
 		val PATH_LOADER = object : PartLoader(Category.PATH, "Path", null, JsTypename.OBJECT) {
-			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) =
-					Path(ctx,
-							json.name,
-							ctx.loadPointOrNull(json.origin),
-							(json.nodes as Array<dynamic>).map { ctx.loadNode(it) },
-							json.style ?: jsobject {},
-							json.closed)
+			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): Path {
+				if (json.length) {
+					val a:Array<Any?> = json
+					return Path(ctx,
+							a[0] as String?,
+							a[1] as Boolean,
+							a[2].asDynamic(),
+							ctx.loadPointOrNull(a[3].asDynamic()),
+							(4..a.size-1).map { ctx.loadNode(a[it]) })
+				}
+				return Path(ctx,
+						json.name,
+						json.closed,
+						json.style ?: jsobject {},
+						ctx.loadPointOrNull(json.origin),
+						(json.nodes as Array<dynamic>).map { ctx.loadNode(it) })
+			}
 		}.register()
 	}
 }

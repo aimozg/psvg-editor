@@ -7,8 +7,11 @@ package com.aimozg.psvg
 external open class Object {
 	companion object {
 		fun keys(o:Object):Array<String>
+		fun entries(o:Object):Array<Array<Any?>>
 	}
 }
+fun Object.keys() = Object.keys(this)
+fun Object.entries() = Object.entries(this)
 
 inline fun jsobject(init: (jso:dynamic) -> Unit): dynamic {
 	return (Object()).apply {init(this)}
@@ -27,4 +30,4 @@ fun String.wrap(prefix:String,suffix:String=prefix):String = prefix+this+suffix
 fun <T : Any> T.climb(step: T.() -> T?) = generateSequence({ this }, step)
 inline fun <TYPE, reified SUBTYPE : TYPE> Sequence<TYPE>.firstInstanceOf() = firstOrNull { it is SUBTYPE } as SUBTYPE?
 
-
+fun<T> Array<T>.sliceFrom(index:Int) = sliceArray(index..size-1)

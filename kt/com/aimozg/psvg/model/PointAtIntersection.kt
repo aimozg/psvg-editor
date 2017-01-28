@@ -1,4 +1,4 @@
-package com.aimozg.psvg.parts
+package com.aimozg.psvg.model
 
 import com.aimozg.psvg.*
 import org.w3c.dom.svg.SVGGElement
@@ -17,7 +17,7 @@ class PointAtIntersection(ctx: Context,
 		Point(ctx, name, listOf(a1.asPosDependency, a2.asPosDependency, b1.asPosDependency, b2.asPosDependency)) {
 	private var l1: SVGLineElement? = null
 	private var l2: SVGLineElement? = null
-	override fun updated(other: Part, attr: String) {
+	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
 		update("pos")
 	}

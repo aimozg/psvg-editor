@@ -5,7 +5,7 @@ import com.aimozg.psvg.d.JSTree
 import com.aimozg.psvg.d.JSTreeNodeEvent
 import com.aimozg.psvg.d.tfscale
 import com.aimozg.psvg.d.withPlugins
-import com.aimozg.psvg.parts.*
+import com.aimozg.psvg.model.*
 import jquery.jq
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
@@ -26,7 +26,7 @@ class Editor(
 
 	val model: Model get() = editPane.model
 
-	private var selection: Part? = null
+	private var selection: ModelElement? = null
 
 	init {
 		document.addEventListener("wheel", { ev ->
@@ -146,21 +146,21 @@ class Editor(
 		select(null)
 	}
 
-	fun select(part: Part?) {
-		if (selection == part) return
+	fun select(modelElement: ModelElement?) {
+		if (selection == modelElement) return
 		val model = editPane.model
 		var s = selection
-		while (s != null && s is VisiblePart && s != model) {
+		while (s != null && s is VisibleElement && s != model) {
 			s.graphic.classList.remove("-selected", "-primary")
 			s = s.owner
 		}
 		tree?.deselect_all(true)
-		selection = part
-		if (part != null && part is VisiblePart && part != model) {
-			tree?.select_node(part.treeNodeId(), true)
-			part.graphic.classList.add("-selected", "-primary")
-			var p2: Part? = part
-			while (p2 != null && p2 is VisiblePart && p2 != model) {
+		selection = modelElement
+		if (modelElement != null && modelElement is VisibleElement && modelElement != model) {
+			tree?.select_node(modelElement.treeNodeId(), true)
+			modelElement.graphic.classList.add("-selected", "-primary")
+			var p2: ModelElement? = modelElement
+			while (p2 != null && p2 is VisibleElement && p2 != model) {
 				val g = p2.graphic
 				g.classList.add("-selected")
 				g.parentElement?.appendChild(g)
@@ -168,16 +168,16 @@ class Editor(
 			}
 		}
 		objviewDiv.innerHTML = ""
-		if (part != null) {
+		if (modelElement != null) {
 			objviewDiv.appendAll(
 					HTMLDivElement {
 						className = "partValues"
-						for (v in part.children) {
+						for (v in modelElement.children) {
 							if (v is Value<*>) appendChild(v.editorElement())
 						}
 					}, HTMLDivElement {
 				className = "partReplace"
-				for (v in Context.loadersFor(part.category)) {
+				for (v in Context.loadersFor(modelElement.category)) {
 					appendChild(HTMLDivElement {
 						textContent = v.name
 					})

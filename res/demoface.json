@@ -3,148 +3,123 @@
   "params": [
     { "name": "noseSz" }
   ],
+  "store" : {
+    "_vaxis": [
+      "path", false, null, null,
+      { "type": "cusp", "pos": ["_vtop", 0, -80] },
+      { "type": "cusp", "pos": ["_vbottom", 0, 50] }
+    ]
+  },
   "paths" : [
-    {
-      "name"  : "_vaxis",
-      "closed": false,
-      "nodes" : [
-        { "type": "cusp", "pos": ["_vtop", 0, -80] },
-        { "type": "cusp", "pos": ["_vbottom", 0, 50] }
-      ]
+    [
+      "face", true, {
+      "stroke": "hsl(26, 49%, 16%)",
+      "fill"  : "hsl(26, 49%, 64%)"
+    }, null,
+      { "type": "smooth", "pos": [10, 44] },
+      { "type": "smooth", "pos": [-10, 44] },
+      { "type": "smooth", "pos": [-45, 0] },
+      { "type": "smooth", "pos": [-50, -22] },
+      { "type": "smooth", "pos": [-35, -70] },
+      { "type": "smooth", "pos": [35, -70] },
+      { "type": "smooth", "pos": [50, -22] },
+      { "type": "smooth", "pos": [45, 0] }
+    ],
+    [
+      "noseline", false, {
+      "stroke"      : "hsl(26, 49%, 16%)",
+      "stroke-width": 0.5
+    }, null,
+      {
+        "type"   : "cusp",
+        "pos"    : "@nosetop",
+        "handle2": "@nosetop"
+      }, {
+      "type": "flow1",
+      "pos" : "@nosetip",
+      "h1ab": [0.8181818181818182, -0.09090909090909091],
+      "h2ab": [0.2, 0.1]
     }, {
-      "name"  : "face",
-      "closed": true,
-      "style" : {
-        "stroke": "hsl(26, 49%, 16%)",
-        "fill"  : "hsl(26, 49%, 64%)"
-      },
-      "nodes" : [
-        { "type": "smooth", "pos": [10, 44] },
-        { "type": "smooth", "pos": [-10, 44] },
-        { "type": "smooth", "pos": [-45, 0] },
-        { "type": "smooth", "pos": [-50, -22] },
-        { "type": "smooth", "pos": [-35, -70] },
-        { "type": "smooth", "pos": [35, -70] },
-        { "type": "smooth", "pos": [50, -22] },
-        { "type": "smooth", "pos": [45, 0] }
-      ]
-    }, {
-      "name"  : "noseline",
-      "closed": false,
-      "style" : {
-        "stroke"      : "hsl(26, 49%, 16%)",
-        "stroke-width": 0.5
-      },
-      "nodes" : [
-        {
-          "type"   : "cusp",
-          "pos"    : "@nosetop",
-          "handle2": "@nosetop"
-        }, {
-          "type": "flow1",
-          "pos" : "@nosetip",
-          "h1ab": [0.8181818181818182, -0.09090909090909091],
-          "h2ab": [0.2, 0.1]
-        }, {
-          "type"   : "flow1",
-          "pos"    : {
-            "type" : "N",
-            "name" : "noseleft",
-            "xy"   : [-8, 15],
-            "pt0"  : "@noseright",
-            "pt1"  : {
-              "type": "PROJ",
-              "a"   : "@nosetop",
-              "b"   : "@nosetip",
-              "p"   : "@noseright"
-            },
-            "alpha": 2,
-            "beta" : 0
-          },
-          "h1ab"   : [0.7, 0.1],
-          "handle1": [-6, 17]
-        }
-      ]
-    }, {
-      "name"  : "nosefill",
-      "closed": true,
-      "style" : {
-        "fill": "hsla(26, 49%, 32%, 0.5)"
-      },
-      "nodes" : [
-        {
-          "type": "flow1",
-          "pos" : ["nosetop", 0, -3],
-          "h1ab": [0.8247422680412371, -0.14432989690721648],
-          "h2ab": [0, 0]
-        }, {
-          "type": "flow1",
-          "pos" : ["nosetip", 0, 19],
-          "h1ab": [0.8181818181818182, -0.09090909090909091],
-          "h2ab": [0.2, -0.1]
-        }, {
-          "type": "flow1",
-          "pos" : ["noseright", 8, 15],
-          "h1ab": [0.7, -0.1],
-          "h2ab": [0.09278350515463918, -0.041237113402061855]
-        }
-      ]
-    }, {
-      "name"  : "mouth",
-      "closed": false,
-      "style" : {
-        "stroke"      : "hsl(26, 49%, 16%)",
-        "stroke-width": 0.5
-      },
-      "nodes" : [
-        {
-          "type": "flow1",
-          "pos" : [-9, 28],
-          "h2ab": [0.023529411764705882, 0.10588235294117647]
-        }, {
-          "type"   : "smooth",
-          "pos"    : [0, 26],
-          "handle1": [-3, 26],
-          "handle2": [3, 26],
-          "b"      : 0.33,
-          "c"      : 0.33,
-          "rot"    : 0
-        }, {
-          "type"   : "flow1",
-          "pos"    : [9, 28],
-          "h1ab"   : [0.9764705882352941, 0.10588235294117647],
-          "handle1": [9, 27]
-        }
-      ]
-    }, {
-      "name"  : "eyer_white",
-      "origin": ["eyer_origin", 25, -16],
-      "comment": ["M -3,13 ",
-        "C -7.1766547,13 -11,12 -14,7 ",
-        "C -14,3 -7.1300638,1.3533152 -3,0 ",
-        "C 1.7619685,-1.5603741 4,-1 12,-1 ",
-        "C 12,-1 10.070221,4.8545226 8,7 ",
-        "C 5.0998426,10.005583 1.1766547,13 -3,13 Z M 15,15 -25,15 -25,-9 15,-9 Z"],
-      "closed": true,
-      "style" : {
-        "fill": "#fff"
-      },
-      "nodes" : [
-        { "type": "smooth", "pos": [-3, 13] },
-        {
-          "type": "cusp",
-          "pos": ["eyer_corneri", -14, 7],
-          "handle1": [-11, 12],
-          "handle2": [-14, 3]
+      "type"   : "flow1",
+      "pos"    : {
+        "type" : "N",
+        "name" : "noseleft",
+        "xy"   : [-8, 15],
+        "pt0"  : "@noseright",
+        "pt1"  : {
+          "type": "PROJ",
+          "a"   : "@nosetop",
+          "b"   : "@nosetip",
+          "p"   : "@noseright"
         },
-        { "type": "smooth", "pos": [-3, 0] },
-        {
-          "type": "cusp",
-          "pos": ["eyer_cornero", 12, -1],
-          "handle1": [4, -1]
-        },
-        { "type": "smooth", "pos": [8, 7] }
-      ]
+        "alpha": 2,
+        "beta" : 0
+      },
+      "h1ab"   : [0.7, 0.1],
+      "handle1": [-6, 17]
     }
+    ],
+    [
+      "nosefill", true, {
+      "fill": "hsla(26, 49%, 32%, 0.5)"
+    },null,
+      {
+        "type": "flow1",
+        "pos" : ["nosetop", 0, -3],
+        "h1ab": [0.8247422680412371, -0.14432989690721648],
+        "h2ab": [0, 0]
+      }, {
+      "type": "flow1",
+      "pos" : ["nosetip", 0, 19],
+      "h1ab": [0.8181818181818182, -0.09090909090909091],
+      "h2ab": [0.2, -0.1]
+    }, {
+      "type": "flow1",
+      "pos" : ["noseright", 8, 15],
+      "h1ab": [0.7, -0.1],
+      "h2ab": [0.09278350515463918, -0.041237113402061855]
+    }
+    ],
+    [
+      "mouth", false, {
+      "stroke"      : "hsl(26, 49%, 16%)",
+      "stroke-width": 0.5
+    }, null,{
+      "type": "flow1",
+      "pos" : [-9, 28],
+      "h2ab": [0.023529411764705882, 0.10588235294117647]
+    }, {
+      "type"   : "smooth",
+      "pos"    : [0, 26],
+      "handle1": [-3, 26],
+      "handle2": [3, 26],
+      "b"      : 0.33,
+      "c"      : 0.33,
+      "rot"    : 0
+    }, {
+      "type"   : "flow1",
+      "pos"    : [9, 28],
+      "h1ab"   : [0.9764705882352941, 0.10588235294117647],
+      "handle1": [9, 27]
+    }
+    ], [
+      "eyer_white", true, {
+        "fill": "#fff"
+      }, ["eyer_origin", 25, -16],
+      { "type": "smooth", "pos": [-3, 13] },
+      {
+        "type"   : "cusp",
+        "pos"    : ["eyer_corneri", -14, 7],
+        "handle1": [-11, 12],
+        "handle2": [-14, 3]
+      },
+      { "type": "smooth", "pos": [-3, 0] },
+      {
+        "type"   : "cusp",
+        "pos"    : ["eyer_cornero", 12, -1],
+        "handle1": [4, -1]
+      },
+      { "type": "smooth", "pos": [8, 7] }
+    ]
   ]
 }

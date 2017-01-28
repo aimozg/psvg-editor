@@ -1,4 +1,4 @@
-package com.aimozg.psvg.parts
+package com.aimozg.psvg.model
 
 import com.aimozg.psvg.*
 import org.w3c.dom.svg.SVGGElement
@@ -26,7 +26,7 @@ class PointAtProjection(ctx: Context,
 		}.register()
 	}
 
-	override fun updated(other: Part, attr: String) {
+	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
 		update("pos")
 	}
@@ -49,14 +49,16 @@ class PointAtProjection(ctx: Context,
 		lab?.remove()
 		lpq?.remove()
 		lab = SVGLineElement(a.x,a.y,b.x,b.y){
+			classList += "lineref"
 			g.insertBefore(this, g.firstChild)
 		}
 		lpq = SVGLineElement(p.x,p.y,q.x,q.y){
+			classList += "lineref"
 			g.insertBefore(this, g.firstChild)
 		}
 	}
 
-	override fun save() = jsobject {
+	override fun save(): dynamic = jsobject {
 		it.type = POINT_AT_PROJECTION_TYPE
 		it.name= name
 		it.a = a.save()

@@ -1,6 +1,5 @@
-package com.aimozg.psvg.parts
+package com.aimozg.psvg.model
 
-import com.aimozg.psvg.PartLoader
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.appendAll
 import com.aimozg.psvg.jsobject
@@ -17,7 +16,7 @@ class CuspNode(ctx: Context,
                val h1: Point?,
                val h2: Point?) :
 		CommonNode(ctx, name, ownOrigin, pos, listOf(h1?.asPosDependency, h2?.asPosDependency)) {
-	override fun updated(other: Part, attr: String) {
+	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
 		if (other == pos) update("pos")
 		else update("handle")

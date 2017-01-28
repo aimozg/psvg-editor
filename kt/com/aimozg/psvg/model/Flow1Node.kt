@@ -1,6 +1,5 @@
-package com.aimozg.psvg.parts
+package com.aimozg.psvg.model
 
-import com.aimozg.psvg.PartLoader
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.norm2fixed
@@ -25,7 +24,7 @@ CommonNode(ctx,name,ownOrigin,pos,listOf(
 		h2b?.asValDependency,
 		ItemDeclaration.Deferred{(it as Flow1Node).asPosDependency})){
 
-	override fun updated(other: Part, attr: String) {
+	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
 		if (other is Point) update("*")
 		if (other is PathNode && (attr == "pos" || attr=="*") || other is ValueFloat) update("handle")

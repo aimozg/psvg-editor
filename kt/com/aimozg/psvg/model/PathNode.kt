@@ -1,4 +1,4 @@
-package com.aimozg.psvg.parts
+package com.aimozg.psvg.model
 
 import com.aimozg.psvg.DNode
 import com.aimozg.psvg.TXY
@@ -7,7 +7,7 @@ abstract class PathNode(ctx: Context,
                         name: String?,
                         ownOrigin: Point?,
                         items: List<ItemDeclaration?>) :
-		VisiblePart(ctx, name, ownOrigin, items) {
+		VisibleElement(ctx, name, ownOrigin, items) {
 	override val category: Category = Category.NODE
 	val path get() = owner as Path
 	val index get() = path.nodes.indexOf(this)

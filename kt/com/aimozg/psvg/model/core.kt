@@ -1,10 +1,7 @@
 @file:JsModule("svgedit-api")
 
-package com.aimozg.psvg.parts
+package com.aimozg.psvg.model
 
-import com.aimozg.psvg.d.JSTreeNodeInit
-import com.aimozg.psvg.jsobject2
-import com.aimozg.psvg.wrap
 import org.w3c.dom.HTMLElement
 
 enum class JsTypename {
@@ -35,27 +32,26 @@ enum class Category {
 	PARAM,
 	VALUEFLOAT
 }
-typealias PartDependency = Pair<String, Part>
+typealias PartDependency = Pair<String, ModelElement>
 sealed class ItemDeclaration {
-	class Instant(val part: Part,
+	class Instant(val modelElement: ModelElement,
 	              val dependency: String? = null) : ItemDeclaration()
 
-	class Deferred(val dep: (Part) -> ItemDeclaration) : ItemDeclaration()
+	class Deferred(val dep: (ModelElement) -> ItemDeclaration) : ItemDeclaration()
 }
 
-abstract class Part(
+abstract class ModelElement(
 		val ctx: Context,
 		val name: String?,
 		items: List<ItemDeclaration?>
 ) {
 	val id: Int = ctx.nextId()
-	var owner: Part? = null
+	var owner: ModelElement? = null
 		private set
-	private val _children = ArrayList<Part>()
-	val children: List<Part> get() = _children
+	private val _children = ArrayList<ModelElement>()
+	val children: List<ModelElement> get() = _children
 	protected val dependants = ArrayList<PartDependency>()
 	abstract val category: Category
-	val asDependency get() = ItemDeclaration.Instant(this, "*")
 
 	init {
 		ctx.register(this)
@@ -68,7 +64,7 @@ abstract class Part(
 		if (icd == null) return
 		when (icd) {
 			is ItemDeclaration.Instant -> {
-				val item = icd.part
+				val item = icd.modelElement
 				if (item.owner == null) {
 					item.owner = this
 					_children.add(item)
@@ -92,28 +88,19 @@ abstract class Part(
 		}
 	}
 
-	protected abstract fun updated(other: Part, attr: String)
+	protected abstract fun updated(other: ModelElement, attr: String)
 
-	fun treeNodeSelf(): JSTreeNodeInit = jsobject2 {
-		id = treeNodeId()
-		text = treeNodeText()
-	}
-
-	fun treeNodeFull(): JSTreeNodeInit = treeNodeSelf().apply {
-		children = _children.filter { it !is Value<*> }.map(Part::treeNodeFull).toTypedArray()
-	}
-
-	fun treeNodeId(): String = "ModelPart_$id"
-	val classname = this::class.simpleName?:"Part<?>"
-
-	fun treeNodeText(): String = (name?.wrap("\"") ?: "#$id") + " (" + classname + ")"
+	val classname = this::class.simpleName?:"ModelElement<?>"
 
 	abstract fun save(): dynamic
 }
 
-abstract class Value<T>(ctx: Context,
-                        name: String?,
-                        declarations:List<ItemDeclaration> =emptyList()) : Part(ctx, name, declarations) {
+val ModelElement.asDependency get() = ItemDeclaration.Instant(this, "*")
+fun ModelElement.asDependency(dependency: String?) = ItemDeclaration.Instant(this,dependency)
+
+abstract class Value<out T>(ctx: Context,
+                            name: String?,
+                            declarations:List<ItemDeclaration> =emptyList()) : ModelElement(ctx, name, declarations) {
 	val asValDependency get() = ItemDeclaration.Instant(this,"val")
 	abstract fun get(): T
 	abstract fun editorElement(): HTMLElement

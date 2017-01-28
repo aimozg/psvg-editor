@@ -1,4 +1,4 @@
-import {FPassage, TPassage, TPassageAction, displayPassage, displayFace} from "./game";
+import {displayFace, displayPassage, FPassage, TPassage, TPassageAction} from "./game";
 import * as _face from "./face";
 import {Appearance, Colors} from "./face";
 import {tinycolor_ex as TCX} from "./tinycolor-ex";
@@ -73,4 +73,4 @@ export namespace storyLib {
 
 $(() => {
 	displayPassage(storyLib.storyStart());
-})
+});

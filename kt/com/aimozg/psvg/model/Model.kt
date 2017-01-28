@@ -1,25 +1,36 @@
-package com.aimozg.psvg.parts
+package com.aimozg.psvg.model
 
-import com.aimozg.psvg.SVGGElement
-import com.aimozg.psvg.appendAll
-import com.aimozg.psvg.jsobject
-import com.aimozg.psvg.set
+import com.aimozg.psvg.*
 import org.w3c.dom.svg.SVGGElement
 
 class Model(ctx: Context,
             name: String?,
             ownOrigin: Point?,
             val paths: List<Path>,
+            val store: List<ModelElement>,
             val parameters: List<Parameter>) :
-		VisiblePart(ctx, name, ownOrigin, paths.map(Path::asDependency)) {
+		VisibleElement(ctx, name, ownOrigin, paths.map { it.asDependency } +store.map { it.asDependency (null)}) {
 	override val category: Category = Category.MODEL
 	override fun save(): dynamic = jsobject {
 		it.name = name
 		it.paths = paths.map { it.save() }.toTypedArray()
 		it.params = parameters.map { it.save() }.toTypedArray()
+		it.store = jsobject { o->
+			for (part in store) {
+				val name = part.name ?: "#${part.id}"
+				val save = part.save()
+				val type = part.category.toString()
+				if (save is Array<Any?> && save[0] === name) {
+					val array:Array<Any?> = save
+					o[name] = arrayOf(type) + array.sliceFrom(1)
+				} else {
+					o[name] = arrayOf(type,save)
+				}
+			}
+		}
 	}
 
-	override fun updated(other: Part, attr: String) {}
+	override fun updated(other: ModelElement, attr: String) {}
 
 	override fun draw(g: SVGGElement) {
 		/*g.style["stroke"] = "transparent"
@@ -29,6 +40,7 @@ class Model(ctx: Context,
 		g.style["opacity"] = "1"
 		g.style["stroke-width"] = "1"*/
 		g.appendAll(paths.map{it.graphic})
+		g.appendAll(store.map{(it as? VisibleElement)?.graphic})
 	}
 
 	override fun display() = SVGGElement {

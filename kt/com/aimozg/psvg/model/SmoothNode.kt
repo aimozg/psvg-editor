@@ -1,6 +1,5 @@
-package com.aimozg.psvg.parts
+package com.aimozg.psvg.model
 
-import com.aimozg.psvg.PartLoader
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.smoothHandles
@@ -22,7 +21,7 @@ class SmoothNode(ctx: Context,
 						rot.asValDependency,
 						ItemDeclaration.Deferred { (it as PathNode).prevNode.asPosDependency},
 						ItemDeclaration.Deferred { (it as PathNode).nextNode.asPosDependency})) {
-	override fun updated(other: Part, attr: String) {
+	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
 		if (other is Point) update("*")
 		if (other is PathNode && (attr == "pos" || attr=="*") || other is ValueFloat) update("handle")
@@ -48,7 +47,7 @@ class SmoothNode(ctx: Context,
 	companion object {
 		const val NODE_SMOOTH_TYPE = "smooth"
 		val NODE_SMOOTH_LOADER = object: PartLoader(Category.NODE, "SmoothNode", NODE_SMOOTH_TYPE) {
-			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): Part {
+			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): ModelElement {
 				return SmoothNode(ctx,
 						json.name,
 						ctx.loadPointOrNull(json.origin),

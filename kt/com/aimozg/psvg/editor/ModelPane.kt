@@ -4,9 +4,9 @@ import com.aimozg.psvg.*
 import com.aimozg.psvg.d.rect_cpy
 import com.aimozg.psvg.d.rect_expand
 import com.aimozg.psvg.d.rect_scale
-import com.aimozg.psvg.parts.Context
-import com.aimozg.psvg.parts.DisplayMode
-import com.aimozg.psvg.parts.Model
+import com.aimozg.psvg.model.Context
+import com.aimozg.psvg.model.DisplayMode
+import com.aimozg.psvg.model.Model
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.svg.SVGElement
 import org.w3c.dom.svg.SVGGElement

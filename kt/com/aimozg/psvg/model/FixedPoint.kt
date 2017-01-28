@@ -1,6 +1,9 @@
-package com.aimozg.psvg.parts
+package com.aimozg.psvg.model
 
-import com.aimozg.psvg.*
+import com.aimozg.psvg.TXY
+import com.aimozg.psvg.makeDraggable
+import com.aimozg.psvg.onsdrag
+import com.aimozg.psvg.onsdragstart
 import org.w3c.dom.svg.SVGGElement
 
 
@@ -35,7 +38,7 @@ class FixedPoint(ctx: Context,
 
 	override fun calculate(): TXY = TXY(x.get(),y.get())
 
-	override fun updated(other: Part, attr: String) {
+	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
 		set(x.get(),y.get())
 	}
@@ -47,24 +50,27 @@ class FixedPoint(ctx: Context,
 
 	companion object {
 		val POINT_FIXED_LOADER = object: PartLoader(Category.POINT,"FixedPoint","F",JsTypename.OBJECT) {
-			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): Part = FixedPoint(ctx,
+			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): ModelElement = FixedPoint(ctx,
 					json.name,
 					ctx.loadFloat("x",json.pt[0]),
 					ctx.loadFloat("y",json.pt[1]))
 
-			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): Part? {
+			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): ModelElement? {
 				val name:String?
 				val x:dynamic
 				val y:dynamic
-				val length = json.length
-				if (length == 2) {
-					name = null
-					x = json[0]
-					y = json[1]
-				} else if (length == 3) {
-					name = ""+json[0]
-					x = json[1]
-					y = json[2]
+				if (json is Array<Any?>) {
+					val array:Array<Any?> = json
+					val length = array.size
+					if (length == 2) {
+						name = null
+						x = array[0]
+						y = array[1]
+					} else if (length == 3) {
+						name = "" + array[0]
+						x = array[1]
+						y = array[2]
+					} else return null
 				} else return null
 				return FixedPoint(ctx,name,ctx.loadFloat("x",x),ctx.loadFloat("y",y))
 			}

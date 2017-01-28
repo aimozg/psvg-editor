@@ -3,7 +3,7 @@ declare namespace kotlinjs {
 		namespace aimozg {
 			namespace psvg {
 
-				namespace parts {
+				namespace model {
 					const ALL_LOADERS:any[];
 				}
 

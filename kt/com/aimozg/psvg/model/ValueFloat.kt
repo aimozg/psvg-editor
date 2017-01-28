@@ -1,4 +1,4 @@
-package com.aimozg.psvg.parts
+package com.aimozg.psvg.model
 
 import com.aimozg.psvg.*
 import org.w3c.dom.HTMLElement
@@ -23,7 +23,7 @@ class ValueFloat(
 	private var input:HTMLInputElement? = null
 
 	override val category: Category = Category.VALUEFLOAT
-	override fun updated(other: Part, attr: String) {}
+	override fun updated(other: ModelElement, attr: String) {}
 
 	override fun save(): dynamic {
 		return get()
