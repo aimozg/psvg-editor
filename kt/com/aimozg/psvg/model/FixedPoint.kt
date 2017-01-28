@@ -1,5 +1,6 @@
 package com.aimozg.psvg.model
 
+import com.aimozg.ktuple.*
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.makeDraggable
 import com.aimozg.psvg.onsdrag
@@ -49,8 +50,12 @@ class FixedPoint(ctx: Context,
 	}
 
 	companion object {
-		val POINT_FIXED_LOADER = object: PartLoader(Category.POINT,"FixedPoint","F",JsTypename.OBJECT) {
-			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): ModelElement = FixedPoint(ctx,
+		val POINT_FIXED_LOADER = object: PartLoader(
+				Category.POINT,
+				FixedPoint::class.simpleName!!,
+				"F",
+				JsTypename.OBJECT) {
+			override fun loadStrict(ctx: Context, json: FixedPointJson, vararg args: Any?): ModelElement = FixedPoint(ctx,
 					json.name,
 					ctx.loadFloat("x",json.pt[0]),
 					ctx.loadFloat("y",json.pt[1]))
@@ -60,20 +65,30 @@ class FixedPoint(ctx: Context,
 				val x:dynamic
 				val y:dynamic
 				if (json is Array<Any?>) {
-					val array:Array<Any?> = json
-					val length = array.size
-					if (length == 2) {
-						name = null
-						x = array[0]
-						y = array[1]
-					} else if (length == 3) {
-						name = "" + array[0]
-						x = array[1]
-						y = array[2]
-					} else return null
+					val tuple: Tuple = json
+					when (tuple.length) {
+						2 -> {
+							@Suppress("UNCHECKED_CAST_TO_NATIVE_INTERFACE")
+							tuple as Tuple2<*, *>
+							name = null
+							x = tuple.i0
+							y = tuple.i1
+						}
+						3 -> {
+							@Suppress("UNCHECKED_CAST", "UNCHECKED_CAST_TO_NATIVE_INTERFACE")
+							tuple as Tuple3<String,*,*>
+							name = "" + tuple.i0
+							x = tuple.i1
+							y = tuple.i2
+						}
+						else -> return null
+					}
 				} else return null
 				return FixedPoint(ctx,name,ctx.loadFloat("x",x),ctx.loadFloat("y",y))
 			}
 		}.register()
 	}
+}
+interface FixedPointJson : PointJson {
+	var pt: Array<Number>
 }

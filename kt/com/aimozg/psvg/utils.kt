@@ -14,10 +14,10 @@ fun Object.keys() = Object.keys(this)
 fun Object.entries() = Object.entries(this)
 
 inline fun jsobject(init: (jso:dynamic) -> Unit): dynamic {
-	return (Object()).apply {init(this)}
+	return (Object()).also(init)
 }
-inline fun<T> jsobject2(init: T.() -> Unit): T {
-	return (Object().asDynamic() as T).apply(init)
+inline fun<T> jsobject2(init: (T) -> Unit): T {
+	return (Object().asDynamic() as T).also(init)
 }
 
 external fun parseFloat(s: String): Double

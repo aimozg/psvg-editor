@@ -45,3 +45,6 @@ abstract class VisibleElement(ctx: Context,
 	protected abstract fun draw(g: SVGGElement)
 	protected abstract fun redraw(attr: String, g: SVGGElement)
 }
+interface VisualElementJson : ModelElementJson {
+	var origin: PointJson?
+}

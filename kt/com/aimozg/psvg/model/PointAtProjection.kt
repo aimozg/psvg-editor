@@ -18,7 +18,10 @@ class PointAtProjection(ctx: Context,
 	private var lpq:SVGLineElement? = null
 	companion object {
 		const val POINT_AT_PROJECTION_TYPE = "PROJ"
-		val POINT_AT_PROJECTION_LOADER = object : PartLoader(Category.POINT, "PointAtProjection", POINT_AT_PROJECTION_TYPE) {
+		val POINT_AT_PROJECTION_LOADER = object : PartLoader(
+				Category.POINT,
+				PointAtProjection::class.simpleName!!,
+				POINT_AT_PROJECTION_TYPE) {
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) = PointAtProjection(ctx,json.name,
 					ctx.loadPoint(json.a),
 					ctx.loadPoint(json.b),

@@ -1,5 +1,6 @@
 package com.aimozg.psvg
 
+import com.aimozg.ktuple.*
 import org.w3c.dom.DOMPoint
 import org.w3c.dom.svg.SVGSVGElement
 import kotlin.browser.document
@@ -14,6 +15,7 @@ class TXY(val x: Double, val y: Double) {
 	constructor(x: Number, y: Number) : this(x.toDouble(), y.toDouble())
 	constructor(xy: DOMPoint) : this(xy.x, xy.y)
 	constructor(xy: Pair<Number, Number>) : this(xy.first.toDouble(), xy.second.toDouble())
+	constructor(xy: Tuple2<out Number, out Number>) : this(xy.i0.toDouble(), xy.i1.toDouble())
 	constructor(xy: Array<out Number>) : this(xy[0].toDouble(), xy[1].toDouble())
 
 	override fun toString(): String = "$x,$y"
@@ -49,20 +51,20 @@ operator fun DOMPoint.minus(other: DOMPoint) = svgsvg.createSVGPoint().also {
 	it.y = y - other.y
 }
 
-fun vlinj(vararg kvs: Pair<Number, TXY>): TXY = TXY(kvs.map { (k, v) -> k.toDouble() * v.x to k.toDouble() * v.y }.fold(0.0 to 0.0) { v1, v2 -> (v1.first + v2.first) to (v1.second + v2.second) })
+fun vlinj(vararg kvs: Tuple2<Number, TXY>): TXY = TXY(kvs.map { (k, v) -> k.toDouble() * v.x tup k.toDouble() * v.y }.fold(0.0 tup 0.0) { v1, v2 -> (v1[0] + v2[0]) tup (v1[1] + v2[1]) })
 
 fun vnormbisect(ab: TXY, ac: TXY, ablen: Double = ab.vlength, aclen: Double = ac.vlength): TXY {
 	if (ablen == 0.0 || aclen == 0.0) return TXY(1, 0)
 	return ac * (ablen / aclen) - ab
 }
 
-fun smoothHandles(b: TXY, a: TXY, c: TXY, abq: Number = 0.3, acq: Number = 0.3, rot: Number = 0.0): Pair<TXY, TXY> {
+fun smoothHandles(b: TXY, a: TXY, c: TXY, abq: Number = 0.3, acq: Number = 0.3, rot: Number = 0.0): Tuple2<TXY, TXY> {
 	val ab = b - a
 	val ac = c - a
 	val ablen = ab.vlength
 	val aclen = ac.vlength
 	val dir = vnormbisect(ab, ac, ablen, aclen).toUnit().rotate(rot)
-	return a - dir * (ablen * abq.toDouble()) to a + dir * (aclen * acq.toDouble())
+	return Tuple2(a - dir * (ablen * abq.toDouble()), a + dir * (aclen * acq.toDouble()))
 }
 
 fun fixed2norm(a: TXY, c: TXY, b: TXY): TXY {
@@ -75,7 +77,7 @@ fun fixed2norm(a: TXY, c: TXY, b: TXY): TXY {
 fun norm2fixed(a: TXY, b: TXY, alpha: Number, beta: Number): TXY {
 	val v1 = b - a
 	val v2 = v1.rot90()
-	return vlinj(1 to a, alpha to v1, beta to v2)
+	return vlinj(1 tup a, alpha tup v1, beta tup v2)
 }
 
 /**
@@ -94,6 +96,7 @@ class Vector3(val x: Double, val y: Double, val z: Double) {
 	constructor(xyz: DOMPoint) : this(xyz.x, xyz.y, xyz.z)
 	constructor(xyz: Triple<Number, Number, Number>) : this(xyz.first.toDouble(), xyz.second.toDouble(), xyz.third.toDouble())
 	constructor(xyz: Array<out Number>) : this(xyz[0].toDouble(), xyz[1].toDouble(), xyz[2].toDouble())
+	constructor(xyz: Tuple3<Number, Number, Number>) : this(xyz.i0, xyz.i1, xyz.i2)
 
 	override fun toString(): String = "$x,$y,$z"
 }

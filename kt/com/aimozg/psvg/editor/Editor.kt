@@ -93,9 +93,9 @@ class Editor(
 
 		tree?.destroy()
 		tree = jq(treeDiv).withPlugins.jstree(jsobject2 {
-			core = jsobject2 {
-				data = editPane.model.treeNodeFull().children
-				check_callback = true
+			it.core = jsobject2 {
+				it.data = editPane.model.treeNodeFull().children
+				it.check_callback = true
 			}
 		}).withPlugins.jstree().apply {
 			get_container().withPlugins.on("select_node.jstree", { _, data: JSTreeNodeEvent ->

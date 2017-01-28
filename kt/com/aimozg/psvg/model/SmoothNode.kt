@@ -1,5 +1,6 @@
 package com.aimozg.psvg.model
 
+import com.aimozg.ktuple.Tuple2
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.smoothHandles
@@ -27,7 +28,7 @@ class SmoothNode(ctx: Context,
 		if (other is PathNode && (attr == "pos" || attr=="*") || other is ValueFloat) update("handle")
 	}
 
-	override fun calcHandles(): Pair<TXY, TXY> = smoothHandles(
+	override fun calcHandles(): Tuple2<TXY, TXY> = smoothHandles(
 			prevNode.center(),
 			center(),
 			nextNode.center(),
@@ -46,7 +47,10 @@ class SmoothNode(ctx: Context,
 	}
 	companion object {
 		const val NODE_SMOOTH_TYPE = "smooth"
-		val NODE_SMOOTH_LOADER = object: PartLoader(Category.NODE, "SmoothNode", NODE_SMOOTH_TYPE) {
+		val NODE_SMOOTH_LOADER = object: PartLoader(
+				Category.NODE,
+				SmoothNode::class.simpleName!!,
+				NODE_SMOOTH_TYPE) {
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): ModelElement {
 				return SmoothNode(ctx,
 						json.name,
@@ -58,4 +62,7 @@ class SmoothNode(ctx: Context,
 			}
 		}.register()
 	}
+}
+interface SmoothNodeJson : PathNodeJson {
+
 }

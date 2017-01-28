@@ -13,6 +13,6 @@ fun ModelElement.treeNodeFull(): JSTreeNodeInit = treeNodeSelf().apply {
 fun ModelElement.treeNodeText(): String = (name?.wrap("\"") ?: "#$id") + " (" + classname + ")"
 fun ModelElement.treeNodeId(): String = "ModelPart_$id"
 fun ModelElement.treeNodeSelf(): JSTreeNodeInit = jsobject2 {
-	id = treeNodeId()
-	text = treeNodeText()
+	it.id = treeNodeId()
+	it.text = treeNodeText()
 }

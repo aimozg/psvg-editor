@@ -31,7 +31,11 @@ class PointRef(
 	}
 	companion object {
 		const val POINT_REF_TYPE = "@"
-		val POINT_REF_LOADER = object: PartLoader(Category.POINT,"PointRef", POINT_REF_TYPE,JsTypename.STRING,JsTypename.OBJECT) {
+		val POINT_REF_LOADER = object: PartLoader(
+				Category.POINT,
+				PointRef::class.simpleName!!,
+				POINT_REF_TYPE,
+				JsTypename.STRING,JsTypename.OBJECT) {
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): ModelElement {
 				return PointRef(ctx,json.name,json.ref)
 			}

@@ -2,6 +2,10 @@
 
 package com.aimozg.psvg.model
 
+import com.aimozg.ktuple.Tuple2
+import com.aimozg.ktuple.i0
+import com.aimozg.ktuple.i1
+import com.aimozg.ktuple.tup
 import org.w3c.dom.HTMLElement
 
 enum class JsTypename {
@@ -32,7 +36,7 @@ enum class Category {
 	PARAM,
 	VALUEFLOAT
 }
-typealias PartDependency = Pair<String, ModelElement>
+typealias PartDependency = Tuple2<String, ModelElement>
 sealed class ItemDeclaration {
 	class Instant(val modelElement: ModelElement,
 	              val dependency: String? = null) : ItemDeclaration()
@@ -71,7 +75,7 @@ abstract class ModelElement(
 				}
 				val dep = icd.dependency
 				if (dep != null) {
-					item.dependants.add(dep to this)
+					item.dependants.add(dep tup this)
 				}
 			}
 			is ItemDeclaration.Deferred -> {
@@ -83,7 +87,7 @@ abstract class ModelElement(
 
 	open fun update(attr: String = "*") {
 		for (dep in dependants) {
-			if (attr == "*" || dep.first == "*" || dep.first == attr) dep.second.updated(this, attr)
+			if (attr == "*" || dep.i0 == "*" || dep.i0 == attr) dep.i1.updated(this, attr)
 			ctx.updated(this, attr)
 		}
 	}
@@ -104,5 +108,9 @@ abstract class Value<out T>(ctx: Context,
 	val asValDependency get() = ItemDeclaration.Instant(this,"val")
 	abstract fun get(): T
 	abstract fun editorElement(): HTMLElement
+}
+interface ModelElementJson {
+	var type: String
+	var name: String?
 }
 

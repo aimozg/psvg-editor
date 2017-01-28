@@ -1,5 +1,8 @@
 package com.aimozg.psvg.model
 
+import com.aimozg.ktuple.Tuple2
+import com.aimozg.ktuple.component1
+import com.aimozg.ktuple.component2
 import com.aimozg.psvg.*
 import org.w3c.dom.svg.SVGGElement
 import org.w3c.dom.svg.SVGLineElement
@@ -60,5 +63,5 @@ abstract class CommonNode(
 		return DNode(xy,h1,h2)
 	}
 
-	protected abstract fun calcHandles():Pair<TXY,TXY>
+	protected abstract fun calcHandles(): Tuple2<TXY, TXY>
 }

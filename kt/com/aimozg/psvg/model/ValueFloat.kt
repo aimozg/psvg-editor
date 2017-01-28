@@ -71,7 +71,11 @@ class ValueFloat(
 	fun validate(x:Number):Boolean = x.toDouble().let { it.isFinite() && it>=min && it<=max }
 
 	companion object {
-		val VALUEFLOAD_LOADER = object: PartLoader(Category.VALUEFLOAT,"ValueFloat",null,JsTypename.NUMBER,JsTypename.STRING,JsTypename.UNDEFINED) {
+		val VALUEFLOAD_LOADER = object: PartLoader(
+				Category.VALUEFLOAT,
+				ValueFloat::class.simpleName!!,
+				null,
+				JsTypename.NUMBER,JsTypename.STRING,JsTypename.UNDEFINED) {
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): ValueFloat = loadRelaxed(ctx,json,*args) ?: error("Cannot load VALUEFLOAT ${JsTypename.of(json)} ${JSON.stringify(json)}")
 			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): ValueFloat? {
 				val name = args[0] as String?

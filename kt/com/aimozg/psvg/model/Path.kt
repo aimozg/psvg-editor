@@ -1,5 +1,6 @@
 package com.aimozg.psvg.model
 
+import com.aimozg.ktuple.*
 import com.aimozg.psvg.*
 import org.w3c.dom.svg.SVGGElement
 import org.w3c.dom.svg.SVGPathElement
@@ -61,24 +62,32 @@ class Path(ctx: Context,
 			arrayOf(name, closed, style ?: jsobject {}, ownOrigin?.save()) + nodes.map { it.save() }
 
 	companion object {
-		val PATH_LOADER = object : PartLoader(Category.PATH, "Path", null, JsTypename.OBJECT) {
+		val PATH_LOADER = object : PartLoader(
+				Category.PATH,
+				Path::class.simpleName!!,
+				null,
+				JsTypename.OBJECT) {
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): Path {
-				if (json.length) {
-					val a:Array<Any?> = json
-					return Path(ctx,
-							a[0] as String?,
-							a[1] as Boolean,
-							a[2].asDynamic(),
-							ctx.loadPointOrNull(a[3].asDynamic()),
-							(4..a.size-1).map { ctx.loadNode(a[it]) })
+				if (json is Array<Any?>) {
+					val array:Array<Any?> = json
+					val a: Tuple4<String?, Boolean, dynamic, dynamic> = json
+					return Path(ctx,a.i0,a.i1,a.i2,
+							ctx.loadPointOrNull(a.i3),
+							(4..array.size-1).map { ctx.loadNode(array[it]) })
 				}
+				val json1: PathJson = json
 				return Path(ctx,
-						json.name,
-						json.closed,
-						json.style ?: jsobject {},
-						ctx.loadPointOrNull(json.origin),
-						(json.nodes as Array<dynamic>).map { ctx.loadNode(it) })
+						json1.name,
+						json1.closed,
+						json1.style ?: jsobject {},
+						ctx.loadPointOrNull(json1.origin),
+						json1.nodes.map { ctx.loadNode(it) })
 			}
 		}.register()
 	}
+}
+interface PathJson : VisualElementJson {
+	var closed: Boolean
+	var style: dynamic
+	var nodes: Array<PathNodeJson>
 }

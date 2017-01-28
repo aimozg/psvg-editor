@@ -51,7 +51,7 @@ class PointAtIntersection(ctx: Context,
 		}
 	}
 
-	override fun save(): dynamic = jsobject{
+	override fun save(): PointAtIntersectionJson = jsobject2 {
 		it.type = POINT_AT_INTERSECTION_TYPE
 		it.name = name
 		it.a1 = a1.save()
@@ -61,8 +61,11 @@ class PointAtIntersection(ctx: Context,
 	}
 	companion object {
 		val POINT_AT_INTERSECTION_TYPE = "I"
-		val POINT_AT_INTERSECTION_LOADER = object: PartLoader(Category.POINT,"PointAtIntersection", POINT_AT_INTERSECTION_TYPE){
-			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) = PointAtIntersection(ctx,
+		val POINT_AT_INTERSECTION_LOADER = object: PartLoader(
+				Category.POINT,
+				PointAtIntersection::class.simpleName!!,
+				POINT_AT_INTERSECTION_TYPE){
+			override fun loadStrict(ctx: Context, json: PointAtIntersectionJson, vararg args: Any?) = PointAtIntersection(ctx,
 					json.name,
 					ctx.loadPoint(json.a1),
 					ctx.loadPoint(json.a2),
@@ -70,4 +73,10 @@ class PointAtIntersection(ctx: Context,
 					ctx.loadPoint(json.b2))
 		}.register()
 	}
+}
+interface PointAtIntersectionJson : PointJson {
+	var a1:PointJson
+	var a2:PointJson
+	var b1:PointJson
+	var b2:PointJson
 }
