@@ -27,7 +27,7 @@ abstract class CommonNode(
 		l1 = null
 		l2 = null
 		u0 = SVGUseElement("#svg_$classname"){}
-		g.appendAll(u0,pos.graphic)
+		super.draw(g)
 	}
 
 	override fun center(): TXY = pos.calculate()

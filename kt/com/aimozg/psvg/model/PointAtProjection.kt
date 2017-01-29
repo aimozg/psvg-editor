@@ -43,7 +43,6 @@ class PointAtProjection(ctx: Context,
 		super.draw(g)
 		lab = null
 		lpq = null
-		g.appendAll(a.graphic,b.graphic,p.graphic)
 	}
 
 	override fun redraw(attr: String, g: SVGGElement) {

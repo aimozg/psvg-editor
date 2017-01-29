@@ -30,7 +30,6 @@ class PointAtIntersection(ctx: Context,
 		super.draw(g)
 		l1 = null
 		l2 = null
-		g.appendAll(a1.graphic,a2.graphic,b1.graphic,b2.graphic)
 	}
 
 	override fun redraw(attr: String, g: SVGGElement) {

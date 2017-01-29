@@ -3,6 +3,8 @@ package com.aimozg.psvg.model
 import com.aimozg.psvg.Object
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.entries
+import com.aimozg.psvg.model.segment.Handle
+import com.aimozg.psvg.model.segment.Segment
 import com.aimozg.psvg.sliceFrom
 import kotlin.collections.set
 
@@ -64,11 +66,12 @@ class Context {
 		} else return loadPart(type,array[1])
 	}
 
-	fun loadPoint(json: dynamic): Point = loadPart(Category.POINT, json) as Point
+	fun loadPoint(json: dynamic): Point = loadPointOrNull(json)!!
 	fun loadPointOrNull(json: dynamic): Point? = if (json == null) null else loadPart(Category.POINT, json) as Point
 	fun loadNode(json: dynamic): ModelNode = loadPart(Category.NODE, json) as ModelNode
 	fun loadPath(json: dynamic): AbstractPath = loadPart(Category.PATH, json) as AbstractPath
 	fun loadSegment(json: dynamic): Segment = loadPart(Category.SEGMENT, json) as Segment
+	fun loadHandle(json: dynamic): Handle = loadPart(Category.HANDLE, json) as Handle
 	fun loadParam(json: dynamic): Parameter = loadPart(Category.PARAM, json) as Parameter
 	fun loadFloat(name: String,
 	              json: dynamic,

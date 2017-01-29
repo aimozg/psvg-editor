@@ -1,9 +1,7 @@
 package com.aimozg.psvg.model
 
-import com.aimozg.psvg.appendAll
 import com.aimozg.psvg.jsobject2
 import com.aimozg.psvg.norm2fixed
-import org.w3c.dom.svg.SVGGElement
 
 /**
  * Created by aimozg on 26.01.2017.
@@ -16,11 +14,6 @@ class PointFromNormal(ctx: Context,
                       val alpha:ValueFloat,
                       val beta:ValueFloat):
 Point(ctx,name,listOf(pt0.asPosDependency,pt1.asPosDependency,alpha.asValDependency,beta.asValDependency)){
-	override fun draw(g: SVGGElement) {
-		super.draw(g)
-		g.appendAll(pt0.graphic,pt1.graphic)
-	}
-
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
 		update("pos")

@@ -2,7 +2,6 @@ package com.aimozg.psvg.model
 
 import com.aimozg.psvg.Object
 import com.aimozg.psvg.SVGPathElement
-import com.aimozg.psvg.appendAll
 import com.aimozg.psvg.d
 import org.w3c.dom.svg.SVGGElement
 import org.w3c.dom.svg.SVGPathElement
@@ -18,7 +17,7 @@ abstract class AbstractPath(ctx: Context,
 	abstract fun toSvgD(): String
 	override fun draw(g: SVGGElement) {
 		p = SVGPathElement { appendTo(g) }
-		g.appendAll(children.mapNotNull { (it as? VisibleElement)?.graphic })
+		super.draw(g)
 	}
 
 	override fun display() = SVGPathElement {

@@ -1,8 +1,9 @@
-package com.aimozg.psvg.model
+package com.aimozg.psvg.model.segment
 
 import com.aimozg.ktuple.*
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.jsobject2
+import com.aimozg.psvg.model.*
 
 /**
  * Created by aimozg on 29.01.2017.
@@ -28,6 +29,11 @@ class SegmentedPath(
 	}
 	interface SegmentedPathJson : AbstractPathJson {
 		var segments: Array<dynamic>
+	}
+
+	override fun updated(other: ModelElement, attr: String) {
+		super.updated(other, attr)
+		update("*")
 	}
 
 	override fun save(): SegmentedPathJson = jsobject2 {

@@ -1,5 +1,9 @@
 package com.aimozg.psvg.model
 
+import com.aimozg.psvg.model.segment.LineTo
+import com.aimozg.psvg.model.segment.MoveTo
+import com.aimozg.psvg.model.segment.SegmentedPath
+
 
 @Suppress("unused")
 val ALL_LOADERS: Collection<PartLoader> = listOf(

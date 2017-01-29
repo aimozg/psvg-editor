@@ -17,6 +17,7 @@ abstract class Point(ctx: Context,
 	abstract fun calculate(): TXY
 	override fun draw(g: SVGGElement) {
 		use = SVGUseElement("#svg_$classname") {appendTo(g)}
+		super.draw(g)
 	}
 
 	override fun redraw(attr: String, g: SVGGElement) {

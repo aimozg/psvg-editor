@@ -2,9 +2,7 @@ package com.aimozg.psvg.model
 
 import com.aimozg.ktuple.Tuple2
 import com.aimozg.psvg.TXY
-import com.aimozg.psvg.appendAll
 import com.aimozg.psvg.jsobject2
-import org.w3c.dom.svg.SVGGElement
 
 /**
  * Created by aimozg on 26.01.2017.
@@ -21,11 +19,6 @@ class CuspNode(ctx: Context,
 		super.updated(other, attr)
 		if (other == pos) update("pos")
 		else update("handle")
-	}
-
-	override fun draw(g: SVGGElement) {
-		super.draw(g)
-		g.appendAll(h1?.graphic, h2?.graphic)
 	}
 
 	override fun calcHandles(): Tuple2<TXY, TXY> {
