@@ -63,10 +63,10 @@ class PointAtIntersection(ctx: Context,
 		val POINT_AT_INTERSECTION_LOADER = object: PartLoader(Category.POINT,PointAtIntersection::class,POINT_AT_INTERSECTION_TYPE){
 			override fun loadStrict(ctx: Context, json: PointAtIntersectionJson, vararg args: Any?) = PointAtIntersection(ctx,
 					json.name,
-					ctx.loadPoint(json.a1),
-					ctx.loadPoint(json.a2),
-					ctx.loadPoint(json.b1),
-					ctx.loadPoint(json.b2))
+					ctx.loadPoint(json.a1)!!,
+					ctx.loadPoint(json.a2)!!,
+					ctx.loadPoint(json.b1)!!,
+					ctx.loadPoint(json.b2)!!)
 		}.register()
 	}
 	interface PointAtIntersectionJson : PointJson {

@@ -1,8 +1,6 @@
 package com.aimozg.psvg.model
 
-import com.aimozg.psvg.model.segment.LineTo
-import com.aimozg.psvg.model.segment.MoveTo
-import com.aimozg.psvg.model.segment.SegmentedPath
+import com.aimozg.psvg.model.segment.*
 
 
 @Suppress("unused")
@@ -18,6 +16,11 @@ val ALL_LOADERS: Collection<PartLoader> = listOf(
 
 		MoveTo.SEGMENT_M_LOADER,
 		LineTo.SEGMENT_L_LOADER,
+		CubicTo.SEGMENT_C_LOADER,
+
+		AbsoluteHandle.HANDLE_ABS_LOADER,
+		RelativeHandle.HANDLE_REL_LOADER,
+		FlowHandle.HANDLE_FLOW_LOADER,
 
 		FixedPoint.POINT_FIXED_LOADER,
 		PointRef.POINT_REF_LOADER,

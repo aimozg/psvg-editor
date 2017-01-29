@@ -40,10 +40,10 @@ class CuspNode(ctx: Context,
 		val NODE_CUSP_LOADER = object : PartLoader(Category.NODE,CuspNode::class,NODE_CUSP_TYPE) {
 			override fun loadStrict(ctx: Context, json: CuspNodeJson, vararg args: Any?) = CuspNode(ctx,
 					json.name,
-					ctx.loadPointOrNull(json.origin),
-					ctx.loadPoint(json.pos),
-					ctx.loadPointOrNull(json.handle1),
-					ctx.loadPointOrNull(json.handle2))
+					ctx.loadPoint(json.origin),
+					ctx.loadPoint(json.pos)!!,
+					ctx.loadPoint(json.handle1),
+					ctx.loadPoint(json.handle2))
 		}.register()
 	}
 	interface CuspNodeJson : VisualElementJson {

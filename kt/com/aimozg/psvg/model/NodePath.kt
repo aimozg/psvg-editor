@@ -44,7 +44,7 @@ class NodePath(ctx: Context,
 						json.name,
 						json.closed,
 						json.style ?: jsobject {},
-						ctx.loadPointOrNull(json.origin),
+						ctx.loadPoint(json.origin),
 						json.nodes.map { ctx.loadNode(it) })
 			}
 
@@ -54,7 +54,7 @@ class NodePath(ctx: Context,
 					val a: Tuple5<String, String?, Boolean, dynamic, dynamic> = json
 					if (a.i0 != TYPE) return null
 					return NodePath(ctx,a.i1,a.i2,a.i3,
-							ctx.loadPointOrNull(a.i4),
+							ctx.loadPoint(a.i4),
 							(5..array.size-1).map { ctx.loadNode(array[it]) })
 				}
 				return null

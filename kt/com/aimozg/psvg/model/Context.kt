@@ -48,11 +48,12 @@ class Context {
 		} catch (e:PartLoadException){
 			throw e
 		} catch (e:dynamic){
+			console.error(e.asDynamic().stack)
 			val e2 = PartLoadException(cat,json,e)
 			console.error(e2.asDynamic().stack)
 			throw e2
 		}
-		error("No loader for $cat $type " + JSON.stringify(json))
+		throw PartLoadException(cat,json)
 	}
 
 	fun loadAnyPart(name:String,json:dynamic): ModelElement {
@@ -66,12 +67,15 @@ class Context {
 		} else return loadPart(type,array[1])
 	}
 
-	fun loadPoint(json: dynamic): Point = loadPointOrNull(json)!!
-	fun loadPointOrNull(json: dynamic): Point? = if (json == null) null else loadPart(Category.POINT, json) as Point
+	fun loadPoint(json: dynamic): Point? =
+			if (json == null) null
+			else loadPart(Category.POINT, json) as Point
 	fun loadNode(json: dynamic): ModelNode = loadPart(Category.NODE, json) as ModelNode
 	fun loadPath(json: dynamic): AbstractPath = loadPart(Category.PATH, json) as AbstractPath
 	fun loadSegment(json: dynamic): Segment = loadPart(Category.SEGMENT, json) as Segment
-	fun loadHandle(json: dynamic): Handle = loadPart(Category.HANDLE, json) as Handle
+	fun loadHandle(json: dynamic, atStart: Boolean): Handle? =
+			if (json == null) null
+			else loadPart(Category.HANDLE, json, atStart) as Handle
 	fun loadParam(json: dynamic): Parameter = loadPart(Category.PARAM, json) as Parameter
 	fun loadFloat(name: String,
 	              json: dynamic,

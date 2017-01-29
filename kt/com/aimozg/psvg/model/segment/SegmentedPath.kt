@@ -2,6 +2,7 @@ package com.aimozg.psvg.model.segment
 
 import com.aimozg.ktuple.*
 import com.aimozg.psvg.TXY
+import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.jsobject2
 import com.aimozg.psvg.model.*
 
@@ -22,8 +23,8 @@ class SegmentedPath(
 			override fun loadStrict(ctx: Context, json: SegmentedPathJson, vararg args: Any?) =
 					SegmentedPath(ctx,
 							json.name,
-							ctx.loadPointOrNull(json.origin),
-							json.style,
+							ctx.loadPoint(json.origin),
+							json.style ?: jsobject {  },
 							json.segments.map { ctx.loadSegment(it) })
 		}.register()
 	}

@@ -12,10 +12,14 @@ import org.w3c.dom.svg.SVGPathElement
 import kotlin.dom.appendTo
 
 abstract class Segment(ctx: Context, name: String?, items: List<ItemDeclaration?>) :
-		VisibleElement(ctx, name, null, items) {
+		VisibleElement(ctx, name, null, items + listOf(
+				ItemDeclaration.Deferred{(it as Segment).prev?.asDependency}
+		)) {
 	override final val category: Category get() = Category.SEGMENT
 
-	override var owner: ModelElement? = null
+
+	override var owner: ModelElement?
+		get() = super.owner
 		set(value) {
 			super.owner = value
 			path = value as? SegmentedPath?

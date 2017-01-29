@@ -51,15 +51,13 @@ class SmoothNode(ctx: Context,
 				Category.NODE,
 				SmoothNode::class.simpleName!!,
 				NODE_SMOOTH_TYPE) {
-			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): ModelElement {
-				return SmoothNode(ctx,
-						json.name,
-						ctx.loadPointOrNull(json.origin),
-						ctx.loadPoint(json.pos),
-						ctx.loadFloat("prev",json.b,0.3),
-						ctx.loadFloat("next",json.c,0.3),
-						ctx.loadFloat("rotation",json.rot,0))
-			}
+			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) = SmoothNode(ctx,
+					json.name,
+					ctx.loadPoint(json.origin),
+					ctx.loadPoint(json.pos)!!,
+					ctx.loadFloat("prev",json.b,0.3),
+					ctx.loadFloat("next",json.c,0.3),
+					ctx.loadFloat("rotation",json.rot,0))
 		}.register()
 	}
 	interface SmoothNodeJson : ModelNodeJson {

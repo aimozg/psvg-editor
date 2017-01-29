@@ -33,8 +33,8 @@ Point(ctx,name,listOf(pt0.asPosDependency,pt1.asPosDependency,alpha.asValDepende
 		const val POINT_FROM_NORMAL_TYPE = "N"
 		val POINT_FROM_NORMAL_LOADER = object: PartLoader(Category.POINT,PointFromNormal::class,POINT_FROM_NORMAL_TYPE) {
 			override fun loadStrict(ctx: Context, json: PointFromNormalJson, vararg args: Any?) = PointFromNormal(ctx,json.name,
-					ctx.loadPoint(json.pt0),
-					ctx.loadPoint(json.pt1),
+					ctx.loadPoint(json.pt0)!!,
+					ctx.loadPoint(json.pt1)!!,
 					ctx.loadFloat("tangent",json.alpha,0),
 					ctx.loadFloat("normal",json.beta,0))
 		}.register()

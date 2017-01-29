@@ -43,7 +43,7 @@ sealed class ItemDeclaration {
 	class Instant(val modelElement: ModelElement,
 	              val dependency: String? = null) : ItemDeclaration()
 
-	class Deferred(val dep: (ModelElement) -> ItemDeclaration) : ItemDeclaration()
+	class Deferred(val dep: (ModelElement) -> ItemDeclaration?) : ItemDeclaration()
 }
 
 abstract class ModelElement(
@@ -82,6 +82,7 @@ abstract class ModelElement(
 			}
 			is ItemDeclaration.Deferred -> {
 				val other = icd.dep
+
 				ctx.queuePostload { depend(other(this)) }
 			}
 		}

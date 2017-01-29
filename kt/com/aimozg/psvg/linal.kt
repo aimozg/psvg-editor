@@ -27,6 +27,7 @@ class TXY(val x: Double, val y: Double) {
 }
 
 operator fun TXY.plus(other: TXY) = TXY(x + other.x, y + other.y)
+fun TXY.plus(dx: Number,dy:Number) = TXY(x + dx.toDouble(), y + dy.toDouble())
 operator fun TXY.minus(other: TXY) = TXY(x - other.x, y - other.y)
 operator fun TXY.times(other: Number) = TXY(x * other.toDouble(), y * other.toDouble())
 operator fun TXY.div(other: Number) = TXY(x / other.toDouble(), y / other.toDouble())

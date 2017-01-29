@@ -11,17 +11,17 @@ class LineTo(ctx: Context,
 		private const val TYPE = "L"
 		val SEGMENT_L_LOADER = object : PartLoader(Category.SEGMENT, LineTo::class, TYPE,
 				JsTypename.OBJECT) {
-			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) = LineTo(ctx, json.name, ctx.loadPoint(json.pt))
+			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) = LineTo(ctx, json.name, ctx.loadPoint(json.pt)!!)
 			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): LineTo? {
 				if (json is Array<dynamic> && json[0] == TYPE) {
 					when ((json as Array<*>).size) {
 						2 -> {
 							val a1: Tuple2<String, dynamic> = json
-							return LineTo(ctx, null, ctx.loadPoint(a1.i1))
+							return LineTo(ctx, null, ctx.loadPoint(a1.i1)!!)
 						}
 						3 -> {
 							val a2: Tuple3<String, String?, dynamic> = json
-							return LineTo(ctx, a2.i1, ctx.loadPoint(a2.i2))
+							return LineTo(ctx, a2.i1, ctx.loadPoint(a2.i2)!!)
 						}
 					}
 				}

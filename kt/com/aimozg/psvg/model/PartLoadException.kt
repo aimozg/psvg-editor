@@ -6,7 +6,15 @@ package com.aimozg.psvg.model
  */
 class PartLoadException(val cat: Category,
                         val json: dynamic,
-                        cause: Throwable? = null) : Throwable(
-		(cause?.message?.plus(" caused ")?:"")+
-		" failure to load $cat from " + JSON.stringify(json), cause
+                        cause: dynamic = null) : Throwable(
+		when (cause) {
+			is String -> cause
+			null, undefined -> "Error"
+			else -> cause.message ?: "Error"
+		} + " when loading $cat from " + try {
+			JSON.stringify(json)
+		} catch (e: dynamic) {
+			console.error("Offending object:", json)
+			"[$e] $json"
+		}, cause
 )

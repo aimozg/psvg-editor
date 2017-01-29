@@ -21,9 +21,9 @@ class PointAtProjection(ctx: Context,
 		val POINT_AT_PROJECTION_LOADER = object : PartLoader(Category.POINT,PointAtProjection::class,
 				POINT_AT_PROJECTION_TYPE) {
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) = PointAtProjection(ctx,json.name,
-					ctx.loadPoint(json.a),
-					ctx.loadPoint(json.b),
-					ctx.loadPoint(json.p),
+					ctx.loadPoint(json.a)!!,
+					ctx.loadPoint(json.b)!!,
+					ctx.loadPoint(json.p)!!,
 					ctx.loadFloat("scale",json.scale,1.0))
 		}.register()
 	}
