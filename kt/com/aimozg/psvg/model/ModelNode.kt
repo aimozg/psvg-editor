@@ -3,13 +3,13 @@ package com.aimozg.psvg.model
 import com.aimozg.psvg.DNode
 import com.aimozg.psvg.TXY
 
-abstract class PathNode(ctx: Context,
-                        name: String?,
-                        ownOrigin: Point?,
-                        items: List<ItemDeclaration?>) :
+abstract class ModelNode(ctx: Context,
+                         name: String?,
+                         ownOrigin: Point?,
+                         items: List<ItemDeclaration?>) :
 		VisibleElement(ctx, name, ownOrigin, items) {
 	override val category: Category = Category.NODE
-	val path get() = owner as Path
+	val path get() = owner as NodePath
 	val index get() = path.nodes.indexOf(this)
 	val first get() = !path.closed && index == 0
 	val last get() = !path.closed && index == path.nodes.size - 1
@@ -19,7 +19,7 @@ abstract class PathNode(ctx: Context,
 
 	abstract fun center(): TXY
 	abstract fun toDNode(): DNode
-	interface PathNodeJson : VisualElementJson {
+	interface ModelNodeJson : VisualElementJson {
 
 	}
 }

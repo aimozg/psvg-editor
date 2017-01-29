@@ -18,7 +18,7 @@ abstract class CommonNode(
 		ownOrigin: Point?,
 		val pos: Point,
 		items: List<ItemDeclaration?>
-) : PathNode(ctx, name, ownOrigin, items + pos.asPosDependency) {
+) : ModelNode(ctx, name, ownOrigin, items + pos.asPosDependency) {
 	protected var l1: SVGLineElement? = null
 	protected var l2: SVGLineElement? = null
 	protected var u0: SVGUseElement? = null

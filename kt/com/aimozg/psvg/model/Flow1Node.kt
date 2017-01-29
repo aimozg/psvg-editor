@@ -33,7 +33,7 @@ class Flow1Node(ctx: Context,
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
 		if (other is Point) update("*")
-		if (other is PathNode && (attr == "pos" || attr == "*") || other is ValueFloat) update("handle")
+		if (other is ModelNode && (attr == "pos" || attr == "*") || other is ValueFloat) update("handle")
 	}
 
 	override fun draw(g: SVGGElement) {
@@ -105,10 +105,7 @@ class Flow1Node(ctx: Context,
 
 	companion object {
 		const val NODE_FLOW1_TYPE = "flow1"
-		val NODE_FLOW1_LOADER = object : PartLoader(
-				Category.NODE,
-				Flow1Node::class.simpleName!!,
-				NODE_FLOW1_TYPE) {
+		val NODE_FLOW1_LOADER = object : PartLoader(Category.NODE,Flow1Node::class,NODE_FLOW1_TYPE) {
 			override fun loadStrict(ctx: Context, json: Flow1NodeJson, vararg args: Any?) = Flow1Node(
 					ctx,
 					json.name,
@@ -121,7 +118,7 @@ class Flow1Node(ctx: Context,
 			)
 		}.register()
 	}
-	interface Flow1NodeJson : PathNodeJson {
+	interface Flow1NodeJson : ModelNodeJson {
 		var pos: Point.PointJson
 		var h1ab: Tuple2<Number,Number>?
 		var h2ab: Tuple2<Number,Number>?

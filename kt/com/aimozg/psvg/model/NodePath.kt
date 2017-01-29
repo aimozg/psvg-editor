@@ -5,14 +5,13 @@ import com.aimozg.psvg.appendAll
 import com.aimozg.psvg.jsobject
 import org.w3c.dom.svg.SVGGElement
 
-class Path(ctx: Context,
-           name: String?,
-           val closed: Boolean,
-           style: dynamic,
-           ownOrigin: Point?,
-           val nodes: List<PathNode>) :
+class NodePath(ctx: Context,
+               name: String?,
+               val closed: Boolean,
+               style: dynamic,
+               ownOrigin: Point?,
+               val nodes: List<ModelNode>) :
 		AbstractPath(ctx, name, ownOrigin, nodes.map { it.asDependency }, style) {
-	override val category = Category.PATH
 
 	override fun draw(g: SVGGElement) {
 		super.draw(g)
@@ -21,7 +20,7 @@ class Path(ctx: Context,
 
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
-		if (other is PathNode && (attr == "handle" || attr == "pos" || attr == "*")) update("*")
+		if (other is ModelNode && (attr == "handle" || attr == "pos" || attr == "*")) update("*")
 	}
 
 	override fun toSvgD(): String {
@@ -44,21 +43,18 @@ class Path(ctx: Context,
 			arrayOf(name, closed, style ?: jsobject {}, ownOrigin?.save()) + nodes.map { it.save() }
 
 	companion object {
-		val PATH_LOADER = object : PartLoader(
-				Category.PATH,
-				Path::class.simpleName!!,
-				null,
+		val PATH_LOADER = object : PartLoader(Category.PATH, NodePath::class,"nodepath",
 				JsTypename.OBJECT) {
-			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): Path {
+			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): NodePath {
 				if (json is Array<Any?>) {
 					val array:Array<Any?> = json
 					val a: Tuple4<String?, Boolean, dynamic, dynamic> = json
-					return Path(ctx,a.i0,a.i1,a.i2,
+					return NodePath(ctx,a.i0,a.i1,a.i2,
 							ctx.loadPointOrNull(a.i3),
 							(4..array.size-1).map { ctx.loadNode(array[it]) })
 				}
 				val json1: PathJson = json
-				return Path(ctx,
+				return NodePath(ctx,
 						json1.name,
 						json1.closed,
 						json1.style ?: jsobject {},
@@ -67,9 +63,8 @@ class Path(ctx: Context,
 			}
 		}.register()
 	}
-	interface PathJson : VisualElementJson {
+	interface PathJson : AbstractPathJson {
 		var closed: Boolean
-		var style: dynamic
-		var nodes: Array<PathNode.PathNodeJson>
+		var nodes: Array<ModelNode.ModelNodeJson>
 	}
 }

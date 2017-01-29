@@ -61,10 +61,7 @@ class PointAtIntersection(ctx: Context,
 	}
 	companion object {
 		val POINT_AT_INTERSECTION_TYPE = "I"
-		val POINT_AT_INTERSECTION_LOADER = object: PartLoader(
-				Category.POINT,
-				PointAtIntersection::class.simpleName!!,
-				POINT_AT_INTERSECTION_TYPE){
+		val POINT_AT_INTERSECTION_LOADER = object: PartLoader(Category.POINT,PointAtIntersection::class,POINT_AT_INTERSECTION_TYPE){
 			override fun loadStrict(ctx: Context, json: PointAtIntersectionJson, vararg args: Any?) = PointAtIntersection(ctx,
 					json.name,
 					ctx.loadPoint(json.a1),

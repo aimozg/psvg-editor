@@ -1,20 +1,25 @@
 package com.aimozg.psvg.model
 
 
-/**
- * Created by aimozg on 26.01.2017.
- * Confidential
- */
-val ALL_LOADERS = listOf(
+@Suppress("unused")
+val ALL_LOADERS: Collection<PartLoader> = listOf(
 		CuspNode.NODE_CUSP_LOADER,
 		Flow1Node.NODE_FLOW1_LOADER,
 		SmoothNode.NODE_SMOOTH_LOADER,
+
 		Parameter.PARAM_LOADER,
-		Path.PATH_LOADER,
+
+		NodePath.PATH_LOADER,
+		SegmentedPath.PATH_SEGMENTED_LOADER,
+
+		MoveTo.SEGMENT_M_LOADER,
+		LineTo.SEGMENT_L_LOADER,
+
+		FixedPoint.POINT_FIXED_LOADER,
+		PointRef.POINT_REF_LOADER,
+		PointFromNormal.POINT_FROM_NORMAL_LOADER,
 		PointAtIntersection.POINT_AT_INTERSECTION_LOADER,
 		PointAtProjection.POINT_AT_PROJECTION_LOADER,
-		FixedPoint.POINT_FIXED_LOADER,
-		PointFromNormal.POINT_FROM_NORMAL_LOADER,
-		PointRef.POINT_REF_LOADER,
-		ValueFloat.VALUEFLOAD_LOADER
+
+		ValueFloat.VALUEFLOAT_LOADER
 )

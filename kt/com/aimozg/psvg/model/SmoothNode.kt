@@ -20,12 +20,12 @@ class SmoothNode(ctx: Context,
 				listOf(abq.asValDependency,
 						acq.asValDependency,
 						rot.asValDependency,
-						ItemDeclaration.Deferred { (it as PathNode).prevNode.asPosDependency},
-						ItemDeclaration.Deferred { (it as PathNode).nextNode.asPosDependency})) {
+						ItemDeclaration.Deferred { (it as ModelNode).prevNode.asPosDependency},
+						ItemDeclaration.Deferred { (it as ModelNode).nextNode.asPosDependency})) {
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
 		if (other is Point) update("*")
-		if (other is PathNode && (attr == "pos" || attr=="*") || other is ValueFloat) update("handle")
+		if (other is ModelNode && (attr == "pos" || attr=="*") || other is ValueFloat) update("handle")
 	}
 
 	override fun calcHandles(): Tuple2<TXY, TXY> = smoothHandles(
@@ -62,7 +62,7 @@ class SmoothNode(ctx: Context,
 			}
 		}.register()
 	}
-	interface SmoothNodeJson : PathNodeJson {
+	interface SmoothNodeJson : ModelNodeJson {
 
 	}
 }

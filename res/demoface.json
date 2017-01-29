@@ -4,10 +4,17 @@
     { "name": "noseSz" }
   ],
   "store" : {
+    "_vtop"      : ["point", 0, -80],
+    "_vbottom"   : ["point", 0, 50],
     "_vaxis"     : [
-      "path", false, null, null,
-      { "type": "cusp", "pos": ["_vtop", 0, -80] },
-      { "type": "cusp", "pos": ["_vbottom", 0, 50] }
+      "path", {
+        "type"    : "v2",
+        "name"    : "_vaxis",
+        "segments": [
+          ["M", "@_vtop"],
+          ["L", "@_vbottom"]
+        ]
+      }
     ],
     "_haxis"     : [
       "path", false, null, null,
@@ -61,8 +68,8 @@
       "h1ab": [0.2, -0.1],
       "h2ab": [0.2, 0.1]
     }, {
-      "type"   : "flow1",
-      "pos"    : {
+      "type": "flow1",
+      "pos" : {
         "name" : "noseleft",
         "type" : "PROJ",
         "a"    : "@nosetop",
@@ -70,7 +77,7 @@
         "p"    : "@noseright",
         "scale": 2
       },
-      "h1ab"   : [0.3, 0.1]
+      "h1ab": [0.3, 0.1]
     }
     ],
     [

@@ -71,7 +71,7 @@ class ValueFloat(
 	fun validate(x:Number):Boolean = x.toDouble().let { it.isFinite() && it>=min && it<=max }
 
 	companion object {
-		val VALUEFLOAD_LOADER = object: PartLoader(
+		val VALUEFLOAT_LOADER = object: PartLoader(
 				Category.VALUEFLOAT,
 				ValueFloat::class.simpleName!!,
 				null,

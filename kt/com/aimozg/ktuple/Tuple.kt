@@ -32,8 +32,8 @@ external interface MutableTuple1<T1> : Tuple1<T1>, MutableTuple {
 }
 
 
-inline fun <reified T1> Tuple1(i1: T1): Tuple1<T1> = arrayOf(i1).asDynamic()
-inline fun <reified T1> MutableTuple1(i1: T1): MutableTuple1<T1> = arrayOf(i1).asDynamic()
+inline fun <T1> Tuple1(i1: T1): Tuple1<T1> = arrayOf(i1).asDynamic()
+inline fun <T1> MutableTuple1(i1: T1): MutableTuple1<T1> = arrayOf(i1).asDynamic()
 inline operator fun <T1> Tuple1<T1>.component1(): T1 = get(0).asDynamic()
 inline val <T1> Tuple1<T1>.i0: T1 get() = get(0).asDynamic()
 inline var <T1> MutableTuple1<T1>.i0: T1
@@ -52,10 +52,10 @@ external interface MutableTuple2<T1, T2> : Tuple2<T1, T2>, MutableTuple {
 	override fun <T3> concat(t3: T3): MutableTuple3<T1, T2, T3>
 }
 
-inline fun <reified T1, reified T2> Tuple2(i1: T1, i2: T2): Tuple2<T1, T2> = arrayOf(i1, i2).asDynamic()
-inline fun <reified T1, reified T2> MutableTuple2(i1: T1, i2: T2): MutableTuple2<T1, T2> = arrayOf(i1, i2).asDynamic()
-inline infix fun <reified T1, reified T2> T1.tup(i2: T2): Tuple2<T1, T2> = arrayOf(this, i2).asDynamic()
-inline infix fun <reified T1, reified T2> T1.mtup(i2: T2): MutableTuple2<T1, T2> = arrayOf(this, i2).asDynamic()
+inline fun <T1, T2> Tuple2(i1: T1, i2: T2): Tuple2<T1, T2> = arrayOf(i1, i2).asDynamic()
+inline fun <T1, T2> MutableTuple2(i1: T1, i2: T2): MutableTuple2<T1, T2> = arrayOf(i1, i2).asDynamic()
+inline infix fun <T1, T2> T1.tup(i2: T2): Tuple2<T1, T2> = arrayOf(this, i2).asDynamic()
+inline infix fun <T1, T2> T1.mtup(i2: T2): MutableTuple2<T1, T2> = arrayOf(this, i2).asDynamic()
 inline operator fun <T1> Tuple2<T1, *>.component1(): T1 = get(0).asDynamic()
 inline operator fun <T2> Tuple2<*, T2>.component2(): T2 = get(1).asDynamic()
 inline val <T1> Tuple2<T1, *>.i0: T1  get() = get(0).asDynamic()
@@ -79,8 +79,8 @@ external interface MutableTuple3<T1, T2, T3> : Tuple3<T1, T2, T3>, MutableTuple 
 	override fun <T4> concat(t4: T4): MutableTuple4<T1, T2, T3, T4>
 }
 
-inline fun <reified T1, reified T2, reified T3> Tuple3(i1: T1, i2: T2, i3: T3): Tuple3<T1, T2, T3> = arrayOf(i1, i2, i3).asDynamic()
-inline fun <reified T1, reified T2, reified T3> MutableTuple3(i1: T1, i2: T2, i3: T3): MutableTuple3<T1, T2, T3> = arrayOf(i1, i2, i3).asDynamic()
+inline fun <T1, T2, T3> Tuple3(i1: T1, i2: T2, i3: T3): Tuple3<T1, T2, T3> = arrayOf(i1, i2, i3).asDynamic()
+inline fun <T1, T2, T3> MutableTuple3(i1: T1, i2: T2, i3: T3): MutableTuple3<T1, T2, T3> = arrayOf(i1, i2, i3).asDynamic()
 inline operator fun <T1> Tuple3<T1, *, *>.component1(): T1 = get(0).asDynamic()
 inline operator fun <T2> Tuple3<*, T2, *>.component2(): T2 = get(1).asDynamic()
 inline operator fun <T3> Tuple3<*, *, T3>.component3(): T3 = get(2).asDynamic()
@@ -109,8 +109,8 @@ external interface MutableTuple4<T1, T2, T3, T4> : Tuple4<T1, T2, T3, T4>, Mutab
 	override fun <T5> concat(t5: T5): MutableTuple5<T1, T2, T3, T4, T5>
 }
 
-inline fun <reified T1, reified T2, reified T3, reified T4> Tuple4(i1: T1, i2: T2, i3: T3, i4: T4): Tuple4<T1, T2, T3, T4> = arrayOf(i1, i2, i3, i4).asDynamic()
-inline fun <reified T1, reified T2, reified T3, reified T4> MutableTuple4(i1: T1, i2: T2, i3: T3, i4: T4): MutableTuple4<T1, T2, T3, T4> = arrayOf(i1, i2, i3, i4).asDynamic()
+inline fun <T1, T2, T3, T4> Tuple4(i1: T1, i2: T2, i3: T3, i4: T4): Tuple4<T1, T2, T3, T4> = arrayOf(i1, i2, i3, i4).asDynamic()
+inline fun <T1, T2, T3, T4> MutableTuple4(i1: T1, i2: T2, i3: T3, i4: T4): MutableTuple4<T1, T2, T3, T4> = arrayOf(i1, i2, i3, i4).asDynamic()
 inline operator fun <T1> Tuple4<T1, *, *, *>.component1(): T1 = get(0).asDynamic()
 inline operator fun <T2> Tuple4<*, T2, *, *>.component2(): T2 = get(1).asDynamic()
 inline operator fun <T3> Tuple4<*, *, T3, *>.component3(): T3 = get(2).asDynamic()
@@ -138,8 +138,8 @@ inline operator fun <T> Tuple4<T,T,T,T>.get(index:Int):T = asArray()[index].asDy
 external interface Tuple5<T1, T2, T3, T4, T5> : Tuple
 external interface MutableTuple5<T1, T2, T3, T4, T5> : Tuple5<T1, T2, T3, T4, T5>, MutableTuple
 
-inline fun <reified T1, reified T2, reified T3, reified T4, reified T5> Tuple5(i1: T1, i2: T2, i3: T3, i4: T4, i5: T5): Tuple5<T1, T2, T3, T4, T5> = arrayOf(i1, i2, i3, i4, i5).asDynamic()
-inline fun <reified T1, reified T2, reified T3, reified T4, reified T5> MutableTuple5(i1: T1, i2: T2, i3: T3, i4: T4, i5: T5): MutableTuple5<T1, T2, T3, T4, T5> = arrayOf(i1, i2, i3, i4, i5).asDynamic()
+inline fun <T1, T2, T3, T4, T5> Tuple5(i1: T1, i2: T2, i3: T3, i4: T4, i5: T5): Tuple5<T1, T2, T3, T4, T5> = arrayOf(i1, i2, i3, i4, i5).asDynamic()
+inline fun <T1, T2, T3, T4, T5> MutableTuple5(i1: T1, i2: T2, i3: T3, i4: T4, i5: T5): MutableTuple5<T1, T2, T3, T4, T5> = arrayOf(i1, i2, i3, i4, i5).asDynamic()
 inline operator fun <T1> Tuple5<T1, *, *, *, *>.component1(): T1 = get(0).asDynamic()
 inline operator fun <T2> Tuple5<*, T2, *, *, *>.component2(): T2 = get(1).asDynamic()
 inline operator fun <T3> Tuple5<*, *, T3, *, *>.component3(): T3 = get(2).asDynamic()

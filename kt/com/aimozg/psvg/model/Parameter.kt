@@ -28,10 +28,7 @@ class Parameter(
 		update("meta")
 	}
 	companion object {
-		val PARAM_LOADER = object: PartLoader(
-				Category.PARAM,
-				Parameter::class.simpleName!!,
-				null,
+		val PARAM_LOADER = object: PartLoader(Category.PARAM,Parameter::class,null,
 				JsTypename.OBJECT){
 			override fun loadStrict(ctx: Context, json: ParameterJson, vararg args: Any?): ModelElement {
 				return Parameter(ctx,json.name!!,

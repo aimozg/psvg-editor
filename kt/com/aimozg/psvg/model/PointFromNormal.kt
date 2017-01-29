@@ -38,10 +38,7 @@ Point(ctx,name,listOf(pt0.asPosDependency,pt1.asPosDependency,alpha.asValDepende
 	}
 	companion object {
 		const val POINT_FROM_NORMAL_TYPE = "N"
-		val POINT_FROM_NORMAL_LOADER = object: PartLoader(
-				Category.POINT,
-				PointFromNormal::class.simpleName!!,
-				POINT_FROM_NORMAL_TYPE) {
+		val POINT_FROM_NORMAL_LOADER = object: PartLoader(Category.POINT,PointFromNormal::class,POINT_FROM_NORMAL_TYPE) {
 			override fun loadStrict(ctx: Context, json: PointFromNormalJson, vararg args: Any?) = PointFromNormal(ctx,json.name,
 					ctx.loadPoint(json.pt0),
 					ctx.loadPoint(json.pt1),

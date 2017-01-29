@@ -13,6 +13,7 @@ abstract class AbstractPath(ctx: Context,
                             items:List<ItemDeclaration>, val style: dynamic) :
 		VisibleElement(ctx,name,ownOrigin,items) {
 	protected var p: SVGPathElement? = null
+	override val category = Category.PATH
 	abstract fun toSvgD(): String
 	override fun draw(g: SVGGElement) {
 		p = SVGPathElement { appendTo(g) }
@@ -34,5 +35,7 @@ abstract class AbstractPath(ctx: Context,
 		p?.d = toSvgD()
 	}
 
-
+	interface AbstractPathJson : VisualElementJson {
+		var style: dynamic
+	}
 }

@@ -50,10 +50,7 @@ class FixedPoint(ctx: Context,
 	}
 
 	companion object {
-		val POINT_FIXED_LOADER = object: PartLoader(
-				Category.POINT,
-				FixedPoint::class.simpleName!!,
-				"F",
+		val POINT_FIXED_LOADER = object: PartLoader(Category.POINT,FixedPoint::class,"F",
 				JsTypename.OBJECT) {
 			override fun loadStrict(ctx: Context, json: FixedPointJson, vararg args: Any?): ModelElement = FixedPoint(ctx,
 					json.name,

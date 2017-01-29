@@ -43,9 +43,12 @@ class Context {
 					.asSequence()
 					.mapNotNull { it.loadRelaxed(this, json, *args) }
 					.firstOrNull { return it }
-		} catch (e:Throwable){
-			if (e is PartLoadException) throw e
-			else throw PartLoadException(cat,json,e)
+		} catch (e:PartLoadException){
+			throw e
+		} catch (e:dynamic){
+			val e2 = PartLoadException(cat,json,e)
+			console.error(e2.asDynamic().stack)
+			throw e2
 		}
 		error("No loader for $cat $type " + JSON.stringify(json))
 	}
@@ -63,8 +66,9 @@ class Context {
 
 	fun loadPoint(json: dynamic): Point = loadPart(Category.POINT, json) as Point
 	fun loadPointOrNull(json: dynamic): Point? = if (json == null) null else loadPart(Category.POINT, json) as Point
-	fun loadNode(json: dynamic): PathNode = loadPart(Category.NODE, json) as PathNode
+	fun loadNode(json: dynamic): ModelNode = loadPart(Category.NODE, json) as ModelNode
 	fun loadPath(json: dynamic): AbstractPath = loadPart(Category.PATH, json) as AbstractPath
+	fun loadSegment(json: dynamic): Segment = loadPart(Category.SEGMENT, json) as Segment
 	fun loadParam(json: dynamic): Parameter = loadPart(Category.PARAM, json) as Parameter
 	fun loadFloat(name: String,
 	              json: dynamic,

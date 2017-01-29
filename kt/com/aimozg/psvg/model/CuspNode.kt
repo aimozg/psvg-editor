@@ -44,10 +44,7 @@ class CuspNode(ctx: Context,
 
 	companion object {
 		const val NODE_CUSP_TYPE = "cusp"
-		val NODE_CUSP_LOADER = object : PartLoader(
-				Category.NODE,
-				CuspNode::class.simpleName!!,
-				NODE_CUSP_TYPE) {
+		val NODE_CUSP_LOADER = object : PartLoader(Category.NODE,CuspNode::class,NODE_CUSP_TYPE) {
 			override fun loadStrict(ctx: Context, json: CuspNodeJson, vararg args: Any?) = CuspNode(ctx,
 					json.name,
 					ctx.loadPointOrNull(json.origin),
