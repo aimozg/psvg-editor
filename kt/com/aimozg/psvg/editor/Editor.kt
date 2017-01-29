@@ -126,7 +126,7 @@ class Editor(
 					// if (p) p.update();
 				}
 			}
-			if (obj is Path) {
+			if (obj is AbstractPath) {
 				for (m in previews) {
 
 				}

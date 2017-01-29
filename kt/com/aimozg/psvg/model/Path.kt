@@ -1,40 +1,22 @@
 package com.aimozg.psvg.model
 
 import com.aimozg.ktuple.*
-import com.aimozg.psvg.*
+import com.aimozg.psvg.appendAll
+import com.aimozg.psvg.jsobject
 import org.w3c.dom.svg.SVGGElement
-import org.w3c.dom.svg.SVGPathElement
-import kotlin.dom.appendTo
 
 class Path(ctx: Context,
            name: String?,
            val closed: Boolean,
-           val style: dynamic,
+           style: dynamic,
            ownOrigin: Point?,
            val nodes: List<PathNode>) :
-		VisibleElement(ctx, name, ownOrigin, nodes.map { it.asDependency }) {
-	private var p: SVGPathElement? = null
+		AbstractPath(ctx, name, ownOrigin, nodes.map { it.asDependency }, style) {
 	override val category = Category.PATH
 
 	override fun draw(g: SVGGElement) {
-		p = SVGPathElement { appendTo(g) }
+		super.draw(g)
 		g.appendAll(nodes.map { it.graphic })
-	}
-
-	override fun display() = SVGPathElement {
-		graphic
-		p = this
-		redraw("*",graphic)
-		d = toSvgD()
-		translate(this)
-		val styledef = this@Path.style
-		for (k in Object.keys(styledef)) {
-			style.setProperty(k, styledef[k])
-		}
-	}
-
-	override fun redraw(attr: String, g: SVGGElement) {
-		p?.d = toSvgD()
 	}
 
 	override fun updated(other: ModelElement, attr: String) {
@@ -42,7 +24,7 @@ class Path(ctx: Context,
 		if (other is PathNode && (attr == "handle" || attr == "pos" || attr == "*")) update("*")
 	}
 
-	fun toSvgD(): String {
+	override fun toSvgD(): String {
 		val pts = nodes.map { it.toDNode() }
 		if (pts.isEmpty()) return ""
 		val M = "M ${pts[0].p}"

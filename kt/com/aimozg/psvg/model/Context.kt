@@ -64,7 +64,7 @@ class Context {
 	fun loadPoint(json: dynamic): Point = loadPart(Category.POINT, json) as Point
 	fun loadPointOrNull(json: dynamic): Point? = if (json == null) null else loadPart(Category.POINT, json) as Point
 	fun loadNode(json: dynamic): PathNode = loadPart(Category.NODE, json) as PathNode
-	fun loadPath(json: dynamic): Path = loadPart(Category.PATH, json) as Path
+	fun loadPath(json: dynamic): AbstractPath = loadPart(Category.PATH, json) as AbstractPath
 	fun loadParam(json: dynamic): Parameter = loadPart(Category.PARAM, json) as Parameter
 	fun loadFloat(name: String,
 	              json: dynamic,

@@ -7,7 +7,7 @@ class Model(ctx: Context,
             name: String?,
             ownOrigin: Point?,
             val store: List<ModelElement>,
-            val paths: List<Path>,
+            val paths: List<AbstractPath>,
             val parameters: List<Parameter>) :
 		VisibleElement(ctx, name, ownOrigin, paths.map { it.asDependency } +store.map { it.asDependency (null)}) {
 	override val category: Category = Category.MODEL
