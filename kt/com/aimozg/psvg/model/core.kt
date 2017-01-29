@@ -51,8 +51,8 @@ abstract class ModelElement(
 		items: List<ItemDeclaration?>
 ) {
 	val id: Int = ctx.nextId()
-	var owner: ModelElement? = null
-		private set
+	open var owner: ModelElement? = null
+		protected set
 	private val _children = ArrayList<ModelElement>()
 	val children: List<ModelElement> get() = _children
 	protected val dependants = ArrayList<PartDependency>()

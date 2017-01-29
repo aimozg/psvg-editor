@@ -6,32 +6,33 @@
   "store" : {
     "_vtop"      : ["point", 0, -80],
     "_vbottom"   : ["point", 0, 50],
+    "_hright"    : ["point", 50, 0],
+    "_hcent"     : ["point", { "name": "_hcent", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@_hright" }],
+    "_hleft"     : [
+      "point",
+      { "name": "_hleft", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@_hright", "scale": 2 }
+    ],
     "_vaxis"     : [
       "path", {
-        "type"    : "v2",
+        "type"    : "S",
         "name"    : "_vaxis",
-        "segments": [
-          ["M", "@_vtop"],
-          ["L", "@_vbottom"]
-        ]
+        "segments": [["M", "@_vtop"], ["L", "@_vbottom"]]
       }
     ],
     "_haxis"     : [
-      "path", false, null, null,
-      { "type": "cusp", "pos": ["_hright", 50, 0] },
-      {
-        "type": "cusp",
-        "pos" : { "name": "_hcent", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@_hright" }
+      "path", {
+        "type": "S", "name": "_haxis", "segments": [["M", "@_hright"], ["L", "@_hleft"]]
       }
     ],
     "eyer_origin": ["point", 25, -16]
   },
   "paths" : [
     [
-      "face", true, {
-      "stroke": "hsl(26, 49%, 16%)",
-      "fill"  : "hsl(26, 49%, 64%)"
-    }, null,
+      "N", "face", true,
+      {
+        "stroke": "hsl(26, 49%, 16%)",
+        "fill"  : "hsl(26, 49%, 64%)"
+      }, null,
       { "type": "smooth", "pos": ["htopr", 35, -70] },
       { "type": "smooth", "pos": ["tempr", 50, -22] },
       { "type": "smooth", "pos": ["jawbr", 45, 0] },
@@ -54,10 +55,11 @@
       }
     ],
     [
-      "noseline", false, {
-      "stroke"      : "hsl(26, 49%, 16%)",
-      "stroke-width": 0.5
-    }, null,
+      "N", "noseline", false,
+      {
+        "stroke"      : "hsl(26, 49%, 16%)",
+        "stroke-width": 0.5
+      }, null,
       {
         "type"   : "cusp",
         "pos"    : "@nosetop",
@@ -81,9 +83,10 @@
     }
     ],
     [
-      "nosefill", true, {
-      "fill": "hsla(26, 49%, 32%, 0.5)"
-    }, null, {
+      "N", "nosefill", true,
+      {
+        "fill": "hsla(26, 49%, 32%, 0.5)"
+      }, null, {
       "type": "flow1",
       "pos" : ["nosetip", 0, 19],
       "h1ab": [0.2, 0.1],
@@ -101,10 +104,12 @@
     }
     ],
     [
-      "mouth", false, {
-      "stroke"      : "hsl(26, 49%, 16%)",
-      "stroke-width": 0.5
-    }, null, {
+      "N", "mouth", false,
+      {
+        "stroke"      : "hsl(26, 49%, 16%)",
+        "stroke-width": 0.5
+      },
+      null, {
       "type": "flow1",
       "pos" : [-9, 28],
       "h2ab": [0.023529411764705882, 0.10588235294117647]
@@ -123,9 +128,11 @@
       "handle1": [9, 27]
     }
     ], [
-      "eyer_white", true, {
+      "N", "eyer_white", true,
+      {
         "fill": "#fff"
-      }, "@eyer_origin",
+      },
+      "@eyer_origin",
       { "type": "smooth", "pos": [-3, 13] },
       {
         "type": "flow1",

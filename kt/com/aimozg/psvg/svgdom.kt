@@ -36,7 +36,12 @@ inline fun SVGLineElement(x1: Number? = null,
 			init()
 		}
 
-inline fun SVGPathElement(init: SVGPathElement.() -> Unit): SVGPathElement = (document.createElementNS(SVGNS, "path") as SVGPathElement).apply(init)
+inline fun SVGPathElement(d: String? = null,
+                          init: SVGPathElement.() -> Unit): SVGPathElement =
+		(document.createElementNS(SVGNS, "path") as SVGPathElement).apply{
+			if (d != null) this.d = d
+			init()
+		}
 inline fun SVGRectElement(x0: Number? = null,
                           y0: Number? = null,
                           width0: Number? = null,

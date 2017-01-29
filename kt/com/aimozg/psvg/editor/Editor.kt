@@ -56,14 +56,12 @@ class Editor(
 
 	private fun recreateView(model: Model) {
 		editPane = ModelPane(model, DisplayMode.EDIT, canvasDiv,
-				SVGPathElement {
+				SVGPathElement("M -5 0 0 -5 5 0 0 5 z") {
 					id = "svgpt_diamond_sm"
-					d = "M -5 0 0 -5 5 0 0 5 z"
 					style.any = "inherit"
 					scaledown.add(this)
-				}, SVGPathElement {
+				}, SVGPathElement("M -10 0 0 -10 10 0 0 10 z") {
 			id = "svgpt_diamond"
-			d = "M -10 0 0 -10 10 0 0 10 z"
 			style.any = "inherit"
 			scaledown.add(this)
 		}, SVGCircleElement(0, 0, 5) {
@@ -105,13 +103,13 @@ class Editor(
 			get_container().withPlugins.on("select_node.jstree", { _, data: JSTreeNodeEvent ->
 				val id = data.node.id.split("_")
 				if (id[0] == "ModelPart") select(editPane.ctx.parts[id[1].toInt()])
-			}).withPlugins.on("click dblclick", {_,_:Any?->
+			}).withPlugins.on("click dblclick", { _, _: Any? ->
 				// console.log(e, this.tree.jstree().get_node(e.target))
 
 			})
 			Unit
 		}
-		editPane.ctx.onUpdate = { obj,_ ->
+		editPane.ctx.onUpdate = { obj, _ ->
 			//console.log(obj);
 			val id = obj.id
 			if (obj is ValueFloat || obj is FixedPoint) {

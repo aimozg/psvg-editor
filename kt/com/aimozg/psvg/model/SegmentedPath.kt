@@ -13,7 +13,7 @@ class SegmentedPath(
 		name: String?,
 		ownOrigin: Point?,
 		style: dynamic,
-		val segments: Iterable<Segment>) :
+		val segments: List<Segment>) :
 		AbstractPath(ctx, name, ownOrigin, segments.map { it.asDependency }, style) {
 	companion object {
 		const private val TYPE = "S"

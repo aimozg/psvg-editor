@@ -1,9 +1,7 @@
 package com.aimozg.psvg.model
 
 import com.aimozg.ktuple.*
-import com.aimozg.psvg.appendAll
 import com.aimozg.psvg.jsobject
-import org.w3c.dom.svg.SVGGElement
 
 class NodePath(ctx: Context,
                name: String?,
@@ -12,11 +10,6 @@ class NodePath(ctx: Context,
                ownOrigin: Point?,
                val nodes: List<ModelNode>) :
 		AbstractPath(ctx, name, ownOrigin, nodes.map { it.asDependency }, style) {
-
-	override fun draw(g: SVGGElement) {
-		super.draw(g)
-		g.appendAll(nodes.map { it.graphic })
-	}
 
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
@@ -40,26 +33,31 @@ class NodePath(ctx: Context,
 	}
 
 	override fun save() =
-			arrayOf(name, closed, style ?: jsobject {}, ownOrigin?.save()) + nodes.map { it.save() }
+			arrayOf(TYPE, name, closed, style ?: jsobject {}, ownOrigin?.save()) + nodes.map { it.save() }
 
 	companion object {
-		val PATH_LOADER = object : PartLoader(Category.PATH, NodePath::class,"nodepath",
+		private const val TYPE = "N"
+		val PATH_LOADER = object : PartLoader(Category.PATH, NodePath::class,TYPE,
 				JsTypename.OBJECT) {
-			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): NodePath {
+			override fun loadStrict(ctx: Context, json: PathJson, vararg args: Any?): NodePath {
+				return NodePath(ctx,
+						json.name,
+						json.closed,
+						json.style ?: jsobject {},
+						ctx.loadPointOrNull(json.origin),
+						json.nodes.map { ctx.loadNode(it) })
+			}
+
+			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): NodePath? {
 				if (json is Array<Any?>) {
 					val array:Array<Any?> = json
-					val a: Tuple4<String?, Boolean, dynamic, dynamic> = json
-					return NodePath(ctx,a.i0,a.i1,a.i2,
-							ctx.loadPointOrNull(a.i3),
-							(4..array.size-1).map { ctx.loadNode(array[it]) })
+					val a: Tuple5<String, String?, Boolean, dynamic, dynamic> = json
+					if (a.i0 != TYPE) return null
+					return NodePath(ctx,a.i1,a.i2,a.i3,
+							ctx.loadPointOrNull(a.i4),
+							(5..array.size-1).map { ctx.loadNode(array[it]) })
 				}
-				val json1: PathJson = json
-				return NodePath(ctx,
-						json1.name,
-						json1.closed,
-						json1.style ?: jsobject {},
-						ctx.loadPointOrNull(json1.origin),
-						json1.nodes.map { ctx.loadNode(it) })
+				return null
 			}
 		}.register()
 	}

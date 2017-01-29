@@ -16,7 +16,7 @@ class PointRef(
 	override fun calculate(): TXY = obj.calculate()
 
 	val obj: Point by lazy {
-		ctx.findPoint(ref)!!
+		ctx.findPoint(ref) ?: throw NullPointerException("Cannot dereference Point.@$ref")
 	}
 
 	override fun updated(other: ModelElement, attr: String) {

@@ -70,12 +70,16 @@
 		.viewport {
 			fill: #fff;
 		}
-		.modelpane-edit .path > path{
+		.modelpane-edit .path > path,
+		.modelpane-edit .segment > path {
 			stroke-width:4;
 			stroke-opacity:0.8;
-			stroke:#000000;
+			pointer-events: stroke;
 			fill:none;
 			vector-effect:non-scaling-stroke;
+		}
+		.modelpane-edit .path > path {
+			stroke:#000000;
 		}
 		.modelpane-edit.point {
 			stroke-width:2;
@@ -103,10 +107,14 @@
 		.-selected use{
 			stroke:#800000;
 		}
+		.segment > path:hover {
+			stroke:#ffff00;
+		}
 		.node.-selected.-primary > line.handle,
 		.node.-selected.-primary > line.lineref,
 		.node.-selected.-primary > use,
 		.path.-selected.-primary > path,
+		.segment.-selected.-primary > path,
 		.point.-selected.-primary,
 		.point.-selected.-primary > line.handle,
 		.point.-selected.-primary > line.lineref,
