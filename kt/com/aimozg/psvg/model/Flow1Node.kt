@@ -121,10 +121,10 @@ class Flow1Node(ctx: Context,
 			)
 		}.register()
 	}
-}
+	interface Flow1NodeJson : PathNodeJson {
+		var pos: Point.PointJson
+		var h1ab: Tuple2<Number,Number>?
+		var h2ab: Tuple2<Number,Number>?
+	}
 
-interface Flow1NodeJson : PathNodeJson {
-	var pos: PointJson
-	var h1ab: Tuple2<Number,Number>?
-	var h2ab: Tuple2<Number,Number>?
 }

@@ -11,11 +11,13 @@ class PointRef(
 		ctx: Context,
 		name:String?,
 		val ref:String
-): Point(ctx,name,listOf(ItemDeclaration.Deferred{(it as PointRef).obj().asPosDependency})) {
+): Point(ctx,name,listOf(ItemDeclaration.Deferred{(it as PointRef).obj.asPosDependency})) {
 
-	override fun calculate(): TXY = obj().calculate()
+	override fun calculate(): TXY = obj.calculate()
 
-	fun obj(): Point = ctx.findPoint(ref)!!
+	val obj: Point by lazy {
+		ctx.findPoint(ref)!!
+	}
 
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
@@ -34,8 +36,7 @@ class PointRef(
 		val POINT_REF_LOADER = object: PartLoader(
 				Category.POINT,
 				PointRef::class.simpleName!!,
-				POINT_REF_TYPE,
-				JsTypename.STRING,JsTypename.OBJECT) {
+				POINT_REF_TYPE,JsTypename.STRING,JsTypename.OBJECT) {
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): ModelElement {
 				return PointRef(ctx,json.name,json.ref)
 			}

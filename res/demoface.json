@@ -4,10 +4,18 @@
     { "name": "noseSz" }
   ],
   "store" : {
-    "_vaxis": [
+    "_vaxis"     : [
       "path", false, null, null,
       { "type": "cusp", "pos": ["_vtop", 0, -80] },
       { "type": "cusp", "pos": ["_vbottom", 0, 50] }
+    ],
+    "_haxis"     : [
+      "path", false, null, null,
+      { "type": "cusp", "pos": ["_hright", 50, 0] },
+      {
+        "type": "cusp",
+        "pos" : { "name": "_hcent", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@_hright" }
+      }
     ],
     "eyer_origin": ["point", 25, -16]
   },
@@ -17,14 +25,26 @@
       "stroke": "hsl(26, 49%, 16%)",
       "fill"  : "hsl(26, 49%, 64%)"
     }, null,
-      { "type": "smooth", "pos": [10, 44] },
-      { "type": "smooth", "pos": [-10, 44] },
-      { "type": "smooth", "pos": [-45, 0] },
-      { "type": "smooth", "pos": [-50, -22] },
-      { "type": "smooth", "pos": [-35, -70] },
-      { "type": "smooth", "pos": [35, -70] },
-      { "type": "smooth", "pos": [50, -22] },
-      { "type": "smooth", "pos": [45, 0] }
+      { "type": "smooth", "pos": ["htopr", 35, -70] },
+      { "type": "smooth", "pos": ["tempr", 50, -22] },
+      { "type": "smooth", "pos": ["jawbr", 45, 0] },
+      { "type": "smooth", "pos": ["chinr", 10, 44] },
+      {
+        "type": "smooth",
+        "pos" : { "name": "chinl", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@chinr", "scale": 2 }
+      },
+      {
+        "type": "smooth",
+        "pos" : { "name": "jawbl", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@jawbr", "scale": 2 }
+      },
+      {
+        "type": "smooth",
+        "pos" : { "name": "templ", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@tempr", "scale": 2 }
+      },
+      {
+        "type": "smooth",
+        "pos" : { "name": "htopl", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@htopr", "scale": 2 }
+      }
     ],
     [
       "noseline", false, {
@@ -102,12 +122,10 @@
       }, "@eyer_origin",
       { "type": "smooth", "pos": [-3, 13] },
       {
-        "type"   : "flow1",
-        "pos"    : ["eyer_corneri", -14, 7],
-        "h1ab"   : [0.5987261146496816, 0.23566878980891717],
-        "h2ab"   : [0.1647058823529412, 0.25882352941176473],
-        "handle1": [-11, 12],
-        "handle2": [-14, 3]
+        "type": "flow1",
+        "pos" : ["eyer_corneri", -14, 7],
+        "h1ab": [0.5987261146496816, 0.23566878980891717],
+        "h2ab": [0.1647058823529412, 0.25882352941176473]
       },
       { "type": "smooth", "pos": [-3, 0] },
       {

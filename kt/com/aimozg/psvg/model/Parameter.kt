@@ -41,9 +41,9 @@ class Parameter(
 			}
 		}.register()
 	}
-}
-interface ParameterJson : ModelElementJson {
-	var def: Number?
-	var min: Number?
-	var max: Number?
+	interface ParameterJson : ModelElementJson {
+		var def: Number?
+		var min: Number?
+		var max: Number?
+	}
 }

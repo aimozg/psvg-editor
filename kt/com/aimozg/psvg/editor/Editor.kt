@@ -26,6 +26,13 @@ class Editor(
 
 	val model: Model get() = editPane.model
 
+	var zoom: Double
+		get() = editPane.zoomfact
+		set(value) {
+			editPane.zoomfact = value
+			for (obj in scaledown) obj.transform.set(tfscale(1.0 / value))
+		}
+
 	private var selection: ModelElement? = null
 
 	init {
@@ -39,10 +46,6 @@ class Editor(
 						ev.preventDefault()
 						val steps = if (ev.deltaY < 0) 1.0 else -1.0
 						p.zoomfact *= Math.pow(1.1, steps)
-						val zf = p.zoomfact
-						if (p == editPane) {
-							for (obj in scaledown) obj.transform.set(tfscale(1.0 / zf))
-						}
 					}
 					t = t.parentElement
 				}

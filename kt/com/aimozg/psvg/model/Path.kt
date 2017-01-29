@@ -85,9 +85,9 @@ class Path(ctx: Context,
 			}
 		}.register()
 	}
-}
-interface PathJson : VisualElementJson {
-	var closed: Boolean
-	var style: dynamic
-	var nodes: Array<PathNodeJson>
+	interface PathJson : VisualElementJson {
+		var closed: Boolean
+		var style: dynamic
+		var nodes: Array<PathNode.PathNodeJson>
+	}
 }

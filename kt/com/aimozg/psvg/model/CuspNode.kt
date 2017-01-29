@@ -56,9 +56,9 @@ class CuspNode(ctx: Context,
 					ctx.loadPointOrNull(json.handle2))
 		}.register()
 	}
-}
-interface CuspNodeJson : VisualElementJson {
-	var pos: PointJson
-	var handle1: PointJson?
-	var handle2: PointJson?
+	interface CuspNodeJson : VisualElementJson {
+		var pos: Point.PointJson
+		var handle1: Point.PointJson?
+		var handle2: Point.PointJson?
+	}
 }

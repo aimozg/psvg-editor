@@ -73,10 +73,10 @@ class PointAtIntersection(ctx: Context,
 					ctx.loadPoint(json.b2))
 		}.register()
 	}
-}
-interface PointAtIntersectionJson : PointJson {
-	var a1:PointJson
-	var a2:PointJson
-	var b1:PointJson
-	var b2:PointJson
+	interface PointAtIntersectionJson : PointJson {
+		var a1:PointJson
+		var a2:PointJson
+		var b1:PointJson
+		var b2:PointJson
+	}
 }

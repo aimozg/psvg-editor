@@ -24,7 +24,7 @@ abstract class Point(ctx: Context,
 	}
 
 	val asPosDependency get() = ItemDeclaration.Instant(this, "pos")
-}
-interface PointJson : VisualElementJson {
+	interface PointJson : VisualElementJson {
 
+	}
 }

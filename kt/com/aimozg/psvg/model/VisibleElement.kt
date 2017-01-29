@@ -44,7 +44,7 @@ abstract class VisibleElement(ctx: Context,
 	open fun display():SVGGraphicsElement? = null // TODO translate on origin movement
 	protected abstract fun draw(g: SVGGElement)
 	protected abstract fun redraw(attr: String, g: SVGGElement)
-}
-interface VisualElementJson : ModelElementJson {
-	var origin: PointJson?
+	interface VisualElementJson : ModelElementJson {
+		var origin: Point.PointJson?
+	}
 }

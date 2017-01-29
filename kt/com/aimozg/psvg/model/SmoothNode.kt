@@ -62,7 +62,7 @@ class SmoothNode(ctx: Context,
 			}
 		}.register()
 	}
-}
-interface SmoothNodeJson : PathNodeJson {
+	interface SmoothNodeJson : PathNodeJson {
 
+	}
 }

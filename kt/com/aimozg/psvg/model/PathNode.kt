@@ -19,7 +19,7 @@ abstract class PathNode(ctx: Context,
 
 	abstract fun center(): TXY
 	abstract fun toDNode(): DNode
-}
-interface PathNodeJson : VisualElementJson {
+	interface PathNodeJson : VisualElementJson {
 
+	}
 }

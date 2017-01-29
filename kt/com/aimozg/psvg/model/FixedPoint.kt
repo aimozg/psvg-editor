@@ -88,7 +88,7 @@ class FixedPoint(ctx: Context,
 			}
 		}.register()
 	}
-}
-interface FixedPointJson : PointJson {
-	var pt: Array<Number>
+	interface FixedPointJson : PointJson {
+		var pt: Array<Number>
+	}
 }
