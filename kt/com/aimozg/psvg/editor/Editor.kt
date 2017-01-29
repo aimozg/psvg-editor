@@ -45,7 +45,8 @@ class Editor(
 					for (p in panes.filter { it.div == t }) {
 						ev.preventDefault()
 						val steps = if (ev.deltaY < 0) 1.0 else -1.0
-						p.zoomfact *= Math.pow(1.1, steps)
+						if (p == editPane) zoom *= Math.pow(1.1, steps)
+						else p.zoomfact *= Math.pow(1.1, steps)
 					}
 					t = t.parentElement
 				}
