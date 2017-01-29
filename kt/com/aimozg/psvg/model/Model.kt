@@ -6,8 +6,8 @@ import org.w3c.dom.svg.SVGGElement
 class Model(ctx: Context,
             name: String?,
             ownOrigin: Point?,
-            val paths: List<Path>,
             val store: List<ModelElement>,
+            val paths: List<Path>,
             val parameters: List<Parameter>) :
 		VisibleElement(ctx, name, ownOrigin, paths.map { it.asDependency } +store.map { it.asDependency (null)}) {
 	override val category: Category = Category.MODEL

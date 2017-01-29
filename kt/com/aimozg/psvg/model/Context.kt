@@ -4,18 +4,6 @@ import com.aimozg.psvg.Object
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.entries
 import com.aimozg.psvg.sliceFrom
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
-import kotlin.collections.List
-import kotlin.collections.Map
-import kotlin.collections.asSequence
-import kotlin.collections.emptyList
-import kotlin.collections.find
-import kotlin.collections.getOrPut
-import kotlin.collections.hashMapOf
-import kotlin.collections.map
-import kotlin.collections.plus
-import kotlin.collections.plusAssign
 import kotlin.collections.set
 
 /**
@@ -78,13 +66,18 @@ class Context {
 	fun loadNode(json: dynamic): PathNode = loadPart(Category.NODE, json) as PathNode
 	fun loadPath(json: dynamic): Path = loadPart(Category.PATH, json) as Path
 	fun loadParam(json: dynamic): Parameter = loadPart(Category.PARAM, json) as Parameter
-	fun loadFloat(name: String, json: dynamic, def: Number? = null, min: Number = Double.NEGATIVE_INFINITY, max: Number = Double.POSITIVE_INFINITY): ValueFloat = loadPart(Category.VALUEFLOAT, json, name, def, min, max) as ValueFloat
+	fun loadFloat(name: String,
+	              json: dynamic,
+	              def: Number? = null,
+	              min: Number = Double.NEGATIVE_INFINITY,
+	              max: Number = Double.POSITIVE_INFINITY): ValueFloat =
+			loadPart(Category.VALUEFLOAT, json, name, def, min, max) as ValueFloat
 	fun loadModel(json: dynamic): Model {
 		val model = Model(this,
 				json.name ?: "unnamed",
 				null,
-				(json.paths as Array<dynamic>?)?.map { loadPath(it) } ?: emptyList(),
 				(json.store as Object?)?.entries()?.map { loadAnyPart(it[0] as String,it[1]) } ?: emptyList(),
+				(json.paths as Array<dynamic>?)?.map { loadPath(it) } ?: emptyList(),
 				(json.params as Array<dynamic>?)?.map { loadParam(it) } ?: emptyList())
 		for (function in postloadQueue) function()
 		postloadQueue.clear()
