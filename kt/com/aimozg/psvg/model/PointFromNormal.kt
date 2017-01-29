@@ -1,7 +1,7 @@
 package com.aimozg.psvg.model
 
 import com.aimozg.psvg.appendAll
-import com.aimozg.psvg.jsobject
+import com.aimozg.psvg.jsobject2
 import com.aimozg.psvg.norm2fixed
 import org.w3c.dom.svg.SVGGElement
 
@@ -28,7 +28,7 @@ Point(ctx,name,listOf(pt0.asPosDependency,pt1.asPosDependency,alpha.asValDepende
 
 	override fun calculate() = norm2fixed(pt0.calculate(),pt1.calculate(),alpha.get(),beta.get())
 
-	override fun save(): dynamic = jsobject {
+	override fun save(): PointFromNormalJson = jsobject2 {
 		it.type = POINT_FROM_NORMAL_TYPE
 		it.name = name
 		it.pt0 = pt0.save()
@@ -42,11 +42,17 @@ Point(ctx,name,listOf(pt0.asPosDependency,pt1.asPosDependency,alpha.asValDepende
 				Category.POINT,
 				PointFromNormal::class.simpleName!!,
 				POINT_FROM_NORMAL_TYPE) {
-			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) = PointFromNormal(ctx,json.name,
+			override fun loadStrict(ctx: Context, json: PointFromNormalJson, vararg args: Any?) = PointFromNormal(ctx,json.name,
 					ctx.loadPoint(json.pt0),
 					ctx.loadPoint(json.pt1),
 					ctx.loadFloat("tangent",json.alpha,0),
 					ctx.loadFloat("normal",json.beta,0))
 		}.register()
+	}
+	interface PointFromNormalJson : PointJson {
+		var pt0: PointJson
+		var pt1: PointJson
+		var alpha: Any?
+		var beta: Any?
 	}
 }
