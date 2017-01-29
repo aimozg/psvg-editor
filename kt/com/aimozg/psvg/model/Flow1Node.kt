@@ -53,12 +53,12 @@ class Flow1Node(ctx: Context,
 		val b1 = h1b?.get()
 		if (a1 != null && b1 != null) {
 			val prev = prevNode.center()
-			val tan = prev + (pos - prev) * a1
-			ltan1 = SVGLineElement(prev.x, prev.y, tan.x, tan.y) {
+			val tan = pos + (prev - pos) * a1
+			ltan1 = SVGLineElement(pos.x, pos.y, tan.x, tan.y) {
 				classList += "lineref"
 				g.insertBefore(this, g.firstChild)
 			}
-			val norm = tan + (pos - prev).rot90() * b1
+			val norm = tan - (prev - pos).rot90() * b1
 			lnorm1 = SVGLineElement(tan.x, tan.y, norm.x, norm.y) {
 				classList += "lineref"
 				g.insertBefore(this, g.firstChild)
@@ -91,7 +91,7 @@ class Flow1Node(ctx: Context,
 		val b2 = h2b?.get()
 		val prev = prevNode.center()
 		val next = nextNode.center()
-		return Tuple2(if (a1 != null && b1 != null) norm2fixed(prev, pos, a1, b1) else pos,
+		return Tuple2(if (a1 != null && b1 != null) norm2fixed(pos, prev, a1, -b1) else pos,
 				if (a2 != null && b2 != null) norm2fixed(pos, next, a2, b2) else pos)
 	}
 

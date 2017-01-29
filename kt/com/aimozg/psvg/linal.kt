@@ -37,6 +37,8 @@ val TXY.vnorm get() = x * x + y * y
 val TXY.vlength get() = Math.sqrt(vnorm)
 fun TXY.toUnit() = this / vlength
 fun TXY.rot90() = TXY(y, -x)
+fun TXY.rot180() = TXY(-y, -y)
+fun TXY.rot270() = TXY(-y, x)
 fun TXY.rotate(degrees: Number): TXY {
 	if (degrees.toDouble() == 0.0) return this
 	val sin = Math.sin(Math.PI * degrees.toDouble() / 180)
