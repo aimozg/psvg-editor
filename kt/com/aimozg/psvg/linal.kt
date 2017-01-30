@@ -15,7 +15,7 @@ class TXY(val x: Double, val y: Double) {
 	constructor(x: Number, y: Number) : this(x.toDouble(), y.toDouble())
 	constructor(xy: DOMPoint) : this(xy.x, xy.y)
 	constructor(xy: Pair<Number, Number>) : this(xy.first.toDouble(), xy.second.toDouble())
-	constructor(xy: Tuple2<out Number, out Number>) : this(xy.i0.toDouble(), xy.i1.toDouble())
+	constructor(xy: Tuple2<Number, Number>) : this(xy.i0.toDouble(), xy.i1.toDouble())
 	constructor(xy: Array<out Number>) : this(xy[0].toDouble(), xy[1].toDouble())
 
 	override fun toString(): String = "$x,$y"

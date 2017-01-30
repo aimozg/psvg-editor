@@ -45,11 +45,10 @@ class SegmentedPath(
 		it.segments = segments.map { it.save() }.toTypedArray()
 	}
 
-	override fun toSvgD(): String = segments.fold(mutableListOf<String>() mtup TXY(0,0)) { cmdPos, segment ->
+	override fun toSvgD(): String = segments.fold(mutableListOf<String>() tup TXY(0,0)) { cmdPos, segment ->
 		val (cmd,pos) = segment.toCmdAndPos(cmdPos.i1)
 		cmdPos.i0.add(cmd)
-		cmdPos.i1 = pos
-		cmdPos
+		cmdPos.i0 tup pos
 	}.i0.joinToString(" ")
 }
 
