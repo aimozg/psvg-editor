@@ -14,8 +14,8 @@ class CubicTo(ctx: Context,
               val cp2: Handle?,
               val pt: Point) :
 		Segment(ctx, name, listOf(
-				cp1?.asPosDependency,
-				cp2?.asPosDependency,
+				cp1?.asHandleDependency,
+				cp2?.asHandleDependency,
 				pt.asPosDependency)) {
 	override fun save(): Tuple =
 			if (name == null) Tuple4(TYPE, cp1?.save(), cp2?.save(), pt.save())
@@ -96,8 +96,11 @@ class CubicTo(ctx: Context,
 		return "$TYPE $cp1xy $cp2xy $ptxy" tup ptxy
 	}
 
+	override fun stop(): TXY = pt.calculate()
+
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
-		if (attr == "*" || attr == "pos") update()
+		if (attr == "*" || attr == "pos") update("pos")
+		if (attr == "*" || attr == "handle") update("handle")
 	}
 }

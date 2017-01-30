@@ -10,8 +10,16 @@ abstract class Handle(ctx: Context,
                       items: List<ItemDeclaration?>) :
 		VisibleElement(ctx,name,null,items) {
 	override val category: Category get() = Category.HANDLE
+	override var owner: ModelElement?
+		get() = super.owner
+		set(value) {
+			super.owner = value
+			segment = value as? Segment?
+		}
+	var segment: Segment? = null
+		private set
 
-	val asPosDependency get() = asDependency("pos")
+	val asHandleDependency get() = asDependency("handle")
 	abstract fun calculate(segment: CubicTo, start: TXY, stop: TXY): TXY
 	override fun redraw(attr: String, g: SVGGElement) {
 	}

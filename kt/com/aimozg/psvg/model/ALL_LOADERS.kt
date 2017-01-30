@@ -21,6 +21,7 @@ val ALL_LOADERS: Collection<PartLoader> = listOf(
 		AbsoluteHandle.HANDLE_ABS_LOADER,
 		RelativeHandle.HANDLE_REL_LOADER,
 		FlowHandle.HANDLE_FLOW_LOADER,
+		SmoothHandle.HANDLE_SMOOTH_LOADER,
 
 		FixedPoint.POINT_FIXED_LOADER,
 		PointRef.POINT_REF_LOADER,

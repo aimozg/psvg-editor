@@ -32,8 +32,10 @@ class MoveTo(ctx: Context,
 
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
-		if (attr == "*" || attr == "pos") update()
+		if (attr == "*" || attr == "pos") update("pos")
 	}
+
+	override fun stop(): TXY = pt.calculate()
 
 	override fun save() = if (name == null) TYPE tup pt.save() else Tuple3(TYPE, name, pt.save())
 

@@ -52,6 +52,6 @@ class FlowHandle(ctx: Context,
 
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
-		update("*")
+		update("handle")
 	}
 }

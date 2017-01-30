@@ -39,8 +39,10 @@ class LineTo(ctx: Context,
 		return "$TYPE $pos" tup pos
 	}
 
+	override fun stop(): TXY = pt.calculate()
+
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
-		if (attr == "*" || attr == "pos") update()
+		if (attr == "*" || attr == "pos") update("pos")
 	}
 }

@@ -2,7 +2,6 @@ package com.aimozg.psvg.model.segment
 
 import com.aimozg.ktuple.Tuple2
 import com.aimozg.ktuple.i0
-import com.aimozg.ktuple.i1
 import com.aimozg.psvg.SVGPathElement
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.d
@@ -13,10 +12,11 @@ import kotlin.dom.appendTo
 
 abstract class Segment(ctx: Context, name: String?, items: List<ItemDeclaration?>) :
 		VisibleElement(ctx, name, null, items + listOf(
-				ItemDeclaration.Deferred{(it as Segment).prev?.asDependency}
+				ItemDeclaration.Deferred{(it as Segment).prev?.asStopDependency}
 		)) {
 	override final val category: Category get() = Category.SEGMENT
-
+	val asStopDependency get() = asDependency("pos")
+	val asStartDependency get() = prev?.asStopDependency
 
 	override var owner: ModelElement?
 		get() = super.owner
@@ -49,7 +49,7 @@ abstract class Segment(ctx: Context, name: String?, items: List<ItemDeclaration?
 			it.subList(0, it.indexOf(this))
 		}.fold(TXY(0, 0)) { xy, s -> s.toCmdAndPos(xy).i1 }*/
 	}
-	fun stop(): TXY = toCmdAndPos(start()).i1
+	abstract fun stop(): TXY// toCmdAndPos(start()).i1
 
 	override fun redraw(attr: String, g: SVGGElement) {
 		val m1 = prev?.stop() ?: return
