@@ -1,6 +1,7 @@
-package com.aimozg.psvg.model
+package com.aimozg.psvg.model.point
 
 import com.aimozg.psvg.jsobject2
+import com.aimozg.psvg.model.*
 import com.aimozg.psvg.norm2fixed
 
 /**
@@ -11,8 +12,8 @@ class PointFromNormal(ctx: Context,
                       name:String?,
                       val pt0: Point,
                       val pt1: Point,
-                      val alpha:ValueFloat,
-                      val beta:ValueFloat):
+                      val alpha: ValueFloat,
+                      val beta: ValueFloat):
 Point(ctx,name,listOf(pt0.asPosDependency,pt1.asPosDependency,alpha.asValDependency,beta.asValDependency)){
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
@@ -31,7 +32,7 @@ Point(ctx,name,listOf(pt0.asPosDependency,pt1.asPosDependency,alpha.asValDepende
 	}
 	companion object {
 		const val POINT_FROM_NORMAL_TYPE = "N"
-		val POINT_FROM_NORMAL_LOADER = object: PartLoader(Category.POINT,PointFromNormal::class,POINT_FROM_NORMAL_TYPE) {
+		val POINT_FROM_NORMAL_LOADER = object: PartLoader(Category.POINT,PointFromNormal::class, POINT_FROM_NORMAL_TYPE) {
 			override fun loadStrict(ctx: Context, json: PointFromNormalJson, vararg args: Any?) = PointFromNormal(ctx,json.name,
 					ctx.loadPoint(json.pt0)!!,
 					ctx.loadPoint(json.pt1)!!,

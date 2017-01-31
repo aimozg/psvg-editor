@@ -1,7 +1,9 @@
-package com.aimozg.psvg.model
+package com.aimozg.psvg.model.node
 
 import com.aimozg.ktuple.*
 import com.aimozg.psvg.jsobject
+import com.aimozg.psvg.model.*
+import com.aimozg.psvg.model.point.Point
 
 class NodePath(ctx: Context,
                name: String?,
@@ -37,7 +39,7 @@ class NodePath(ctx: Context,
 
 	companion object {
 		private const val TYPE = "N"
-		val PATH_LOADER = object : PartLoader(Category.PATH, NodePath::class,TYPE,
+		val PATH_LOADER = object : PartLoader(Category.PATH, NodePath::class, TYPE,
 				JsTypename.OBJECT) {
 			override fun loadStrict(ctx: Context, json: PathJson, vararg args: Any?): NodePath {
 				return NodePath(ctx,

@@ -2,7 +2,11 @@ package com.aimozg.psvg.model.segment
 
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.jsobject
-import com.aimozg.psvg.model.*
+import com.aimozg.psvg.model.Category
+import com.aimozg.psvg.model.Context
+import com.aimozg.psvg.model.ModelElement
+import com.aimozg.psvg.model.PartLoader
+import com.aimozg.psvg.model.point.Point
 
 class AbsoluteHandle(ctx: Context,
                      name: String?,

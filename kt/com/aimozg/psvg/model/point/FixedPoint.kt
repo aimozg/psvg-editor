@@ -1,8 +1,9 @@
-package com.aimozg.psvg.model
+package com.aimozg.psvg.model.point
 
 import com.aimozg.ktuple.*
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.makeDraggable
+import com.aimozg.psvg.model.*
 import com.aimozg.psvg.onsdrag
 import com.aimozg.psvg.onsdragstart
 import org.w3c.dom.svg.SVGGElement
@@ -73,7 +74,7 @@ class FixedPoint(ctx: Context,
 						}
 						3 -> {
 							@Suppress("UNCHECKED_CAST", "UNCHECKED_CAST_TO_NATIVE_INTERFACE")
-							tuple as Tuple3<String,*,*>
+							tuple as Tuple3<String, *, *>
 							name = "" + tuple.i0
 							x = tuple.i1
 							y = tuple.i2

@@ -3,6 +3,7 @@ package com.aimozg.psvg.model.segment
 import com.aimozg.ktuple.*
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.model.*
+import com.aimozg.psvg.model.point.Point
 
 class LineTo(ctx: Context,
              name: String?,

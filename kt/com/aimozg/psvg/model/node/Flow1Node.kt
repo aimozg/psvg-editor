@@ -1,14 +1,15 @@
-package com.aimozg.psvg.model
+package com.aimozg.psvg.model.node
 
 import com.aimozg.ktuple.Tuple2
 import com.aimozg.ktuple.get
 import com.aimozg.psvg.*
+import com.aimozg.psvg.model.*
+import com.aimozg.psvg.model.point.Point
 import org.w3c.dom.svg.SVGGElement
 import org.w3c.dom.svg.SVGLineElement
 
 /**
  * Created by aimozg on 26.01.2017.
- * Confidential
  */
 class Flow1Node(ctx: Context,
                 name: String?,
@@ -105,7 +106,7 @@ class Flow1Node(ctx: Context,
 
 	companion object {
 		const val NODE_FLOW1_TYPE = "flow1"
-		val NODE_FLOW1_LOADER = object : PartLoader(Category.NODE,Flow1Node::class,NODE_FLOW1_TYPE) {
+		val NODE_FLOW1_LOADER = object : PartLoader(Category.NODE,Flow1Node::class, NODE_FLOW1_TYPE) {
 			override fun loadStrict(ctx: Context, json: Flow1NodeJson, vararg args: Any?) = Flow1Node(
 					ctx,
 					json.name,
@@ -120,8 +121,8 @@ class Flow1Node(ctx: Context,
 	}
 	interface Flow1NodeJson : ModelNodeJson {
 		var pos: Point.PointJson
-		var h1ab: Tuple2<Number,Number>?
-		var h2ab: Tuple2<Number,Number>?
+		var h1ab: Tuple2<Number, Number>?
+		var h2ab: Tuple2<Number, Number>?
 	}
 
 }

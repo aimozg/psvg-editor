@@ -1,7 +1,8 @@
-package com.aimozg.psvg.model
+package com.aimozg.psvg.model.point
 
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.jsobject
+import com.aimozg.psvg.model.*
 
 /**
  * Created by aimozg on 26.01.2017.
@@ -11,7 +12,7 @@ class PointRef(
 		ctx: Context,
 		name:String?,
 		val ref:String
-): Point(ctx,name,listOf(ItemDeclaration.Deferred{(it as PointRef).obj.asPosDependency})) {
+): Point(ctx,name,listOf(ItemDeclaration.Deferred { (it as PointRef).obj.asPosDependency })) {
 
 	override fun calculate(): TXY = obj.calculate()
 
@@ -33,8 +34,8 @@ class PointRef(
 	}
 	companion object {
 		const val POINT_REF_TYPE = "@"
-		val POINT_REF_LOADER = object: PartLoader(Category.POINT,PointRef::class,POINT_REF_TYPE,
-				JsTypename.STRING,JsTypename.OBJECT) {
+		val POINT_REF_LOADER = object: PartLoader(Category.POINT,PointRef::class, POINT_REF_TYPE,
+				JsTypename.STRING, JsTypename.OBJECT) {
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): ModelElement {
 				return PointRef(ctx,json.name,json.ref)
 			}

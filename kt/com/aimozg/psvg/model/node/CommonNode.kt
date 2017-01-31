@@ -1,9 +1,12 @@
-package com.aimozg.psvg.model
+package com.aimozg.psvg.model.node
 
 import com.aimozg.ktuple.Tuple2
 import com.aimozg.ktuple.component1
 import com.aimozg.ktuple.component2
 import com.aimozg.psvg.*
+import com.aimozg.psvg.model.Context
+import com.aimozg.psvg.model.ItemDeclaration
+import com.aimozg.psvg.model.point.Point
 import org.w3c.dom.svg.SVGGElement
 import org.w3c.dom.svg.SVGLineElement
 import org.w3c.dom.svg.SVGUseElement

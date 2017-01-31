@@ -1,8 +1,10 @@
-package com.aimozg.psvg.model
+package com.aimozg.psvg.model.node
 
 import com.aimozg.ktuple.Tuple2
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.jsobject2
+import com.aimozg.psvg.model.*
+import com.aimozg.psvg.model.point.Point
 
 /**
  * Created by aimozg on 26.01.2017.
@@ -37,7 +39,7 @@ class CuspNode(ctx: Context,
 
 	companion object {
 		const val NODE_CUSP_TYPE = "cusp"
-		val NODE_CUSP_LOADER = object : PartLoader(Category.NODE,CuspNode::class,NODE_CUSP_TYPE) {
+		val NODE_CUSP_LOADER = object : PartLoader(Category.NODE,CuspNode::class, NODE_CUSP_TYPE) {
 			override fun loadStrict(ctx: Context, json: CuspNodeJson, vararg args: Any?) = CuspNode(ctx,
 					json.name,
 					ctx.loadPoint(json.origin),
@@ -46,7 +48,7 @@ class CuspNode(ctx: Context,
 					ctx.loadPoint(json.handle2))
 		}
 	}
-	interface CuspNodeJson : VisualElementJson {
+	interface CuspNodeJson : VisibleElement.VisualElementJson {
 		var pos: Point.PointJson
 		var handle1: Point.PointJson?
 		var handle2: Point.PointJson?

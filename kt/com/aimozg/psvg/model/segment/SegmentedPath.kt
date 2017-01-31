@@ -5,6 +5,7 @@ import com.aimozg.psvg.TXY
 import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.jsobject2
 import com.aimozg.psvg.model.*
+import com.aimozg.psvg.model.point.Point
 
 /**
  * Created by aimozg on 29.01.2017.

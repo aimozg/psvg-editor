@@ -1,6 +1,7 @@
-package com.aimozg.psvg.model
+package com.aimozg.psvg.model.point
 
 import com.aimozg.psvg.*
+import com.aimozg.psvg.model.*
 import org.w3c.dom.svg.SVGGElement
 import org.w3c.dom.svg.SVGLineElement
 
@@ -14,8 +15,8 @@ class PointAtProjection(ctx: Context,
                         val p: Point,
                         val scale: ValueFloat) :
 		Point(ctx, name, listOf(a.asPosDependency, b.asPosDependency, p.asPosDependency, scale.asValDependency)) {
-	private var lab:SVGLineElement? = null
-	private var lpq:SVGLineElement? = null
+	private var lab: SVGLineElement? = null
+	private var lpq: SVGLineElement? = null
 	companion object {
 		const val POINT_AT_PROJECTION_TYPE = "PROJ"
 		val POINT_AT_PROJECTION_LOADER = object : PartLoader(Category.POINT,PointAtProjection::class,
@@ -33,7 +34,7 @@ class PointAtProjection(ctx: Context,
 		update("pos")
 	}
 
-	override fun calculate():TXY {
+	override fun calculate(): TXY {
 		val p = p.calculate()
 		val q = ptproj(a.calculate(),b.calculate(), p)
 		return p + (q-p)*scale.get()

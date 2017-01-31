@@ -3,6 +3,7 @@ package com.aimozg.psvg.model
 import com.aimozg.psvg.Object
 import com.aimozg.psvg.SVGPathElement
 import com.aimozg.psvg.d
+import com.aimozg.psvg.model.point.Point
 import org.w3c.dom.svg.SVGGElement
 import org.w3c.dom.svg.SVGPathElement
 import kotlin.dom.appendTo

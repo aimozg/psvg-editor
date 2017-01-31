@@ -1,8 +1,10 @@
-package com.aimozg.psvg.model
+package com.aimozg.psvg.model.node
 
 import com.aimozg.ktuple.Tuple2
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.jsobject
+import com.aimozg.psvg.model.*
+import com.aimozg.psvg.model.point.Point
 import com.aimozg.psvg.smoothHandles
 
 /**
@@ -20,8 +22,8 @@ class SmoothNode(ctx: Context,
 				listOf(abq.asValDependency,
 						acq.asValDependency,
 						rot.asValDependency,
-						ItemDeclaration.Deferred { (it as ModelNode).prevNode.asPosDependency},
-						ItemDeclaration.Deferred { (it as ModelNode).nextNode.asPosDependency})) {
+						ItemDeclaration.Deferred { (it as ModelNode).prevNode.asPosDependency },
+						ItemDeclaration.Deferred { (it as ModelNode).nextNode.asPosDependency })) {
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
 		if (other is Point) update("*")

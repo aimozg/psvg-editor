@@ -3,6 +3,7 @@ package com.aimozg.psvg.model.segment
 import com.aimozg.ktuple.*
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.model.*
+import com.aimozg.psvg.model.point.Point
 import org.w3c.dom.svg.SVGGElement
 
 class CubicTo(ctx: Context,

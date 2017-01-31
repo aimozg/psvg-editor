@@ -1,7 +1,11 @@
-package com.aimozg.psvg.model
+package com.aimozg.psvg.model.point
 
 import com.aimozg.psvg.SVGUseElement
 import com.aimozg.psvg.TXY
+import com.aimozg.psvg.model.Category
+import com.aimozg.psvg.model.Context
+import com.aimozg.psvg.model.ItemDeclaration
+import com.aimozg.psvg.model.VisibleElement
 import com.aimozg.psvg.set
 import com.aimozg.psvg.tftranslate
 import org.w3c.dom.svg.SVGGElement

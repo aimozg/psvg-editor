@@ -1,7 +1,12 @@
-package com.aimozg.psvg.model
+package com.aimozg.psvg.model.node
 
 import com.aimozg.psvg.DNode
 import com.aimozg.psvg.TXY
+import com.aimozg.psvg.model.Category
+import com.aimozg.psvg.model.Context
+import com.aimozg.psvg.model.ItemDeclaration
+import com.aimozg.psvg.model.VisibleElement
+import com.aimozg.psvg.model.point.Point
 
 abstract class ModelNode(ctx: Context,
                          name: String?,

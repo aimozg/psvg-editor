@@ -1,6 +1,10 @@
-package com.aimozg.psvg.model
+package com.aimozg.psvg.model.point
 
 import com.aimozg.psvg.*
+import com.aimozg.psvg.model.Category
+import com.aimozg.psvg.model.Context
+import com.aimozg.psvg.model.ModelElement
+import com.aimozg.psvg.model.PartLoader
 import org.w3c.dom.svg.SVGGElement
 import org.w3c.dom.svg.SVGLineElement
 
@@ -60,7 +64,7 @@ class PointAtIntersection(ctx: Context,
 	}
 	companion object {
 		val POINT_AT_INTERSECTION_TYPE = "I"
-		val POINT_AT_INTERSECTION_LOADER = object: PartLoader(Category.POINT,PointAtIntersection::class,POINT_AT_INTERSECTION_TYPE){
+		val POINT_AT_INTERSECTION_LOADER = object: PartLoader(Category.POINT,PointAtIntersection::class, POINT_AT_INTERSECTION_TYPE){
 			override fun loadStrict(ctx: Context, json: PointAtIntersectionJson, vararg args: Any?) = PointAtIntersection(ctx,
 					json.name,
 					ctx.loadPoint(json.a1)!!,
@@ -70,9 +74,9 @@ class PointAtIntersection(ctx: Context,
 		}
 	}
 	interface PointAtIntersectionJson : PointJson {
-		var a1:PointJson
-		var a2:PointJson
-		var b1:PointJson
-		var b2:PointJson
+		var a1: PointJson
+		var a2: PointJson
+		var b1: PointJson
+		var b2: PointJson
 	}
 }

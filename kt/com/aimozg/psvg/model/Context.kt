@@ -3,6 +3,8 @@ package com.aimozg.psvg.model
 import com.aimozg.psvg.Object
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.entries
+import com.aimozg.psvg.model.node.ModelNode
+import com.aimozg.psvg.model.point.Point
 import com.aimozg.psvg.model.segment.Handle
 import com.aimozg.psvg.model.segment.Segment
 import com.aimozg.psvg.sliceFrom
