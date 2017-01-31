@@ -30,6 +30,9 @@ abstract class Handle(ctx: Context,
 		line = null
 		super.draw(g)
 	}
+	fun redraw() {
+		this.redraw("handle",this.graphic)
+	}
 	override fun redraw(attr: String, g: SVGGElement) {
 		line?.remove()
 		line = null

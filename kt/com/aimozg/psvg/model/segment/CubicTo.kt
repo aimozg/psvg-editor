@@ -63,6 +63,8 @@ class CubicTo(ctx: Context,
 
 	override fun redraw(attr: String, g: SVGGElement) {
 		super.redraw(attr, g)
+		cp1?.redraw()
+		cp2?.redraw()
 	}
 
 	override fun toCmdAndPos(start: TXY): Tuple2<String, TXY> {

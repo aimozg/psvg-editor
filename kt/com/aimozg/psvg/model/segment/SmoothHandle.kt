@@ -11,7 +11,7 @@ import com.aimozg.psvg.smoothHandles
  * Confidential.
  */
 class SmoothHandle(ctx: Context,
-                   name: String,
+                   name: String?,
                    atStart: Boolean,
                    val size: ValueFloat,
                    val rot: ValueFloat):
@@ -26,7 +26,8 @@ class SmoothHandle(ctx: Context,
 	)){
 	companion object {
 		private const val TYPE = "Smooth"
-		val HANDLE_SMOOTH_LOADER = object: PartLoader(Category.HANDLE,SmoothHandle::class,TYPE) {
+		val HANDLE_SMOOTH_LOADER = object: PartLoader(Category.HANDLE,SmoothHandle::class,TYPE,
+				JsTypename.OBJECT) {
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) =
 					SmoothHandle(ctx,
 							json.name,
@@ -34,6 +35,42 @@ class SmoothHandle(ctx: Context,
 							ctx.loadFloat("size", json.size, 0.3),
 							ctx.loadFloat("rot", json.rot, 0)
 			)
+
+			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): SmoothHandle? {
+				if (json is Array<*>) {
+					val array:Array<*> = json
+					if (array[0] != TYPE) return null
+					val atStart = args[0] as Boolean
+					val name: String?
+					val size: Any?
+					val rot: Any?
+					when(array.size) {
+						1 -> {
+							name = null
+							size = null
+							rot = null
+						}
+						2 -> {
+							name = null
+							size = array[1]
+							rot = null
+						}
+						3 -> {
+							name = null
+							size = array[1]
+							rot = array[2]
+						}
+						4 -> {
+							name = array[1] as String?
+							size = array[2]
+							rot = array[3]
+						}
+						else -> return null
+					}
+					return SmoothHandle(ctx,name,atStart,ctx.loadFloat("size",size,0.3),ctx.loadFloat("rot",rot,0))
+				}
+				return null
+			}
 		}
 	}
 

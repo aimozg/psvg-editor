@@ -27,141 +27,103 @@
     "eyer_origin": ["point", 25, -16]
   },
   "paths" : [
-    [
-      "N", "face", true,
-      {
+    {
+      "type"    : "S",
+      "name"    : "face",
+      "style"   : {
         "stroke": "hsl(26, 49%, 16%)",
         "fill"  : "hsl(26, 49%, 64%)"
-      }, null,
-      { "type": "smooth", "pos": ["htopr", 35, -70] },
-      { "type": "smooth", "pos": ["tempr", 50, -22] },
-      { "type": "smooth", "pos": ["jawbr", 45, 0] },
-      { "type": "smooth", "pos": ["chinr", 10, 44] },
-      {
-        "type": "smooth",
-        "pos" : { "name": "chinl", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@chinr", "scale": 2 }
       },
-      {
-        "type": "smooth",
-        "pos" : { "name": "jawbl", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@jawbr", "scale": 2 }
-      },
-      {
-        "type": "smooth",
-        "pos" : { "name": "templ", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@tempr", "scale": 2 }
-      },
-      {
-        "type": "smooth",
-        "pos" : { "name": "htopl", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@htopr", "scale": 2 }
-      }
-    ],
-    [
-      "N", "noseline", false,
-      {
+      "segments": [
+        ["M", ["htopr", 35, -70]],
+        ["C", ["Smooth"], ["Smooth"], ["tempr", 50, -22]],
+        ["C", ["Smooth"], ["Smooth"], ["jawbr", 45, 0]],
+        ["C", ["Smooth"], ["Smooth"], ["chinr", 10, 44]],
+        [
+          "C",
+          ["Smooth"],
+          ["Smooth"],
+          { "name": "chinl", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@chinr", "scale": 2 }
+        ],
+        [
+          "C",
+          ["Smooth"],
+          ["Smooth"],
+          { "name": "jawbl", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@jawbr", "scale": 2 }
+        ],
+        [
+          "C",
+          ["Smooth"],
+          ["Smooth"],
+          { "name": "templ", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@tempr", "scale": 2 }
+        ],
+        [
+          "C",
+          ["Smooth"],
+          ["Smooth"],
+          { "name": "htopl", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@htopr", "scale": 2 }
+        ],
+        ["C", ["Smooth"], ["Smooth"], null],
+        ["Z"]
+      ]
+    }, {
+      "type"    : "S",
+      "name"    : "noseline",
+      "style"   : {
         "stroke"      : "hsl(26, 49%, 16%)",
         "stroke-width": 0.5
-      }, null,
-      {
-        "type"   : "cusp",
-        "pos"    : "@nosetop",
-        "handle2": "@nosetop"
-      }, {
-      "type": "flow1",
-      "pos" : "@nosetip",
-      "h1ab": [0.2, -0.1],
-      "h2ab": [0.2, 0.1]
-    }, {
-      "type": "flow1",
-      "pos" : {
-        "name" : "noseleft",
-        "type" : "PROJ",
-        "a"    : "@nosetop",
-        "b"    : "@nosetip",
-        "p"    : "@noseright",
-        "scale": 2
       },
-      "h1ab": [0.3, 0.1]
-    }
-    ],
-    [
-      "N", "nosefill", true,
-      {
+      "segments": [
+        ["M", "@nosetop"],
+        ["C", null, ["Flow", 0.2, -0.1], "@nosetip"],
+        [
+          "C", ["Flow", 0.2, 0.1], ["Flow", 0.3, 0.1], {
+          "name" : "noseleft",
+          "type" : "PROJ",
+          "a"    : "@nosetop",
+          "b"    : "@nosetip",
+          "p"    : "@noseright",
+          "scale": 2
+        }
+        ]
+      ]
+    }, {
+      "type"    : "S",
+      "name"    : "nosefill",
+      "style"   : {
         "fill": "hsla(26, 49%, 32%, 0.5)"
-      }, null, {
-      "type": "flow1",
-      "pos" : ["nosetip", 0, 19],
-      "h1ab": [0.2, 0.1],
-      "h2ab": [0.2, 0.1]
+      },
+      "segments": [
+        ["M", ["nosetip", -0, 19]],
+        ["C", ["Flow", 0.2, 0.1], null, ["nosetop", 0, -3]],
+        ["C", ["Flow", 0.2, 0.1], ["Flow", 0.1, 0.1], ["noseright", 8, 15]],
+        ["C", ["Flow", 0.3, 0.1], ["Flow", 0.2, 0.1], null],
+        ["Z"]
+      ]
     }, {
-      "type": "flow1",
-      "pos" : ["nosetop", 0, -3],
-      "h1ab": [0, 0],
-      "h2ab": [0.175257731958763, 0.14432989690721648]
-    }, {
-      "type": "flow1",
-      "pos" : ["noseright", 8, 15],
-      "h1ab": [0.092783505154639, 0.041237113402061855],
-      "h2ab": [0.3, 0.1]
-    }
-    ],
-    [
-      "N", "mouth", false,
-      {
+      "type"    : "S",
+      "name"    : "mouth",
+      "style"   : {
         "stroke"      : "hsl(26, 49%, 16%)",
         "stroke-width": 0.5
       },
-      null, {
-      "type": "flow1",
-      "pos" : [-9, 28],
-      "h2ab": [0.023529411764705882, 0.10588235294117647]
+      "segments": [
+        ["M", [-9, 28]],
+        ["C", ["Flow", 0.1, 0.2], ["Smooth"], [0, 26]],
+        ["C", ["Smooth"], ["Flow", 0.1, 0.2], [9, 28]]
+      ]
     }, {
-      "type"   : "smooth",
-      "pos"    : [0, 26],
-      "handle1": [-3, 26],
-      "handle2": [3, 26],
-      "b"      : 0.33,
-      "c"      : 0.33,
-      "rot"    : 0
-    }, {
-      "type"   : "flow1",
-      "pos"    : [9, 28],
-      "h1ab"   : [0.023529411764705882, 0.10588235294117647],
-      "handle1": [9, 27]
-    }
-    ],
-    {
-      "type": "S",
-      "name": "eyer_white",
-      "origin": "@eyer_origin",
-      "style": { "fill": "#fff" },
-      "segments":[
+      "type"    : "S",
+      "name"    : "eyer_white",
+      "origin"  : "@eyer_origin",
+      "style"   : { "fill": "#fff" },
+      "segments": [
         ["M", [-3, 13]],
-        [
-          "C",
-          { "type": "Smooth", "pt": [-6.7589892258425, 13] },
-          { "type": "Flow", "ab": [0.401273885350318, 0.23566878980891717] },
-          ["eyer_corneri", -14, 7]
-        ],
-        [
-          "C",
-          { "type": "Flow", "ab": [0.1647058823529412, 0.25882352941176473] },
-          { "type": "Smooth"},
-          [-3, 0]
-        ],
-        [
-          "C", { "type": "Smooth"}, null, ["eyer_cornero", 12, -1]
-        ],
-        [
-          "C",
-          null,
-          { "type": "Smooth" },
-          [8, 7]
-        ],
-        [
-          "C",
-          { "type": "Smooth" },
-          { "type": "Smooth" },
-          null
-        ],
+        ["C", ["Smooth"], ["Flow", 0.4, 0.2], ["eyer_corneri", -14, 7]],
+        ["C", ["Flow", 0.2, 0.3], ["Smooth"], [-3, 0]],
+        ["C", ["Smooth"], null, ["eyer_cornero", 12, -1]],
+        ["C", null, ["Smooth"], [8, 7]],
+        ["C", ["Smooth"], ["Smooth"], null],
         ["Z"]
       ]
     }

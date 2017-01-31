@@ -36,7 +36,7 @@ class Context {
 		val type = JsTypename.of(json)
 		try {
 			val loaders = loaders[cat] ?: LoaderLib()
-			if (type == JsTypename.OBJECT) {
+			if (type == JsTypename.OBJECT && json !== null) {
 				val loader = loaders.bytypefield[json["type"]]
 				if (loader != null) return loader.loadStrict(this, json, *args)
 			}
@@ -48,12 +48,12 @@ class Context {
 		} catch (e:PartLoadException){
 			throw e
 		} catch (e:dynamic){
-			console.error(e.asDynamic().stack)
+			console.error(e.stack)
 			val e2 = PartLoadException(cat,json,e)
 			console.error(e2.asDynamic().stack)
 			throw e2
 		}
-		throw PartLoadException(cat,json)
+		throw PartLoadException(cat,json,"Not found")
 	}
 
 	fun loadAnyPart(name:String,json:dynamic): ModelElement {
