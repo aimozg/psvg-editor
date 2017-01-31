@@ -4,7 +4,7 @@ import com.aimozg.ktuple.*
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.model.*
 import com.aimozg.psvg.model.point.Point
-import org.w3c.dom.svg.SVGGElement
+import org.w3c.dom.svg.SVGGraphicsElement
 
 class CubicTo(ctx: Context,
               name: String?,
@@ -58,11 +58,11 @@ class CubicTo(ctx: Context,
 		}
 	}
 
-	override fun draw(g: SVGGElement) {
+	override fun draw(g: SVGGraphicsElement) {
 		super.draw(g)
 	}
 
-	override fun redraw(attr: String, g: SVGGElement) {
+	override fun redraw(attr: String, g: SVGGraphicsElement) {
 		super.redraw(attr, g)
 		cp1?.redraw()
 		cp2?.redraw()

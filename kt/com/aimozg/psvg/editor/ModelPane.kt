@@ -23,7 +23,7 @@ class ModelPane(
 	val model: Model = model1.clone(ctx)
 	val eModel: SVGElement = when(mode) {
 		DisplayMode.EDIT -> model.graphic
-		DisplayMode.VIEW -> model.display()
+		DisplayMode.VIEW -> model.export()!!
 	}
 	private val zoombox: SVGGElement = SVGGElement {
 		appendChild(eModel)

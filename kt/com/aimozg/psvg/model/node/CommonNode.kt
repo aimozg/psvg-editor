@@ -7,7 +7,7 @@ import com.aimozg.psvg.*
 import com.aimozg.psvg.model.Context
 import com.aimozg.psvg.model.ItemDeclaration
 import com.aimozg.psvg.model.point.Point
-import org.w3c.dom.svg.SVGGElement
+import org.w3c.dom.svg.SVGGraphicsElement
 import org.w3c.dom.svg.SVGLineElement
 import org.w3c.dom.svg.SVGUseElement
 
@@ -18,15 +18,14 @@ import org.w3c.dom.svg.SVGUseElement
 abstract class CommonNode(
 		ctx: Context,
 		name: String?,
-		ownOrigin: Point?,
 		val pos: Point,
 		items: List<ItemDeclaration?>
-) : ModelNode(ctx, name, ownOrigin, items + pos.asPosDependency) {
+) : ModelNode(ctx, name, items + pos.asPosDependency) {
 	protected var l1: SVGLineElement? = null
 	protected var l2: SVGLineElement? = null
 	protected var u0: SVGUseElement? = null
 
-	override fun draw(g: SVGGElement) {
+	override fun draw(g: SVGGraphicsElement) {
 		l1 = null
 		l2 = null
 		u0 = SVGUseElement("#svg_$classname"){}
@@ -35,7 +34,7 @@ abstract class CommonNode(
 
 	override fun center(): TXY = pos.calculate()
 
-	override fun redraw(attr: String, g: SVGGElement) {
+	override fun redraw(attr: String, g: SVGGraphicsElement) {
 		val u0 = u0
 		val xy = pos.calculate()
 		if (u0!=null){

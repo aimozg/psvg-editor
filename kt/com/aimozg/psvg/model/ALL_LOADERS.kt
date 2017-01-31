@@ -16,6 +16,8 @@ val ALL_LOADERS: Collection<PartLoader> = listOf(
 
 		Parameter.PARAM_LOADER,
 
+		Group.GROUP_LOADER,
+
 		NodePath.PATH_LOADER,
 		SegmentedPath.PATH_SEGMENTED_LOADER,
 

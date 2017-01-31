@@ -4,14 +4,14 @@ import com.aimozg.psvg.SVGLineElement
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.model.*
 import com.aimozg.psvg.plusAssign
-import org.w3c.dom.svg.SVGGElement
+import org.w3c.dom.svg.SVGGraphicsElement
 import org.w3c.dom.svg.SVGLineElement
 
 abstract class Handle(ctx: Context,
                       name: String?,
                       val atStart: Boolean,
                       items: List<ItemDeclaration?>) :
-		VisibleElement(ctx,name,null,items) {
+		VisibleElement(ctx, name, items) {
 	override val category: Category get() = Category.HANDLE
 	override var owner: ModelElement?
 		get() = super.owner
@@ -26,14 +26,14 @@ abstract class Handle(ctx: Context,
 	abstract fun calculate(segment: CubicTo, start: TXY, stop: TXY): TXY
 
 	private var line: SVGLineElement? = null
-	override fun draw(g: SVGGElement) {
+	override fun draw(g: SVGGraphicsElement) {
 		line = null
 		super.draw(g)
 	}
 	fun redraw() {
 		this.redraw("handle",this.graphic)
 	}
-	override fun redraw(attr: String, g: SVGGElement) {
+	override fun redraw(attr: String, g: SVGGraphicsElement) {
 		line?.remove()
 		line = null
 		val segment = segment ?: return

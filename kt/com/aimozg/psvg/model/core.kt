@@ -36,7 +36,8 @@ enum class Category {
 	PARAM,
 	VALUEFLOAT,
 	SEGMENT,
-	HANDLE
+	HANDLE,
+	GROUP
 }
 typealias PartDependency = Tuple2<String, ModelElement>
 sealed class ItemDeclaration {

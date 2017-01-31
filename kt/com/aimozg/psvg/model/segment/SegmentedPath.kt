@@ -5,7 +5,6 @@ import com.aimozg.psvg.TXY
 import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.jsobject2
 import com.aimozg.psvg.model.*
-import com.aimozg.psvg.model.point.Point
 
 /**
  * Created by aimozg on 29.01.2017.
@@ -14,17 +13,15 @@ import com.aimozg.psvg.model.point.Point
 class SegmentedPath(
 		ctx: Context,
 		name: String?,
-		ownOrigin: Point?,
 		style: dynamic,
 		val segments: List<Segment>) :
-		AbstractPath(ctx, name, ownOrigin, segments.map { it.asDependency }, style) {
+		AbstractPath(ctx, name, segments.map { it.asDependency }, style) {
 	companion object {
 		const private val TYPE = "S"
 		val PATH_SEGMENTED_LOADER = object : PartLoader(Category.PATH, SegmentedPath::class.simpleName!!, TYPE) {
 			override fun loadStrict(ctx: Context, json: SegmentedPathJson, vararg args: Any?) =
 					SegmentedPath(ctx,
 							json.name,
-							ctx.loadPoint(json.origin),
 							json.style ?: jsobject {  },
 							json.segments.map { ctx.loadSegment(it) })
 		}
@@ -44,7 +41,6 @@ class SegmentedPath(
 	override fun save(): SegmentedPathJson = jsobject2 {
 		it.type = TYPE
 		it.name = name
-		it.origin = ownOrigin?.save()
 		it.style = style
 		it.segments = segments.map { it.save() }.toTypedArray()
 	}

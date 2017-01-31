@@ -8,23 +8,23 @@ import com.aimozg.psvg.model.ItemDeclaration
 import com.aimozg.psvg.model.VisibleElement
 import com.aimozg.psvg.set
 import com.aimozg.psvg.tftranslate
-import org.w3c.dom.svg.SVGGElement
+import org.w3c.dom.svg.SVGGraphicsElement
 import org.w3c.dom.svg.SVGUseElement
 import kotlin.dom.appendTo
 
 abstract class Point(ctx: Context,
                      name: String?,
                      items: List<ItemDeclaration?>) :
-		VisibleElement(ctx, name, null, items) {
+		VisibleElement(ctx, name, items) {
 	private var use: SVGUseElement? = null
 	override val category: Category = Category.POINT
 	abstract fun calculate(): TXY
-	override fun draw(g: SVGGElement) {
+	override fun draw(g: SVGGraphicsElement) {
 		use = SVGUseElement("#svg_$classname") {appendTo(g)}
 		super.draw(g)
 	}
 
-	override fun redraw(attr: String, g: SVGGElement) {
+	override fun redraw(attr: String, g: SVGGraphicsElement) {
 		use?.transform?.set(tftranslate(calculate()))
 	}
 

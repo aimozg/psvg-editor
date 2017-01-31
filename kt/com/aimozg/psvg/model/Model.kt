@@ -1,16 +1,14 @@
 package com.aimozg.psvg.model
 
 import com.aimozg.psvg.*
-import com.aimozg.psvg.model.point.Point
-import org.w3c.dom.svg.SVGGElement
+import org.w3c.dom.svg.SVGGraphicsElement
 
 class Model(ctx: Context,
             name: String?,
-            ownOrigin: Point?,
             val store: List<ModelElement>,
             val paths: List<AbstractPath>,
             val parameters: List<Parameter>) :
-		VisibleElement(ctx, name, ownOrigin, paths.map { it.asDependency } +store.map { it.asDependency (null)}) {
+		VisibleElement(ctx, name, paths.map { it.asDependency } +store.map { it.asDependency (null)}) {
 	override val category: Category = Category.MODEL
 	override fun save(): dynamic = jsobject {
 		it.name = name
@@ -33,7 +31,7 @@ class Model(ctx: Context,
 
 	override fun updated(other: ModelElement, attr: String) {}
 
-	override fun draw(g: SVGGElement) {
+	override fun draw(g: SVGGraphicsElement) {
 		/*g.style["stroke"] = "transparent"
 		g.style["fill"] = "transparent"
 		g.style["stroke-opacity"] = "1"
@@ -51,10 +49,11 @@ class Model(ctx: Context,
 		style["fill-opacity"] = "1"
 		style["opacity"] = "1"
 		style["stroke-width"] = "1"
-		appendAll(paths.map{it.display()})
+		appendAll(paths.map{it.export()})
+		appendAll(store.map{(it as? VisibleElement)?.export()})
 	}
 
-	override fun redraw(attr: String, g: SVGGElement) {
+	override fun redraw(attr: String, g: SVGGraphicsElement) {
 	}
 
 	fun clone(ctx: Context): Model = ctx.loadModel(save()) // TODO optimize

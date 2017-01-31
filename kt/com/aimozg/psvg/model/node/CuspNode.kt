@@ -12,11 +12,10 @@ import com.aimozg.psvg.model.point.Point
  */
 class CuspNode(ctx: Context,
                name: String?,
-               ownOrigin: Point?,
                pos: Point,
                val h1: Point?,
                val h2: Point?) :
-		CommonNode(ctx, name, ownOrigin, pos, listOf(h1?.asPosDependency, h2?.asPosDependency)) {
+		CommonNode(ctx, name, pos, listOf(h1?.asPosDependency, h2?.asPosDependency)) {
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
 		if (other == pos) update("pos")
@@ -31,7 +30,6 @@ class CuspNode(ctx: Context,
 	override fun save() = jsobject2<CuspNodeJson> {
 		it.type = NODE_CUSP_TYPE
 		it.name = name
-		it.origin = ownOrigin?.save()
 		it.pos = pos.save()
 		it.handle1 = h1?.save()
 		it.handle2 = h2?.save()
@@ -42,7 +40,6 @@ class CuspNode(ctx: Context,
 		val NODE_CUSP_LOADER = object : PartLoader(Category.NODE,CuspNode::class, NODE_CUSP_TYPE) {
 			override fun loadStrict(ctx: Context, json: CuspNodeJson, vararg args: Any?) = CuspNode(ctx,
 					json.name,
-					ctx.loadPoint(json.origin),
 					ctx.loadPoint(json.pos)!!,
 					ctx.loadPoint(json.handle1),
 					ctx.loadPoint(json.handle2))

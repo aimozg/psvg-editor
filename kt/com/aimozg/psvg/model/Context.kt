@@ -1,7 +1,6 @@
 package com.aimozg.psvg.model
 
 import com.aimozg.psvg.Object
-import com.aimozg.psvg.TXY
 import com.aimozg.psvg.entries
 import com.aimozg.psvg.model.node.ModelNode
 import com.aimozg.psvg.model.point.Point
@@ -20,7 +19,6 @@ class Context {
 	private val postloadQueue = ArrayList<() -> Any?>()
 
 	var onUpdate: (modelElement: ModelElement, attr: String) -> Unit = { _, _ -> }
-	val origin: TXY = TXY(0, 0)
 	val parts: Map<Int, ModelElement> = _parts
 
 	internal fun nextId(): Int = id++
@@ -58,7 +56,7 @@ class Context {
 		throw PartLoadException(cat,json,"Not found")
 	}
 
-	fun loadAnyPart(name:String,json:dynamic): ModelElement {
+	fun loadAnyPart(name:String?,json:dynamic): ModelElement {
 		val array:Array<Any?> = json
 		val type = Category.valueOf((array[0] as String).toUpperCase())
 		if (array.size>2) {
@@ -88,7 +86,6 @@ class Context {
 	fun loadModel(json: dynamic): Model {
 		val model = Model(this,
 				json.name ?: "unnamed",
-				null,
 				(json.store as Object?)?.entries()?.map { loadAnyPart(it[0] as String,it[1]) } ?: emptyList(),
 				(json.paths as Array<dynamic>?)?.map { loadPath(it) } ?: emptyList(),
 				(json.params as Array<dynamic>?)?.map { loadParam(it) } ?: emptyList())

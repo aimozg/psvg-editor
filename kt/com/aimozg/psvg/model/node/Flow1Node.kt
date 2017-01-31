@@ -5,21 +5,20 @@ import com.aimozg.ktuple.get
 import com.aimozg.psvg.*
 import com.aimozg.psvg.model.*
 import com.aimozg.psvg.model.point.Point
-import org.w3c.dom.svg.SVGGElement
+import org.w3c.dom.svg.SVGGraphicsElement
 import org.w3c.dom.svg.SVGLineElement
 
 /**
- * Created by aimozg on 26.01.2017.
- */
+* Created by aimozg on 26.01.2017.
+*/
 class Flow1Node(ctx: Context,
                 name: String?,
-                ownOrigin: Point?,
                 pos: Point,
                 val h1a: ValueFloat?,
                 val h1b: ValueFloat?,
                 val h2a: ValueFloat?,
                 val h2b: ValueFloat?) :
-		CommonNode(ctx, name, ownOrigin, pos, listOf(
+		CommonNode(ctx, name, pos, listOf(
 				h1a?.asValDependency,
 				h1b?.asValDependency,
 				h2a?.asValDependency,
@@ -37,7 +36,7 @@ class Flow1Node(ctx: Context,
 		if (other is ModelNode && (attr == "pos" || attr == "*") || other is ValueFloat) update("handle")
 	}
 
-	override fun draw(g: SVGGElement) {
+	override fun draw(g: SVGGraphicsElement) {
 		super.draw(g) // TODO draggable ctrl points
 		ltan1 = null
 		lnorm1 = null
@@ -45,7 +44,7 @@ class Flow1Node(ctx: Context,
 		lnorm2 = null
 	}
 
-	override fun redraw(attr: String, g: SVGGElement) {
+	override fun redraw(attr: String, g: SVGGraphicsElement) {
 		super.redraw(attr, g)
 		val pos = center()
 		ltan1?.remove()
@@ -110,7 +109,6 @@ class Flow1Node(ctx: Context,
 			override fun loadStrict(ctx: Context, json: Flow1NodeJson, vararg args: Any?) = Flow1Node(
 					ctx,
 					json.name,
-					ctx.loadPoint(json.origin),
 					ctx.loadPoint(json.pos)!!,
 					if (json.h1ab != null) ctx.loadFloat("prev_tangent", json.h1ab!![0]) else null,
 					if (json.h1ab != null) ctx.loadFloat("prev_normal", json.h1ab!![1]) else null,

@@ -5,7 +5,7 @@ import com.aimozg.psvg.model.Category
 import com.aimozg.psvg.model.Context
 import com.aimozg.psvg.model.ModelElement
 import com.aimozg.psvg.model.PartLoader
-import org.w3c.dom.svg.SVGGElement
+import org.w3c.dom.svg.SVGGraphicsElement
 import org.w3c.dom.svg.SVGLineElement
 
 /**
@@ -30,13 +30,13 @@ class PointAtIntersection(ctx: Context,
 			a1.calculate(), a2.calculate(),
 			b1.calculate(), b2.calculate())
 
-	override fun draw(g: SVGGElement) {
+	override fun draw(g: SVGGraphicsElement) {
 		super.draw(g)
 		l1 = null
 		l2 = null
 	}
 
-	override fun redraw(attr: String, g: SVGGElement) {
+	override fun redraw(attr: String, g: SVGGraphicsElement) {
 		super.redraw(attr,g)
 		l1?.remove()
 		l2?.remove()

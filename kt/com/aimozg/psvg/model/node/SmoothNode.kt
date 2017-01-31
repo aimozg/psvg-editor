@@ -13,12 +13,11 @@ import com.aimozg.psvg.smoothHandles
  */
 class SmoothNode(ctx: Context,
                  name: String?,
-                 ownOrigin: Point?,
                  pos: Point,
                  val abq: ValueFloat,
                  val acq: ValueFloat,
                  val rot: ValueFloat) :
-		CommonNode(ctx, name, ownOrigin, pos,
+		CommonNode(ctx, name, pos,
 				listOf(abq.asValDependency,
 						acq.asValDependency,
 						rot.asValDependency,
@@ -41,7 +40,6 @@ class SmoothNode(ctx: Context,
 	override fun save(): dynamic = jsobject{
 		it.type = NODE_SMOOTH_TYPE
 		it.name = name
-		it.origin = ownOrigin?.save()
 		it.pos = pos.save()
 		it.b = abq.save()
 		it.c = acq.save()
@@ -55,7 +53,6 @@ class SmoothNode(ctx: Context,
 				NODE_SMOOTH_TYPE) {
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) = SmoothNode(ctx,
 					json.name,
-					ctx.loadPoint(json.origin),
 					ctx.loadPoint(json.pos)!!,
 					ctx.loadFloat("prev",json.b,0.3),
 					ctx.loadFloat("next",json.c,0.3),

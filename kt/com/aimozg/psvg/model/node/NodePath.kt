@@ -3,15 +3,13 @@ package com.aimozg.psvg.model.node
 import com.aimozg.ktuple.*
 import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.model.*
-import com.aimozg.psvg.model.point.Point
 
 class NodePath(ctx: Context,
                name: String?,
                val closed: Boolean,
                style: dynamic,
-               ownOrigin: Point?,
                val nodes: List<ModelNode>) :
-		AbstractPath(ctx, name, ownOrigin, nodes.map { it.asDependency }, style) {
+		AbstractPath(ctx, name, nodes.map { it.asDependency }, style) {
 
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
@@ -35,7 +33,7 @@ class NodePath(ctx: Context,
 	}
 
 	override fun save() =
-			arrayOf(TYPE, name, closed, style ?: jsobject {}, ownOrigin?.save()) + nodes.map { it.save() }
+			arrayOf(TYPE, name, closed, style ?: jsobject {}) + nodes.map { it.save() }
 
 	companion object {
 		private const val TYPE = "N"
@@ -46,7 +44,6 @@ class NodePath(ctx: Context,
 						json.name,
 						json.closed,
 						json.style ?: jsobject {},
-						ctx.loadPoint(json.origin),
 						json.nodes.map { ctx.loadNode(it) })
 			}
 
@@ -55,9 +52,8 @@ class NodePath(ctx: Context,
 					val array:Array<Any?> = json
 					val a: Tuple5<String, String?, Boolean, dynamic, dynamic> = json
 					if (a.i0 != TYPE) return null
-					return NodePath(ctx,a.i1,a.i2,a.i3,
-							ctx.loadPoint(a.i4),
-							(5..array.size-1).map { ctx.loadNode(array[it]) })
+					return NodePath(ctx, a.i1, a.i2, a.i3,
+							(4..array.size - 1).map { ctx.loadNode(array[it]) })
 				}
 				return null
 			}

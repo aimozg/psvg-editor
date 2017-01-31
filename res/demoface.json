@@ -24,7 +24,33 @@
         "type": "S", "name": "_haxis", "segments": [["M", "@_hright"], ["L", "@_hleft"]]
       }
     ],
-    "eyer_origin": ["point", 25, -16]
+    "eyer_origin": ["point", 25, -16],
+    "eyer"       : [
+      "group", {
+        "type"  : "group",
+        "name"  : "eyer",
+        "origin": "@eyer_origin",
+        "items" : [
+          [
+            "path", {
+            "type"    : "S",
+            "name"    : "eyer_white",
+            "origin"  : "@eyer_origin",
+            "style"   : { "fill": "#fff" },
+            "segments": [
+              ["M", [-3, 13]],
+              ["C", ["Smooth"], ["Flow", 0.4, 0.2], ["eyer_corneri", -14, 7]],
+              ["C", ["Flow", 0.2, 0.3], ["Smooth"], [-3, 0]],
+              ["C", ["Smooth"], null, ["eyer_cornero", 12, -1]],
+              ["C", null, ["Smooth"], [8, 7]],
+              ["C", ["Smooth"], ["Smooth"], null],
+              ["Z"]
+            ]
+          }
+          ]
+        ]
+      }
+    ]
   },
   "paths" : [
     {
@@ -111,20 +137,6 @@
         ["M", [-9, 28]],
         ["C", ["Flow", 0.1, 0.2], ["Smooth"], [0, 26]],
         ["C", ["Smooth"], ["Flow", 0.1, 0.2], [9, 28]]
-      ]
-    }, {
-      "type"    : "S",
-      "name"    : "eyer_white",
-      "origin"  : "@eyer_origin",
-      "style"   : { "fill": "#fff" },
-      "segments": [
-        ["M", [-3, 13]],
-        ["C", ["Smooth"], ["Flow", 0.4, 0.2], ["eyer_corneri", -14, 7]],
-        ["C", ["Flow", 0.2, 0.3], ["Smooth"], [-3, 0]],
-        ["C", ["Smooth"], null, ["eyer_cornero", 12, -1]],
-        ["C", null, ["Smooth"], [8, 7]],
-        ["C", ["Smooth"], ["Smooth"], null],
-        ["Z"]
       ]
     }
   ]

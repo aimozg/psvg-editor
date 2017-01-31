@@ -6,7 +6,7 @@ import com.aimozg.psvg.SVGPathElement
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.d
 import com.aimozg.psvg.model.*
-import org.w3c.dom.svg.SVGGElement
+import org.w3c.dom.svg.SVGGraphicsElement
 import org.w3c.dom.svg.SVGPathElement
 import kotlin.dom.appendTo
 
@@ -14,7 +14,7 @@ abstract class Segment(ctx: Context,
                        name: String?,
                        items: List<ItemDeclaration?>,
                        val visible: Boolean = true) :
-		VisibleElement(ctx, name, null, items + listOf(
+		VisibleElement(ctx, name, items + listOf(
 				ItemDeclaration.Deferred { (it as Segment).prevInList?.asStopDependency }
 		)) {
 	override final val category: Category get() = Category.SEGMENT
@@ -66,7 +66,7 @@ abstract class Segment(ctx: Context,
 	private var p: SVGPathElement? = null
 
 	abstract fun toCmdAndPos(start: TXY): Tuple2<String, TXY>
-	override fun draw(g: SVGGElement) {
+	override fun draw(g: SVGGraphicsElement) {
 		p = SVGPathElement { appendTo(g) }
 		super.draw(g)
 	}
@@ -74,7 +74,7 @@ abstract class Segment(ctx: Context,
 	open fun start() = prevInList?.stop() ?: TXY(0, 0)
 	abstract fun stop(): TXY// toCmdAndPos(start()).i1
 
-	override fun redraw(attr: String, g: SVGGElement) {
+	override fun redraw(attr: String, g: SVGGraphicsElement) {
 		val m1 = start()
 		p?.d = "M $m1 " + toCmdAndPos(m1).i0
 	}

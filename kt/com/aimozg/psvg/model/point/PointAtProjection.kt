@@ -2,7 +2,7 @@ package com.aimozg.psvg.model.point
 
 import com.aimozg.psvg.*
 import com.aimozg.psvg.model.*
-import org.w3c.dom.svg.SVGGElement
+import org.w3c.dom.svg.SVGGraphicsElement
 import org.w3c.dom.svg.SVGLineElement
 
 /**
@@ -40,13 +40,13 @@ class PointAtProjection(ctx: Context,
 		return p + (q-p)*scale.get()
 	}
 
-	override fun draw(g: SVGGElement) {
+	override fun draw(g: SVGGraphicsElement) {
 		super.draw(g)
 		lab = null
 		lpq = null
 	}
 
-	override fun redraw(attr: String, g: SVGGElement) {
+	override fun redraw(attr: String, g: SVGGraphicsElement) {
 		super.redraw(attr, g)
 		val a = a.calculate()
 		val b = b.calculate()

@@ -6,7 +6,7 @@ import com.aimozg.psvg.makeDraggable
 import com.aimozg.psvg.model.*
 import com.aimozg.psvg.onsdrag
 import com.aimozg.psvg.onsdragstart
-import org.w3c.dom.svg.SVGGElement
+import org.w3c.dom.svg.SVGGraphicsElement
 
 
 class FixedPoint(ctx: Context,
@@ -15,7 +15,7 @@ class FixedPoint(ctx: Context,
                  val y: ValueFloat) :
 		Point(ctx,name,listOf(x.asValDependency,y.asValDependency)) {
 
-	override fun draw(g: SVGGElement) {
+	override fun draw(g: SVGGraphicsElement) {
 		super.draw(g)
 		g.makeDraggable()
 		g.onsdragstart { _, d ->
