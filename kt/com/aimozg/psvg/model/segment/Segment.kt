@@ -29,26 +29,26 @@ abstract class Segment(ctx: Context,
 		}
 	var path: SegmentedPath? = null
 		private set
-	protected val segments get() = path?.segments
+	val segsOfPath get() = path?.segments
 	val index get() = path?.segments?.indexOf(this)
 	val prevInList: Segment?
 		get() {
-			val segments = segments
+			val segments = segsOfPath
 			return segments?.getOrNull(segments.indexOf(this) - 1)
 		}
 	val nextInList: Segment?
 		get() {
-			val segments = segments
+			val segments = segsOfPath
 			return segments?.getOrNull(segments.indexOf(this) + 1)
 		}
 	val prevInLoop: Segment?
 		get() {
-			val segments = segments
+			val segments = segsOfPath
 			return segments?.getOrNull((segments.indexOf(this) + segments.size - 1) % segments.size)
 		}
 	val nextInLoop: Segment?
 		get() {
-			val segments = segments
+			val segments = segsOfPath
 			return segments?.getOrNull((segments.indexOf(this) + 1) % segments.size)
 		}
 	val prevInPath: Segment?

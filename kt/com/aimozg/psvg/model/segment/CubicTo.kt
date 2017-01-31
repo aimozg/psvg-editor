@@ -1,12 +1,9 @@
 package com.aimozg.psvg.model.segment
 
 import com.aimozg.ktuple.*
-import com.aimozg.psvg.SVGLineElement
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.model.*
-import com.aimozg.psvg.plusAssign
 import org.w3c.dom.svg.SVGGElement
-import org.w3c.dom.svg.SVGLineElement
 
 class CubicTo(ctx: Context,
               name: String?,
@@ -17,7 +14,7 @@ class CubicTo(ctx: Context,
 				cp1?.asHandleDependency,
 				cp2?.asHandleDependency,
 				pt?.asPosDependency?:ItemDeclaration.Deferred{
-					(it as Segment).path?.segments?.firstOrNull()?.asStartDependency
+					(it as Segment).segsOfPath?.firstOrNull()?.asStartDependency
 				})) {
 	override fun save(): Tuple =
 			if (name == null) Tuple4(TYPE, cp1?.save(), cp2?.save(), pt?.save())
@@ -60,50 +57,22 @@ class CubicTo(ctx: Context,
 		}
 	}
 
-	protected var l1: SVGLineElement? = null
-	protected var l2: SVGLineElement? = null
 	override fun draw(g: SVGGElement) {
-		l1 = null
-		l2 = null
 		super.draw(g)
-	}
-
-	private fun next(): TXY {
-		return pt?.calculate()?:segments?.firstOrNull()?.start()?:TXY(0,0)//?:nextInLoop?.start()?:start()
 	}
 
 	override fun redraw(attr: String, g: SVGGElement) {
 		super.redraw(attr, g)
-		l1?.remove()
-		l2?.remove()
-		l1 = null
-		l2 = null
-		val prev = prevInList?.stop() ?: TXY(0, 0)
-		val next = next()
-		val cp1xy = cp1?.calculate(this, prev, next)
-		val cp2xy = cp2?.calculate(this, prev, next)
-		if (cp1xy != null) {
-			l1 = SVGLineElement(prev.x, prev.y, cp1xy.x, cp1xy.y) {
-				classList += "handle"
-				g.insertBefore(this, g.firstChild)
-			}
-		}
-		if (cp2xy != null) {
-			l2 = SVGLineElement(next.x, next.y, cp2xy.x, cp2xy.y) {
-				classList += "handle"
-				g.insertBefore(this, g.firstChild)
-			}
-		}
 	}
 
 	override fun toCmdAndPos(start: TXY): Tuple2<String, TXY> {
-		val ptxy = next()
+		val ptxy = stop()
 		val cp1xy = cp1?.calculate(this, start, ptxy) ?: start
 		val cp2xy = cp2?.calculate(this, start, ptxy) ?: ptxy
 		return "$TYPE $cp1xy $cp2xy $ptxy" tup ptxy
 	}
 
-	override fun stop(): TXY = next()
+	override fun stop(): TXY = pt?.calculate()?: segsOfPath?.firstOrNull()?.start()?: TXY(0,0)
 
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
