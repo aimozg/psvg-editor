@@ -71,7 +71,7 @@ abstract class Segment(ctx: Context,
 		super.draw(g)
 	}
 
-	fun start() = prevInList?.stop() ?: TXY(0, 0)
+	open fun start() = prevInList?.stop() ?: TXY(0, 0)
 	abstract fun stop(): TXY// toCmdAndPos(start()).i1
 
 	override fun redraw(attr: String, g: SVGGElement) {

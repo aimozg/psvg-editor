@@ -35,6 +35,7 @@ class MoveTo(ctx: Context,
 		if (attr == "*" || attr == "pos") update("pos")
 	}
 
+	override fun start(): TXY = prevInList?.stop()?:pt.calculate()
 	override fun stop(): TXY = pt.calculate()
 
 	override fun save() = if (name == null) TYPE tup pt.save() else Tuple3(TYPE, name, pt.save())

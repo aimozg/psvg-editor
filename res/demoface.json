@@ -159,7 +159,8 @@
         [
           "C",
           { "type": "Smooth" },
-          { "type": "Smooth" }, [-3,13]
+          { "type": "Smooth" },
+          null
         ],
         ["Z"]
       ]

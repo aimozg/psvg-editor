@@ -12,14 +12,16 @@ class CubicTo(ctx: Context,
               name: String?,
               val cp1: Handle?,
               val cp2: Handle?,
-              val pt: Point) :
+              val pt: Point?) :
 		Segment(ctx, name, listOf(
 				cp1?.asHandleDependency,
 				cp2?.asHandleDependency,
-				pt.asPosDependency)) {
+				pt?.asPosDependency?:ItemDeclaration.Deferred{
+					(it as Segment).path?.segments?.firstOrNull()?.asStartDependency
+				})) {
 	override fun save(): Tuple =
-			if (name == null) Tuple4(TYPE, cp1?.save(), cp2?.save(), pt.save())
-			else Tuple5(TYPE, name, cp1?.save(), cp2?.save(), pt.save())
+			if (name == null) Tuple4(TYPE, cp1?.save(), cp2?.save(), pt?.save())
+			else Tuple5(TYPE, name, cp1?.save(), cp2?.save(), pt?.save())
 
 	companion object {
 		private const val TYPE = "C"
@@ -30,7 +32,7 @@ class CubicTo(ctx: Context,
 							json.name,
 							ctx.loadHandle(json.cp1, true),
 							ctx.loadHandle(json.cp2, false),
-							ctx.loadPoint(json.pt)!!)
+							ctx.loadPoint(json.pt))
 
 			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): CubicTo? {
 				if (json is Array<dynamic> && json[0] == TYPE) {
@@ -41,7 +43,7 @@ class CubicTo(ctx: Context,
 									null,
 									ctx.loadHandle(a1.i1, true),
 									ctx.loadHandle(a1.i2, false),
-									ctx.loadPoint(a1.i3)!!)
+									ctx.loadPoint(a1.i3))
 						}
 						5 -> {
 							val a2: Tuple5<String, String?, dynamic, dynamic, dynamic> = json
@@ -49,7 +51,7 @@ class CubicTo(ctx: Context,
 									a2.i1,
 									ctx.loadHandle(a2.i2, true),
 									ctx.loadHandle(a2.i3, false),
-									ctx.loadPoint(a2.i4)!!)
+									ctx.loadPoint(a2.i4))
 						}
 					}
 				}
@@ -67,7 +69,7 @@ class CubicTo(ctx: Context,
 	}
 
 	private fun next(): TXY {
-		return pt.calculate()//?:nextInLoop?.start()?:start()
+		return pt?.calculate()?:segments?.firstOrNull()?.start()?:TXY(0,0)//?:nextInLoop?.start()?:start()
 	}
 
 	override fun redraw(attr: String, g: SVGGElement) {
