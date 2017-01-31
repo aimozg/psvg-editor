@@ -16,7 +16,7 @@ class AbsoluteHandle(ctx: Context,
 					json.name,
 					args[0] as Boolean,
 					ctx.loadPoint(json.pt)!!)
-		}.register()
+		}
 	}
 
 	override fun save(): dynamic = jsobject {

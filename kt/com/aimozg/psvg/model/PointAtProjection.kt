@@ -25,7 +25,7 @@ class PointAtProjection(ctx: Context,
 					ctx.loadPoint(json.b)!!,
 					ctx.loadPoint(json.p)!!,
 					ctx.loadFloat("scale",json.scale,1.0))
-		}.register()
+		}
 	}
 
 	override fun updated(other: ModelElement, attr: String) {

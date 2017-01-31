@@ -12,8 +12,7 @@ abstract class PartLoader(
 			this(cat,clazz.simpleName!!,typename,*objtypes)
 	abstract fun loadStrict(ctx: Context, json: dynamic, vararg args:Any?): ModelElement
 	open fun loadRelaxed(ctx: Context, json: dynamic, vararg args:Any?): ModelElement? = loadStrict(ctx, json)
-	fun register(): PartLoader {
+	init {
 		Context.registerLoader(this)
-		return this
 	}
 }

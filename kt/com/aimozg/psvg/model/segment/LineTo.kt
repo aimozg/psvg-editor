@@ -27,7 +27,7 @@ class LineTo(ctx: Context,
 				}
 				return null
 			}
-		}.register()
+		}
 	}
 
 	override fun save(): Tuple {

@@ -44,7 +44,7 @@ class CuspNode(ctx: Context,
 					ctx.loadPoint(json.pos)!!,
 					ctx.loadPoint(json.handle1),
 					ctx.loadPoint(json.handle2))
-		}.register()
+		}
 	}
 	interface CuspNodeJson : VisualElementJson {
 		var pos: Point.PointJson

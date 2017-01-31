@@ -36,7 +36,7 @@ class Parameter(
 						ctx.loadFloat("min",json.min,0),
 						ctx.loadFloat("max",json.max,1))
 			}
-		}.register()
+		}
 	}
 	interface ParameterJson : ModelElementJson {
 		var def: Number?

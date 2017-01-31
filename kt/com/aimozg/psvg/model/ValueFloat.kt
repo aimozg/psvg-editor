@@ -93,6 +93,6 @@ class ValueFloat(
 				} else error("Cannot load VALUEFLOAT ${JsTypename.of(json)} ${JSON.stringify(json)}")
 				return ValueFloat(ctx,name,x.toDouble(),def?.toDouble(),min.toDouble(),max.toDouble())
 			}
-		}.register()
+		}
 	}
 }

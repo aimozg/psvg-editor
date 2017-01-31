@@ -59,7 +59,7 @@ class NodePath(ctx: Context,
 				}
 				return null
 			}
-		}.register()
+		}
 	}
 	interface PathJson : AbstractPathJson {
 		var closed: Boolean

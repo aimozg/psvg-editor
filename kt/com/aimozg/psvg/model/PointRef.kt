@@ -46,6 +46,6 @@ class PointRef(
 				if (type is String && type[0] == '@') return PointRef(ctx,json["type"],type.substring(1))
 				return null
 			}
-		}.register()
+		}
 	}
 }

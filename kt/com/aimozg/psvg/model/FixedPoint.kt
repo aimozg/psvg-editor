@@ -83,7 +83,7 @@ class FixedPoint(ctx: Context,
 				} else return null
 				return FixedPoint(ctx,name,ctx.loadFloat("x",x),ctx.loadFloat("y",y))
 			}
-		}.register()
+		}
 	}
 	interface FixedPointJson : PointJson {
 		var pt: Array<Number>

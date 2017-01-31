@@ -28,8 +28,8 @@ class CubicTo(ctx: Context,
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) =
 					CubicTo(ctx,
 							json.name,
-							ctx.loadHandle(json.cp1,true),
-							ctx.loadHandle(json.cp2,false),
+							ctx.loadHandle(json.cp1, true),
+							ctx.loadHandle(json.cp2, false),
 							ctx.loadPoint(json.pt)!!)
 
 			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): CubicTo? {
@@ -39,24 +39,25 @@ class CubicTo(ctx: Context,
 							val a1: Tuple4<String, dynamic, dynamic, dynamic> = json
 							return CubicTo(ctx,
 									null,
-									ctx.loadHandle(a1.i1,true),
-									ctx.loadHandle(a1.i2,false),
+									ctx.loadHandle(a1.i1, true),
+									ctx.loadHandle(a1.i2, false),
 									ctx.loadPoint(a1.i3)!!)
 						}
 						5 -> {
 							val a2: Tuple5<String, String?, dynamic, dynamic, dynamic> = json
 							return CubicTo(ctx,
 									a2.i1,
-									ctx.loadHandle(a2.i2,true),
-									ctx.loadHandle(a2.i3,false),
+									ctx.loadHandle(a2.i2, true),
+									ctx.loadHandle(a2.i3, false),
 									ctx.loadPoint(a2.i4)!!)
 						}
 					}
 				}
 				return null
 			}
-		}.register()
+		}
 	}
+
 	protected var l1: SVGLineElement? = null
 	protected var l2: SVGLineElement? = null
 	override fun draw(g: SVGGElement) {
@@ -65,38 +66,42 @@ class CubicTo(ctx: Context,
 		super.draw(g)
 	}
 
+	private fun next(): TXY {
+		return pt.calculate()//?:nextInLoop?.start()?:start()
+	}
+
 	override fun redraw(attr: String, g: SVGGElement) {
 		super.redraw(attr, g)
 		l1?.remove()
 		l2?.remove()
 		l1 = null
 		l2 = null
-		val prev = prev?.stop()?:TXY(0,0)
-		val next = pt.calculate()
+		val prev = prevInList?.stop() ?: TXY(0, 0)
+		val next = next()
 		val cp1xy = cp1?.calculate(this, prev, next)
 		val cp2xy = cp2?.calculate(this, prev, next)
 		if (cp1xy != null) {
-			l1 = SVGLineElement(prev.x,prev.y,cp1xy.x,cp1xy.y) {
+			l1 = SVGLineElement(prev.x, prev.y, cp1xy.x, cp1xy.y) {
 				classList += "handle"
-				g.insertBefore(this,g.firstChild)
+				g.insertBefore(this, g.firstChild)
 			}
 		}
 		if (cp2xy != null) {
-			l2 = SVGLineElement(next.x,next.y,cp2xy.x,cp2xy.y) {
+			l2 = SVGLineElement(next.x, next.y, cp2xy.x, cp2xy.y) {
 				classList += "handle"
-				g.insertBefore(this,g.firstChild)
+				g.insertBefore(this, g.firstChild)
 			}
 		}
 	}
 
 	override fun toCmdAndPos(start: TXY): Tuple2<String, TXY> {
-		val ptxy = pt.calculate()
+		val ptxy = next()
 		val cp1xy = cp1?.calculate(this, start, ptxy) ?: start
 		val cp2xy = cp2?.calculate(this, start, ptxy) ?: ptxy
 		return "$TYPE $cp1xy $cp2xy $ptxy" tup ptxy
 	}
 
-	override fun stop(): TXY = pt.calculate()
+	override fun stop(): TXY = next()
 
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)

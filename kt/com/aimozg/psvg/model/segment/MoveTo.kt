@@ -6,7 +6,7 @@ import com.aimozg.psvg.model.*
 
 class MoveTo(ctx: Context,
              name: String?,
-             val pt: Point) : Segment(ctx, name, listOf(pt.asPosDependency)) {
+             val pt: Point) : Segment(ctx, name, listOf(pt.asPosDependency), false) {
 	companion object {
 		private const val TYPE = "M"
 		val SEGMENT_M_LOADER = object : PartLoader(Category.SEGMENT, MoveTo::class, TYPE,
@@ -27,7 +27,7 @@ class MoveTo(ctx: Context,
 				}
 				return null
 			}
-		}.register()
+		}
 	}
 
 	override fun updated(other: ModelElement, attr: String) {

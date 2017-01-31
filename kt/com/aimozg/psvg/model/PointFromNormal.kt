@@ -37,7 +37,7 @@ Point(ctx,name,listOf(pt0.asPosDependency,pt1.asPosDependency,alpha.asValDepende
 					ctx.loadPoint(json.pt1)!!,
 					ctx.loadFloat("tangent",json.alpha,0),
 					ctx.loadFloat("normal",json.beta,0))
-		}.register()
+		}
 	}
 	interface PointFromNormalJson : PointJson {
 		var pt0: PointJson

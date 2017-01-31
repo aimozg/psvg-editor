@@ -130,56 +130,39 @@
     ],
     {
       "type": "S",
+      "name": "eyer_white",
       "origin": "@eyer_origin",
       "style": { "fill": "#fff" },
       "segments":[
         ["M", [-3, 13]],
         [
           "C",
-          { "type": "Abs", "pt": [-6.7589892258425, 13] },
+          { "type": "Smooth", "pt": [-6.7589892258425, 13] },
           { "type": "Flow", "ab": [0.401273885350318, 0.23566878980891717] },
           ["eyer_corneri", -14, 7]
         ],
         [
           "C",
           { "type": "Flow", "ab": [0.1647058823529412, 0.25882352941176473] },
-          { "type": "Smooth", "pt": [-6.717057398551123, 1.2179837009896126] },
+          { "type": "Smooth"},
           [-3, 0]
         ],
         [
-          "C",
-          { "type": "Abs", "pt": [1.2857716369757206, -1.4043366675033615] },
-          { "type": "Abs", "pt": [4, -1] },
-          ["eyer_cornero", 12, -1]
+          "C", { "type": "Smooth"}, null, ["eyer_cornero", 12, -1]
         ],
         [
           "C",
           null,
-          { "type": "Abs", "pt": [9.863198993708219, 5.0690702990930285] },
+          { "type": "Smooth" },
           [8, 7]
         ],
         [
           "C",
-          { "type": "Abs", "pt": [5.389858368415651, 9.705025076236854] },
-          { "type": "Abs", "pt": [0.7589892258425, 13] },
-          [-3, 13]
-        ]
+          { "type": "Smooth" },
+          { "type": "Smooth" }, [-3,13]
+        ],
+        ["Z"]
       ]
-    },
-    [
-      "N", "eyer_white", true, null, "@eyer_origin",
-      { "type": "smooth", "pos": [-3, 13] },
-      {
-        "type": "cusp",
-        "pos" : [-14, 7]
-      },
-      { "type": "smooth", "pos": [-3, 0] },
-      {
-        "type"   : "cusp",
-        "pos"    : [12, -1],
-        "handle1": [4, -1]
-      },
-      { "type": "smooth", "pos": [8, 7] }
-    ]
+    }
   ]
 }

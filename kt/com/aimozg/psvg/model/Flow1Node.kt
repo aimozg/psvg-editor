@@ -116,7 +116,7 @@ class Flow1Node(ctx: Context,
 					if (json.h2ab != null) ctx.loadFloat("next_tangent", json.h2ab!![0]) else null,
 					if (json.h2ab != null) ctx.loadFloat("next_normal", json.h2ab!![1]) else null
 			)
-		}.register()
+		}
 	}
 	interface Flow1NodeJson : ModelNodeJson {
 		var pos: Point.PointJson

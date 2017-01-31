@@ -37,7 +37,7 @@ class FlowHandle(ctx: Context,
 						ctx.loadFloat("alpha", alpha, 0),
 						ctx.loadFloat("beta", beta, 0))
 			}
-		}.register()
+		}
 	}
 
 	override fun save(): dynamic = jsobject {

@@ -26,11 +26,14 @@ class SegmentedPath(
 							ctx.loadPoint(json.origin),
 							json.style ?: jsobject {  },
 							json.segments.map { ctx.loadSegment(it) })
-		}.register()
+		}
 	}
 	interface SegmentedPathJson : AbstractPathJson {
 		var segments: Array<dynamic>
 	}
+
+	fun start() = segments.firstOrNull()?.start()?: TXY(0,0)
+	val closed: Boolean = segments.count { it is ZSegment } == 1
 
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)

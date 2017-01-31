@@ -19,7 +19,7 @@ class RelativeHandle(ctx: Context,
 					args[0] as Boolean,
 					ctx.loadFloat("dx", json.dx, 0),
 					ctx.loadFloat("dy", json.dy, 0))
-		}.register()
+		}
 	}
 
 	override fun save(): dynamic = jsobject {

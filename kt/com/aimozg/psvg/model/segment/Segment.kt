@@ -10,13 +10,16 @@ import org.w3c.dom.svg.SVGGElement
 import org.w3c.dom.svg.SVGPathElement
 import kotlin.dom.appendTo
 
-abstract class Segment(ctx: Context, name: String?, items: List<ItemDeclaration?>) :
+abstract class Segment(ctx: Context,
+                       name: String?,
+                       items: List<ItemDeclaration?>,
+                       val visible: Boolean = true) :
 		VisibleElement(ctx, name, null, items + listOf(
-				ItemDeclaration.Deferred{(it as Segment).prev?.asStopDependency}
+				ItemDeclaration.Deferred { (it as Segment).prevInList?.asStopDependency }
 		)) {
 	override final val category: Category get() = Category.SEGMENT
 	val asStopDependency get() = asDependency("pos")
-	val asStartDependency get() = prev?.asStopDependency
+	val asStartDependency get() = prevInList?.asStopDependency
 
 	override var owner: ModelElement?
 		get() = super.owner
@@ -26,15 +29,40 @@ abstract class Segment(ctx: Context, name: String?, items: List<ItemDeclaration?
 		}
 	var path: SegmentedPath? = null
 		private set
+	protected val segments get() = path?.segments
 	val index get() = path?.segments?.indexOf(this)
-	val prev: Segment? get() {
-		val segs = path?.segments ?: return null
-		return segs.getOrNull(segs.indexOf(this) - 1)
-	}
-	val next: Segment? get() {
-		val segs = path?.segments ?: return null
-		return segs.getOrNull(segs.indexOf(this) + 1)
-	}
+	val prevInList: Segment?
+		get() {
+			val segments = segments
+			return segments?.getOrNull(segments.indexOf(this) - 1)
+		}
+	val nextInList: Segment?
+		get() {
+			val segments = segments
+			return segments?.getOrNull(segments.indexOf(this) + 1)
+		}
+	val prevInLoop: Segment?
+		get() {
+			val segments = segments
+			return segments?.getOrNull((segments.indexOf(this) + segments.size - 1) % segments.size)
+		}
+	val nextInLoop: Segment?
+		get() {
+			val segments = segments
+			return segments?.getOrNull((segments.indexOf(this) + 1) % segments.size)
+		}
+	val prevInPath: Segment?
+		get() {
+			var prev = prevInLoop
+			while (prev != null && prev != this && !prev.visible) prev = prev.prevInLoop
+			return if (prev == this) null else prev
+		}
+	val nextInPath: Segment?
+		get() {
+			var next = nextInLoop
+			while (next != null && next != this && !next.visible) next = next.nextInLoop
+			return if (next == this) null else next
+		}
 	private var p: SVGPathElement? = null
 
 	abstract fun toCmdAndPos(start: TXY): Tuple2<String, TXY>
@@ -43,17 +71,12 @@ abstract class Segment(ctx: Context, name: String?, items: List<ItemDeclaration?
 		super.draw(g)
 	}
 
-	fun start(): TXY {
-		return prev?.stop()?: TXY(0,0)
-		/*return (path?.segments ?: emptyList<Segment>()).let {
-			it.subList(0, it.indexOf(this))
-		}.fold(TXY(0, 0)) { xy, s -> s.toCmdAndPos(xy).i1 }*/
-	}
+	fun start() = prevInList?.stop() ?: TXY(0, 0)
 	abstract fun stop(): TXY// toCmdAndPos(start()).i1
 
 	override fun redraw(attr: String, g: SVGGElement) {
-		val m1 = prev?.stop() ?: return
-		p?.d = "M $m1 "+toCmdAndPos(m1).i0
+		val m1 = start()
+		p?.d = "M $m1 " + toCmdAndPos(m1).i0
 	}
 
 }

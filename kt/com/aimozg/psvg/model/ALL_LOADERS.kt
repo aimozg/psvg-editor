@@ -17,6 +17,7 @@ val ALL_LOADERS: Collection<PartLoader> = listOf(
 		MoveTo.SEGMENT_M_LOADER,
 		LineTo.SEGMENT_L_LOADER,
 		CubicTo.SEGMENT_C_LOADER,
+		ZSegment.SEGMENT_Z_LOADER,
 
 		AbsoluteHandle.HANDLE_ABS_LOADER,
 		RelativeHandle.HANDLE_REL_LOADER,

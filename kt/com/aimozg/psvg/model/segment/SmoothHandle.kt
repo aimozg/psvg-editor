@@ -20,8 +20,8 @@ class SmoothHandle(ctx: Context,
 			rot.asValDependency,
 			ItemDeclaration.Deferred {
 				it as SmoothHandle
-				if (atStart) it.segment?.prev?.asStartDependency
-				else it.segment?.next?.asStopDependency
+				if (atStart) it.segment?.prevInPath?.asStartDependency
+				else it.segment?.nextInPath?.asStopDependency
 			}
 	)){
 	companion object {
@@ -31,10 +31,10 @@ class SmoothHandle(ctx: Context,
 					SmoothHandle(ctx,
 							json.name,
 							args[0] as Boolean,
-							ctx.loadFloat("size", json.size, 1.0/3.0),
+							ctx.loadFloat("size", json.size, 0.3),
 							ctx.loadFloat("rot", json.rot, 0)
 			)
-		}.register()
+		}
 	}
 
 	override fun save(): dynamic  = jsobject{
@@ -49,13 +49,13 @@ class SmoothHandle(ctx: Context,
 		val a: TXY
 		val c: TXY
 		if (atStart) {
-			b = segment.prev?.start() ?: return start
+			b = segment.prevInPath?.start() ?: return start
 			a = segment.start()
 			c = segment.stop()
 		} else {
 			b = segment.start()
 			a = segment.stop()
-			c = segment.next?.stop() ?: return a
+			c = segment.nextInPath?.stop() ?: return a
 		}
 		return smoothHandles(b, a, c, size.get(), size.get(), rot.get())[
 				if (atStart) 1 else 0]
