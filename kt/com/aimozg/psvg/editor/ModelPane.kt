@@ -36,6 +36,7 @@ class ModelPane(
 				DisplayMode.VIEW -> model.export()!!
 			}
 			zoombox.appendChild(eModel)
+			resizeView()
 		}
 	private val svg: SVGSVGElement = SVGSVGElement {
 		width.px = 100f
