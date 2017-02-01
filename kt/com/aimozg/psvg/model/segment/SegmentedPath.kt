@@ -19,15 +19,16 @@ class SegmentedPath(
 	companion object {
 		const private val TYPE = "S"
 		val PATH_SEGMENTED_LOADER = object : PartLoader(Category.PATH, SegmentedPath::class.simpleName!!, TYPE) {
-			override fun loadStrict(ctx: Context, json: SegmentedPathJson, vararg args: Any?) =
-					SegmentedPath(ctx,
-							json.name,
-							json.style ?: jsobject {  },
-							json.segments.map { ctx.loadSegment(it) })
+			override fun loadStrict(ctx: Context, json: SegmentedPathJson, vararg args: Any?) = SegmentedPath(ctx,
+				json.name,
+				json.style ?: jsobject {  },
+				json.segments?.map { ctx.loadSegment(it) } ?:
+				Segment.loadFromStream(ctx, json.stream!!.asSequence()))
 		}
 	}
 	interface SegmentedPathJson : AbstractPathJson {
-		var segments: Array<dynamic>
+		var segments: Array<dynamic>?
+		var stream: Array<dynamic>?
 	}
 
 	fun start() = segments.firstOrNull()?.start()?: TXY(0,0)

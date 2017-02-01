@@ -17,6 +17,28 @@ abstract class Segment(ctx: Context,
 		VisibleElement(ctx, name, items + listOf(
 				ItemDeclaration.Deferred { (it as Segment).prevInList?.asStopDependency }
 		)) {
+	companion object {
+		fun loadFromStream(ctx:Context, stream:Sequence<dynamic>):List<Segment>{
+			val i = stream.iterator()
+			val rslt = ArrayList<Segment>()
+			while(i.hasNext()) {
+				val type:String? = i.next()
+				rslt.add(when(type) {
+					"M" -> MoveTo(ctx,null,
+							ctx.loadPoint(i.next())!!)
+					"L" -> LineTo(ctx,null,
+							ctx.loadPoint(i.next())!!)
+					"C" -> CubicTo(ctx,null,
+							ctx.loadHandle(i.next(),true),
+							ctx.loadHandle(i.next(),false),
+							ctx.loadPoint(i.next()))
+					"Z" -> ZSegment(ctx,null)
+					else -> error("Unknown segment $type")
+				})
+			}
+			return rslt
+		}
+	}
 	override final val category: Category get() = Category.SEGMENT
 	val asStopDependency get() = asDependency("pos")
 	val asStartDependency get() = prevInList?.asStopDependency

@@ -2,10 +2,7 @@ package com.aimozg.psvg.model.segment
 
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.jsobject
-import com.aimozg.psvg.model.Category
-import com.aimozg.psvg.model.Context
-import com.aimozg.psvg.model.ModelElement
-import com.aimozg.psvg.model.PartLoader
+import com.aimozg.psvg.model.*
 import com.aimozg.psvg.model.point.Point
 
 class AbsoluteHandle(ctx: Context,
@@ -14,12 +11,25 @@ class AbsoluteHandle(ctx: Context,
 		Handle(ctx, name, atStart, listOf(pt.asPosDependency)) {
 	companion object {
 		private const val TYPE = "Abs"
-		val HANDLE_ABS_LOADER = object: PartLoader(Category.HANDLE,AbsoluteHandle::class, TYPE) {
+		val HANDLE_ABS_LOADER = object: PartLoader(Category.HANDLE,AbsoluteHandle::class, TYPE,
+				JsTypename.OBJECT) {
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) = AbsoluteHandle(
 					ctx,
 					json.name,
 					args[0] as Boolean,
 					ctx.loadPoint(json.pt)!!)
+
+			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): AbsoluteHandle? {
+				if (json is Array<*>) {
+					val array: Array<*> = json
+					if (array.size != 2 || array[0] != TYPE) return null
+					return AbsoluteHandle(ctx,
+							null,
+							args[0] as Boolean,
+							ctx.loadPoint(array[1])!!)
+				}
+				return null
+			}
 		}
 	}
 

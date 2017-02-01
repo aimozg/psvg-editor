@@ -24,27 +24,79 @@
         "type": "S", "name": "_haxis", "segments": [["M", "@_hright"], ["L", "@_hleft"]]
       }
     ],
-    "eyer_origin": ["point", 25, -16],
+    "eyer_origin": ["point", 22, -14],
+    "eyel_origin": [
+      "point",
+      { "name": "eyel_origin", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@eyer_origin", "scale": 2 }
+    ],
     "eyer"       : [
       "group", {
         "type"  : "group",
         "name"  : "eyer",
         "origin": "@eyer_origin",
         "items" : [
+          ["point", ["eyer_top", -3, -12]],
+          ["point", ["eyer_bottom", 3, 12]],
+          ["point", ["eyer_left", -14, 3]],
+          ["point", ["eyer_right", 14, -3]],
           [
             "path", {
-            "type"    : "S",
-            "name"    : "eyer_white",
-            "origin"  : "@eyer_origin",
-            "style"   : { "fill": "#fff" },
-            "segments": [
-              ["M", [-3, 13]],
-              ["C", ["Smooth"], ["Flow", 0.4, 0.2], ["eyer_corneri", -14, 7]],
-              ["C", ["Flow", 0.2, 0.3], ["Smooth"], [-3, 0]],
-              ["C", ["Smooth"], null, ["eyer_cornero", 12, -1]],
-              ["C", null, ["Smooth"], [8, 7]],
-              ["C", ["Smooth"], ["Smooth"], null],
-              ["Z"]
+            "type"  : "S",
+            "name"  : "eyer_white",
+            "style" : { "fill": "#fff" },
+            "stream": [
+              "M", "@eyer_left",
+              "C", ["Smooth"], ["Smooth"], "@eyer_top",
+              "C", ["Smooth"], ["Smooth"], "@eyer_right",
+              "C", ["Smooth"], ["Smooth"], "@eyer_bottom",
+              "C", ["Smooth"], ["Smooth"], null,
+              "Z"
+            ]
+          }
+          ], [
+            "path", {
+              "type": "S",
+              "name": "eyer_lidt",
+              "style": { "fill"  : "hsl(26, 49%, 64%)" },
+              "stream": [
+                "M", [-13,7],
+                "L", [-15,0],
+                "C", ["Abs", [-15,-7]], ["Abs", [-6,-13]], [0,-13],
+                "C", ["Abs", [6,-13]], ["Abs", [14,-8]], [14,-3],
+                "C", null, ["Smooth"], [-7,0],
+                "C", ["Smooth"], null, null,
+                "Z"
+              ]
+            }
+          ]
+        ]
+      }
+    ],
+    "eyel"       : [
+      "group", {
+        "type"  : "group",
+        "name"  : "eyel",
+        "origin": "@eyel_origin",
+        "items" : [
+          [
+            "path", {
+            "type"  : "S",
+            "name"  : "eyel_white",
+            "style" : { "fill": "#fff" },
+            "stream": [
+              "M",
+              [-8, 7],
+              "C", ["Smooth"], null,
+              ["eyel_cornero", -12, -1],
+              "C", null, ["Smooth"],
+              [3, 0],
+              "C", ["Smooth"], ["Smooth"],
+              ["eyel_corneri", 14, 7],
+              "C", ["Flow", 0.2, 0.3], ["Smooth"],
+              [3, 13],
+              "C", ["Flow", 0.4, 0.2], ["Smooth"],
+              null,
+              "Z"
             ]
           }
           ]
