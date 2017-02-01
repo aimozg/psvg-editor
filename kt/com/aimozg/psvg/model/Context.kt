@@ -17,9 +17,15 @@ class Context {
 	private val _parts = hashMapOf<Int, ModelElement>()
 	private var id = 0
 	private val postloadQueue = ArrayList<() -> Any?>()
-
-	var onUpdate: (modelElement: ModelElement, attr: String) -> Unit = { _, _ -> }
+	var onUpdate: ((modelElement: ModelElement, attr: String) -> Unit)?=null
 	val parts: Map<Int, ModelElement> = _parts
+
+	fun clear() {
+		_parts.clear()
+		id = 0
+		postloadQueue.clear()
+		onUpdate = null
+	}
 
 	internal fun nextId(): Int = id++
 	internal fun register(modelElement: ModelElement) {
@@ -27,7 +33,7 @@ class Context {
 	}
 
 	fun updated(modelElement: ModelElement, attr: String) {
-		onUpdate(modelElement, attr)
+		onUpdate?.invoke(modelElement, attr)
 	}
 
 	fun findPoint(name: String) = parts.values.find { it is Point && it.name == name } as Point?

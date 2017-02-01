@@ -215,6 +215,7 @@
             $('#treeview')[0],
             $('.canvas-preview').toArray(),
             $('#objview')[0]);
+        editor.zoom = 4;
         editor_load3();
     });
     function editor_save() {
@@ -231,7 +232,7 @@
     function editor_load3() {
         $.getJSON('res/demoface.json',function(json){
             editor.loadJson(json);
-            editor.zoom = 4;
+            //editor.zoom = 4;
             $("#name").text(editor.model.name);
         });
     }

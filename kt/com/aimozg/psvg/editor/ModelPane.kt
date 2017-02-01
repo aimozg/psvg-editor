@@ -12,6 +12,7 @@ import org.w3c.dom.svg.SVGElement
 import org.w3c.dom.svg.SVGGElement
 import org.w3c.dom.svg.SVGLength
 import org.w3c.dom.svg.SVGSVGElement
+import kotlin.dom.appendTo
 
 class ModelPane(
 		model1: Model,
@@ -19,15 +20,23 @@ class ModelPane(
 		val div: HTMLElement,
 		vararg defs: SVGElement
 ) {
-	val ctx: Context = Context()
-	val model: Model = model1.clone(ctx)
-	val eModel: SVGElement = when(mode) {
-		DisplayMode.EDIT -> model.graphic
-		DisplayMode.VIEW -> model.export()!!
-	}
+	var ctx: Context = Context()
+		private set
 	private val zoombox: SVGGElement = SVGGElement {
-		appendChild(eModel)
 	}
+	var eModel: SVGElement = SVGGElement { appendTo(zoombox) }
+		private set
+	var model: Model = model1.clone(ctx)
+		set(value) {
+			ctx = Context()
+			field = value.clone(ctx)
+			eModel.remove()
+			eModel = when(mode) {
+				DisplayMode.EDIT -> model.graphic
+				DisplayMode.VIEW -> model.export()!!
+			}
+			zoombox.appendChild(eModel)
+		}
 	private val svg: SVGSVGElement = SVGSVGElement {
 		width.px = 100f
 		height.px = 100f

@@ -53,9 +53,7 @@ class Editor(
 				}
 			}
 		})
-	}
-
-	private fun recreateView(model: Model) {
+		val model = Model(Context(),"unnaned", emptyList(), emptyList(), emptyList())
 		editPane = ModelPane(model, DisplayMode.EDIT, canvasDiv,
 				SVGPathElement("M -5 0 0 -5 5 0 0 5 z") {
 					id = "svgpt_diamond_sm"
@@ -89,10 +87,15 @@ class Editor(
 				SVGUseElement("#svgpt_circle") { id = "svg_Flow1Node" },
 				SVGUseElement("#svgpt_circle") { id = "svg_SmoothNode" },
 				SVGUseElement("#svgpt_box") { id = "svg_SymmetricNode" })
-
 		for (pd in previewDivs) {
 			previews.add(ModelPane(model, DisplayMode.VIEW, pd))
 		}
+	}
+
+	private fun recreateView(model: Model) {
+		editPane.model = model
+
+		for (p in previews) p.model = model
 
 		tree?.destroy()
 		tree = jq(treeDiv).withPlugins.jstree(jsobject2 {

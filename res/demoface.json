@@ -37,8 +37,8 @@
         "items" : [
           ["point", ["eyer_top", -3, -12]],
           ["point", ["eyer_bottom", 3, 12]],
-          ["point", ["eyer_left", -14, 3]],
-          ["point", ["eyer_right", 14, -3]],
+          ["point", ["eyer_left", -13, 3]],
+          ["point", ["eyer_right", 13, -3]],
           [
             "path", {
             "type"  : "S",
@@ -55,16 +55,31 @@
           }
           ], [
             "path", {
-              "type": "S",
-              "name": "eyer_lidt",
-              "style": { "fill"  : "hsl(26, 49%, 64%)" },
+              "type"  : "S",
+              "name"  : "eyer_lidt",
+              "style" : { "fill": "hsl(26, 49%, 64%)" },
               "stream": [
-                "M", [-13,7],
-                "L", [-15,0],
-                "C", ["Abs", [-15,-7]], ["Abs", [-6,-13]], [0,-13],
-                "C", ["Abs", [6,-13]], ["Abs", [14,-8]], [14,-3],
-                "C", null, ["Smooth"], [-7,0],
+                "M", [-14, 7],
+                "L", [-14, 3],
+                "C", ["Flow", 0.3, 0.2], ["Smooth"], [-3, -13],
+                "C", ["Smooth"], ["Flow", 0.1, 0.2], [14, -3],
+                "C", null, ["Smooth"], [-9, 1],
                 "C", ["Smooth"], null, null,
+                "Z"
+              ]
+            }
+          ], [
+            "path", {
+              "type"  : "S",
+              "name"  : "eyer_lidb",
+              "style" : { "fill": "hsl(26, 49%, 64%)" },
+              "stream": [
+                "M", [3, 13],
+                "C", ["Smooth"], ["Flow", 0.2, 0.3], "@eyer_left",
+                "C", ["Flow", 0.2, -0.2], ["Flow", 0.4, -0.2], [0, 11],
+                "C", ["Flow", 0.25, -0.25], ["Flow", 0.25, -0.25], "@eyer_right",
+                "L", [14, -3],
+                "C", ["Flow", 0.3, 0.2], ["Smooth"], null,
                 "Z"
               ]
             }
