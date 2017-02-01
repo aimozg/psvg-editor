@@ -5,17 +5,15 @@ import org.w3c.dom.svg.SVGGraphicsElement
 
 class Model(ctx: Context,
             name: String?,
-            val store: List<ModelElement>,
-            val paths: List<AbstractPath>,
+            val items: List<ModelElement>,
             val parameters: List<Parameter>) :
-		VisibleElement(ctx, name, paths.map { it.asDependency } +store.map { it.asDependency (null)}) {
+		VisibleElement(ctx, name, items.map { it.asDependency (null)}) {
 	override val category: Category = Category.MODEL
 	override fun save(): dynamic = jsobject {
 		it.name = name
-		it.paths = paths.map { it.save() }.toTypedArray()
 		it.params = parameters.map { it.save() }.toTypedArray()
-		it.store = jsobject { o->
-			for (part in store) {
+		it.items = jsobject { o->
+			for (part in items) {
 				val name = part.name ?: "#${part.id}"
 				val save = part.save()
 				val type = part.category.toString()
@@ -32,14 +30,7 @@ class Model(ctx: Context,
 	override fun updated(other: ModelElement, attr: String) {}
 
 	override fun draw(g: SVGGraphicsElement) {
-		/*g.style["stroke"] = "transparent"
-		g.style["fill"] = "transparent"
-		g.style["stroke-opacity"] = "1"
-		g.style["fill-opacity"] = "1"
-		g.style["opacity"] = "1"
-		g.style["stroke-width"] = "1"*/
-		g.appendAll(paths.map{it.graphic})
-		g.appendAll(store.map{(it as? VisibleElement)?.graphic})
+		g.appendAll(items.map{(it as? VisibleElement)?.graphic})
 	}
 
 	override fun display() = SVGGElement {
@@ -49,8 +40,7 @@ class Model(ctx: Context,
 		style["fill-opacity"] = "1"
 		style["opacity"] = "1"
 		style["stroke-width"] = "1"
-		appendAll(paths.map{it.export()})
-		appendAll(store.map{(it as? VisibleElement)?.export()})
+		appendAll(items.map{(it as? VisibleElement)?.export()})
 	}
 
 	override fun redraw(attr: String, g: SVGGraphicsElement) {

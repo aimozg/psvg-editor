@@ -53,7 +53,7 @@ class Editor(
 				}
 			}
 		})
-		val model = Model(Context(),"unnaned", emptyList(), emptyList(), emptyList())
+		val model = Model(Context(),"unnaned", emptyList(), emptyList())
 		editPane = ModelPane(model, DisplayMode.EDIT, canvasDiv,
 				SVGPathElement("M -5 0 0 -5 5 0 0 5 z") {
 					id = "svgpt_diamond_sm"
@@ -204,41 +204,4 @@ class Editor(
 		recreateView(Context().loadModel(json))
 	}
 
-	/*loadSvgStruct(el: SVGElement) {
-	 interface JPath {
-	 name: string;
-	 np: NodePath;
-	 }
-	 let paths = [] as JPath[];
-	 dom.traverse(el, (el) => {
-	 let type = el.classList.item(0) || "unknown";
-	 //console.log(el.tagName + (el.id ? "#" + el.id : "") + "." + type);
-	 switch (type) {
-	 case "path":
-	 let els = svg.dparse(el.getAttribute("d"));
-	 let p = {
-	 name: (el.getAttribute("inkscape:label") || el.id),
-	 np: svg.eltonodes(els)
-	 };
-	 //console.log(svg.drepr(els) + " -> " + svg.noderepr(p.np) + " -> " + svg.drepr(svg.nodestoels(p.np)));
-	 paths.push(p);
-	 break;
-	 }
-	 return true
-	 });
-	 //console.log(paths);
-	 let m = new Model("edit");
-	 for (let p of paths) {
-	 m.addPath(new Path(p.name,
-	 p.np.nodes.map(node => {
-	 return new CuspNode(undefined,
-	 new FixedPoint(undefined, node.p),
-	 new FixedPoint(undefined, node.h1),
-	 new FixedPoint(undefined, node.h2)
-	 )
-	 }), p.np.z))
-	 }
-	 this.model = m;
-	 this.recreateView();
-	 }*/
 }
