@@ -4,6 +4,7 @@ import com.aimozg.ktuple.*
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.makeDraggable
 import com.aimozg.psvg.model.*
+import com.aimozg.psvg.model.values.FixedFloat
 import com.aimozg.psvg.onsdrag
 import com.aimozg.psvg.onsdragstart
 import org.w3c.dom.svg.SVGGraphicsElement
@@ -30,9 +31,11 @@ class FixedPoint(ctx: Context,
 	}
 
 	fun set(x:Double, y:Double) {
-		this.x.set(x,true)
-		this.y.set(y,true)
-		update("pos")
+		if (this.x is FixedFloat && this.y is FixedFloat) {
+			this.x.set(x, true)
+			this.y.set(y, true)
+			update("pos")
+		}
 	}
 	fun set(xy: TXY) {
 		set(xy.x,xy.y)
@@ -42,7 +45,11 @@ class FixedPoint(ctx: Context,
 
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
-		set(x.get(),y.get())
+		if (other == x || other == y) {
+			update("pos")
+		} else {
+			set(x.get(), y.get())
+		}
 	}
 
 	override fun save(): dynamic {

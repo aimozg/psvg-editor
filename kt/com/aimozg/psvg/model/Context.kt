@@ -124,6 +124,9 @@ class Context {
 	              min: Number = Double.NEGATIVE_INFINITY,
 	              max: Number = Double.POSITIVE_INFINITY): ValueFloat =
 			loadPart(Category.VALUEFLOAT, json, name, def, min, max) as ValueFloat
+	fun loadColor(name: String,
+	              json: dynamic): ValueColor =
+			loadPart(Category.VALUECOLOR, json, name) as ValueColor
 
 	fun loadModel(json: dynamic): Model {
 		val model = Model(this,

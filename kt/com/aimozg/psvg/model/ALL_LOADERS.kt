@@ -6,6 +6,7 @@ import com.aimozg.psvg.model.node.NodePath
 import com.aimozg.psvg.model.node.SmoothNode
 import com.aimozg.psvg.model.point.*
 import com.aimozg.psvg.model.segment.*
+import com.aimozg.psvg.model.values.FixedFloat
 
 
 @Suppress("unused")
@@ -37,5 +38,5 @@ val ALL_LOADERS: Collection<PartLoader> = listOf(
 		PointAtIntersection.POINT_AT_INTERSECTION_LOADER,
 		PointAtProjection.POINT_AT_PROJECTION_LOADER,
 
-		ValueFloat.VALUEFLOAT_LOADER
+		FixedFloat.FIXEDFLOAT_LOADER
 )

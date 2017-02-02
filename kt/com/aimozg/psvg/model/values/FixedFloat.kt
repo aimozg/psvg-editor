@@ -1,6 +1,7 @@
-package com.aimozg.psvg.model
+package com.aimozg.psvg.model.values
 
 import com.aimozg.psvg.*
+import com.aimozg.psvg.model.*
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
@@ -9,20 +10,19 @@ import org.w3c.dom.events.Event
  * Created by aimozg on 25.01.2017.
  * Confidential
  */
-class ValueFloat(
+class FixedFloat(
 		ctx: Context,
 		name:String?,
 		private var value:Double,
 		val def:Double?,
 		val min:Double,
 		val max:Double
-) : Value<Double>(ctx,name) {
+) : ValueFloat(ctx,name) {
 	init {
 		if (def?:min<min || def?:max>max || min>max) error("Illegal bounds for $name: def=$def min=$min max=$max")
 	}
-	private var input:HTMLInputElement? = null
+	private var input: HTMLInputElement? = null
 
-	override val category: Category = Category.VALUEFLOAT
 	override fun updated(other: ModelElement, attr: String) {}
 
 	override fun save(): dynamic {
@@ -37,7 +37,7 @@ class ValueFloat(
 			val s = input.value.trim()
 			val value = if (s == "" && def != null) def else s.toDouble()
 			if (validate(value)) {
-				set(value)
+				set(value,suppressUpdate = true)
 				input.classList -= "-error"
 			} else {
 				input.classList += "-error"
@@ -51,7 +51,7 @@ class ValueFloat(
 			appendAll(HTMLLabelElement {
 				htmlFor = vid
 				textContent = vname
-			},HTMLInputElement("text") {
+			}, HTMLInputElement("text") {
 				input = this
 				placeholder = def?.toString()?:""
 				id = vid
@@ -62,22 +62,23 @@ class ValueFloat(
 		}
 	}
 
-	fun set(value:Number, suppressEvent:Boolean = false) {
+	fun set(value:Number, suppressEvent:Boolean = false, suppressUpdate:Boolean = false) {
 		if (!validate(value)) return
 		this.value = value.toDouble()
-		input?.value = value.toString()
+		if (!suppressUpdate) input?.value = value.toString()
 		if (!suppressEvent) update("val")
 	}
 	fun validate(x:Number):Boolean = x.toDouble().let { it.isFinite() && it>=min && it<=max }
 
 	companion object {
-		val VALUEFLOAT_LOADER = object: PartLoader(
+		private const val TYPE = "const"
+		val FIXEDFLOAT_LOADER = object: PartLoader(
 				Category.VALUEFLOAT,
-				ValueFloat::class.simpleName!!,
-				null,
-				JsTypename.NUMBER,JsTypename.STRING,JsTypename.UNDEFINED,JsTypename.OBJECT) {
-			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): ValueFloat = loadRelaxed(ctx,json,*args) ?: error("Cannot load VALUEFLOAT ${JsTypename.of(json)} ${JSON.stringify(json)}")
-			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): ValueFloat? {
+				FixedFloat::class.simpleName!!,
+				TYPE,
+				JsTypename.NUMBER, JsTypename.STRING, JsTypename.UNDEFINED, JsTypename.OBJECT) {
+			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): FixedFloat = loadRelaxed(ctx,json,*args) ?: error("Cannot load VALUEFLOAT ${JsTypename.of(json)} ${JSON.stringify(json)}")
+			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): FixedFloat? {
 				val name = args[0] as String?
 				val def = args[1] as Number?
 				val min = args[2] as Number
@@ -91,7 +92,7 @@ class ValueFloat(
 					x = parseFloat(json)
 					if (!x.isFinite()) error("Cannot load VALUEFLOAT ${JsTypename.of(json)} ${JSON.stringify(json)}")
 				} else error("Cannot load VALUEFLOAT ${JsTypename.of(json)} ${JSON.stringify(json)}")
-				return ValueFloat(ctx,name,x.toDouble(),def?.toDouble(),min.toDouble(),max.toDouble())
+				return FixedFloat(ctx,name,x.toDouble(),def?.toDouble(),min.toDouble(),max.toDouble())
 			}
 		}
 	}

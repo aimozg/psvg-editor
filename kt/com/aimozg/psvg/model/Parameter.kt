@@ -8,13 +8,13 @@ import com.aimozg.psvg.jsobject2
  */
 class Parameter(
 		ctx: Context,
-		name:String,
-		val def:ValueFloat,
-		val min:ValueFloat,
-		val max:ValueFloat) : ModelElement(ctx,name,
+		name: String,
+		val def: ValueFloat,
+		val min: ValueFloat,
+		val max: ValueFloat) : ModelElement(ctx, name,
 		listOf(def.asValDependency, min.asValDependency, max.asValDependency)
 
-){
+) {
 	override val category: Category = Category.PARAM
 
 	override fun save(): ParameterJson = jsobject2 {
@@ -27,17 +27,19 @@ class Parameter(
 	override fun updated(other: ModelElement, attr: String) {
 		update("meta")
 	}
+
 	companion object {
-		val PARAM_LOADER = object: PartLoader(Category.PARAM,Parameter::class,null,
-				JsTypename.OBJECT){
+		val PARAM_LOADER = object : PartLoader(Category.PARAM, Parameter::class, null,
+				JsTypename.OBJECT) {
 			override fun loadStrict(ctx: Context, json: ParameterJson, vararg args: Any?): ModelElement {
-				return Parameter(ctx,json.name!!,
-						ctx.loadFloat("default",json.def,0.5),
-						ctx.loadFloat("min",json.min,0),
-						ctx.loadFloat("max",json.max,1))
+				return Parameter(ctx, json.name!!,
+						ctx.loadFloat("default", json.def, 0.5),
+						ctx.loadFloat("min", json.min, 0),
+						ctx.loadFloat("max", json.max, 1))
 			}
 		}
 	}
+
 	interface ParameterJson : ModelElementJson {
 		var def: Number?
 		var min: Number?

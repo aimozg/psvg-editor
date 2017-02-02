@@ -4,6 +4,7 @@ import com.aimozg.ktuple.get
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.model.*
+import com.aimozg.psvg.model.values.FixedFloat
 import com.aimozg.psvg.smoothHandles
 
 /**
@@ -82,7 +83,7 @@ class SmoothHandle(ctx: Context,
 	}
 
 	override fun save(): dynamic =
-			if (name == null && size.get() == size.def) TYPE
+			if (name == null && (size as? FixedFloat)?.get() == 0.3 && (rot as? FixedFloat)?.get() == 0.0) TYPE
 			else jsobject {
 				it.type = TYPE
 				it.name = name

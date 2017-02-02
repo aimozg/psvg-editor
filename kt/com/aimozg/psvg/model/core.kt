@@ -6,6 +6,7 @@ import com.aimozg.ktuple.Tuple2
 import com.aimozg.ktuple.tup
 import com.aimozg.psvg.wrap
 import org.w3c.dom.HTMLElement
+import tinycolor.TinyColor
 
 enum class JsTypename {
 	OBJECT,
@@ -28,15 +29,18 @@ enum class DisplayMode {
 }
 
 enum class Category {
-	POINT,
-	NODE,
-	PATH,
 	MODEL,
 	PARAM,
-	VALUEFLOAT,
-	SEGMENT,
+	GROUP,
+
+	POINT,
 	HANDLE,
-	GROUP
+	SEGMENT,
+	PATH,
+	NODE,
+
+	VALUEFLOAT,
+	VALUECOLOR
 }
 typealias PartDependency = Tuple2<String, ModelElement>
 sealed class ItemDeclaration {
@@ -126,3 +130,9 @@ interface ModelElementJson {
 	var name: String?
 }
 
+abstract class ValueFloat(ctx: Context, name: String?, declarations: List<ItemDeclaration> = emptyList()) : Value<Double>(ctx, name, declarations) {
+	override val category: Category = Category.VALUEFLOAT
+}
+abstract class ValueColor(ctx: Context, name: String?, declarations: List<ItemDeclaration> = emptyList()) : Value<TinyColor>(ctx, name, declarations) {
+	override val category: Category = Category.VALUECOLOR
+}
