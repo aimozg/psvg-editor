@@ -7,6 +7,7 @@ import com.aimozg.psvg.d.tfscale
 import com.aimozg.psvg.d.withPlugins
 import com.aimozg.psvg.model.*
 import com.aimozg.psvg.model.point.FixedPoint
+import com.aimozg.psvg.model.values.FixedColor
 import com.aimozg.psvg.model.values.FixedFloat
 import jquery.jq
 import org.w3c.dom.Element
@@ -118,13 +119,15 @@ class Editor(
 			//console.log("${rslt.size} elements updated")
 			for ((obj, _) in rslt) {
 				val id = obj.id
-				if (obj is FixedFloat || obj is FixedPoint) {
+				if (obj is FixedFloat || obj is FixedPoint || obj is FixedColor) {
 					for (m in previews) {
 						val p = m.ctx.parts[id]
 						//console.log(obj.toString(),id,p?.toString())
 						if (p is FixedPoint && obj is FixedPoint) {
 							p.set(obj.x.get(), obj.y.get())
 						} else if (p is FixedFloat && obj is FixedFloat) {
+							p.set(obj.get())
+						} else if (p is FixedColor && obj is FixedColor) {
 							p.set(obj.get())
 						}
 						// if (p) p.update();

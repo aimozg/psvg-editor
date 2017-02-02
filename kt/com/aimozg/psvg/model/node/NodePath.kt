@@ -1,13 +1,12 @@
 package com.aimozg.psvg.model.node
 
 import com.aimozg.ktuple.*
-import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.model.*
 
 class NodePath(ctx: Context,
                name: String?,
                val closed: Boolean,
-               style: dynamic,
+               style: Style,
                val nodes: List<ModelNode>) :
 		AbstractPath(ctx, name, nodes.map { it.asDependency }, style) {
 
@@ -33,7 +32,7 @@ class NodePath(ctx: Context,
 	}
 
 	override fun save() =
-			arrayOf(TYPE, name, closed, style ?: jsobject {}) + nodes.map { it.save() }
+			arrayOf(TYPE, name, closed, style.save()) + nodes.map { it.save() }
 
 	companion object {
 		private const val TYPE = "N"
@@ -43,7 +42,7 @@ class NodePath(ctx: Context,
 				return NodePath(ctx,
 						json.name,
 						json.closed,
-						json.style ?: jsobject {},
+						ctx.loadStyle(json.style) ?: Style(ctx,""),
 						json.nodes.map { ctx.loadNode(it) })
 			}
 

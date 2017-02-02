@@ -118,6 +118,13 @@ class Context {
 			else loadPart(Category.HANDLE, json, atStart) as Handle
 
 	fun loadParam(json: dynamic): Parameter = loadPart(Category.PARAM, json) as Parameter
+	fun loadFloatOrNull(name: String,
+	              json: dynamic,
+	                    def: Number?= null,
+	                    min: Number = Double.NEGATIVE_INFINITY,
+	                    max: Number = Double.POSITIVE_INFINITY): ValueFloat? =
+			if (json == null) null
+			else loadPart(Category.VALUEFLOAT, json, name, def, min, max) as ValueFloat?
 	fun loadFloat(name: String,
 	              json: dynamic,
 	              def: Number? = null,
@@ -125,8 +132,11 @@ class Context {
 	              max: Number = Double.POSITIVE_INFINITY): ValueFloat =
 			loadPart(Category.VALUEFLOAT, json, name, def, min, max) as ValueFloat
 	fun loadColor(name: String,
-	              json: dynamic): ValueColor =
-			loadPart(Category.VALUECOLOR, json, name) as ValueColor
+	              json: dynamic): ValueColor? =
+			if (json == null) null
+			else loadPart(Category.VALUECOLOR, json, name) as ValueColor
+	fun loadStyle(json: dynamic): Style? =
+			loadPart(Category.STYLE, json) as Style
 
 	fun loadModel(json: dynamic): Model {
 		val model = Model(this,

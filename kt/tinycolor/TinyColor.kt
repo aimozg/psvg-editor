@@ -2,57 +2,72 @@
 
 package tinycolor
 
+/**
+ * Create a tinycolor instance of the color named.
+ *
+ * @param color - the color as a String to create an instance for.
+ */
+@JsModule("tinycolor2")
+external fun tinycolor2(color: String): TinyColor
+
+/**
+ * Create a tinycolor instance with the given RGB values.
+ *
+ * @param color - the rgb values to apply to the new instance.
+ */
+@JsModule("tinycolor2")
+external fun tinycolor2(color: ColorFormats.ColorFormat): TinyColor
+
+/**
+ * Create a tinycolor instance with the given RGB values.
+ *
+ * @param color - the rgb values to apply to the new instance.
+ */
+@JsModule("tinycolor2")
+external fun tinycolor2(color: ColorFormats.RGB): TinyColor
+
+/**
+ * Create a tinycolor instance with the given RGBA values.
+ *
+ * @param color - the rgba values to apply to the new instance.
+ */
+@JsModule("tinycolor2")
+external fun tinycolor2(color: ColorFormats.RGBA): TinyColor
+
+/**
+ * Create a tinycolor instance with the given HSL values.
+ *
+ * @param color - the hsl values to apply to the new instance.
+ */
+@JsModule("tinycolor2")
+external fun tinycolor2(color: ColorFormats.HSL): TinyColor
+
+/**
+ * Create a tinycolor instance with the given HSLA values.
+ *
+ * @param color - the hsla values to apply to the new instance.
+ */
+@JsModule("tinycolor2")
+external fun tinycolor2(color: ColorFormats.HSLA): TinyColor
+
+/**
+ * Create a tinycolor instance with the given HSV values.
+ *
+ * @param color - the hsv values to apply to the new instance.
+ */
+@JsModule("tinycolor2")
+external fun tinycolor2(color: ColorFormats.HSV): TinyColor
+
+/**
+ * Create a tinycolor instance with the given HSVA values.
+ *
+ * @param color - the hsva values to apply to the new instance.
+ */
+@JsModule("tinycolor2")
+external fun tinycolor2(color: ColorFormats.HSVA): TinyColor
+
 @JsModule("tinycolor2")
 external object TinyColor2 {
-	/**
-	 * Create a tinycolor instance of the color named.
-	 *
-	 * @param color - the color as a String to create an instance for.
-	 */
-	operator fun invoke(color: String): TinyColor
-
-	/**
-	 * Create a tinycolor instance with the given RGB values.
-	 *
-	 * @param color - the rgb values to apply to the new instance.
-	 */
-	operator fun invoke(color: ColorFormats.RGB): TinyColor
-
-	/**
-	 * Create a tinycolor instance with the given RGBA values.
-	 *
-	 * @param color - the rgba values to apply to the new instance.
-	 */
-	operator fun invoke(color: ColorFormats.RGBA): TinyColor
-
-	/**
-	 * Create a tinycolor instance with the given HSL values.
-	 *
-	 * @param color - the hsl values to apply to the new instance.
-	 */
-	operator fun invoke(color: ColorFormats.HSL): TinyColor
-
-	/**
-	 * Create a tinycolor instance with the given HSLA values.
-	 *
-	 * @param color - the hsla values to apply to the new instance.
-	 */
-	operator fun invoke(color: ColorFormats.HSLA): TinyColor
-
-	/**
-	 * Create a tinycolor instance with the given HSV values.
-	 *
-	 * @param color - the hsv values to apply to the new instance.
-	 */
-	operator fun invoke(color: ColorFormats.HSV): TinyColor
-
-	/**
-	 * Create a tinycolor instance with the given HSVA values.
-	 *
-	 * @param color - the hsva values to apply to the new instance.
-	 */
-	operator fun invoke(color: ColorFormats.HSVA): TinyColor
-
 	/**
 	 * Create a tinycolor instance based off the relative values.
 	 * Works with any color formats
@@ -337,7 +352,8 @@ external interface TinyColor {
 }
 
 external sealed class ColorFormats {
-	interface RGB {
+	interface ColorFormat {}
+	interface RGB : ColorFormat{
 		val r: Double
 		val g: Double
 		val b: Double
@@ -345,7 +361,7 @@ external sealed class ColorFormats {
 	interface RGBA : RGB {
 		val a: Double
 	}
-	interface HSL {
+	interface HSL : ColorFormat{
 		val h: Double
 		val s: Double
 		val l: Double
@@ -353,7 +369,7 @@ external sealed class ColorFormats {
 	interface HSLA : HSL {
 		val a: Double
 	}
-	interface HSV {
+	interface HSV : ColorFormat{
 		val h: Double
 		val s: Double
 		val v: Double

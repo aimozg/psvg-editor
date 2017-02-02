@@ -60,7 +60,7 @@
         "name"  : "noseline",
         "style" : {
           "stroke"      : "hsl(26, 49%, 16%)",
-          "stroke-width": 0.5
+          "strokeWidth": 0.5
         },
         "stream": [
           "MC",
@@ -108,7 +108,7 @@
         "name"  : "mouth",
         "style" : {
           "stroke"      : "hsl(26, 49%, 16%)",
-          "stroke-width": 0.5
+          "strokeWidth": 0.5
         },
         "stream": [
           "MC",

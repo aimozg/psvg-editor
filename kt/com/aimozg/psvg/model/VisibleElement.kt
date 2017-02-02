@@ -11,11 +11,12 @@ abstract class VisibleElement(ctx: Context,
                               items: List<ItemDeclaration?>) :
 		ModelElement(ctx, name, items) {
 	val visibleOwner: VisibleElement? = climb<ModelElement> { owner }.firstInstanceOf()
-	private var displayGraphic: SVGGraphicsElement? = null
+	protected var displayMode = false
+		private set
 	val graphic: SVGGraphicsElement by lazy {
-		displayGraphic?.apply {
+		if (displayMode) display()?.apply {
 			redraw("*", this)
-		} ?: SVGGElement {
+		}?: SVGGElement {  } else SVGGElement {
 			draw(this)
 			classList.add("elem",category.name.toLowerCase())
 			setAttribute("data-partid", this@VisibleElement.id.toString())
@@ -28,7 +29,10 @@ abstract class VisibleElement(ctx: Context,
 		redraw(attr,graphic)
 	}
 
-	fun export() = display()?.apply { displayGraphic = this }
+	fun export(): SVGGraphicsElement? {
+		displayMode = true
+		return graphic
+	}
 	protected open fun display():SVGGraphicsElement? = null
 	override fun updated(other: ModelElement, attr: String) {}
 	protected open fun draw(g: SVGGraphicsElement) {

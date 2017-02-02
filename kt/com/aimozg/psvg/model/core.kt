@@ -30,7 +30,6 @@ enum class DisplayMode {
 
 enum class Category {
 	MODEL,
-	PARAM,
 	GROUP,
 
 	POINT,
@@ -39,8 +38,10 @@ enum class Category {
 	PATH,
 	NODE,
 
+	PARAM,
 	VALUEFLOAT,
-	VALUECOLOR
+	VALUECOLOR,
+	STYLE
 }
 typealias PartDependency = Tuple2<String, ModelElement>
 sealed class ItemDeclaration {

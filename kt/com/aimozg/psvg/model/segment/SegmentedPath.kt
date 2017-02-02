@@ -2,7 +2,6 @@ package com.aimozg.psvg.model.segment
 
 import com.aimozg.ktuple.*
 import com.aimozg.psvg.TXY
-import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.jsobject2
 import com.aimozg.psvg.model.*
 import com.aimozg.psvg.sliceFrom
@@ -14,7 +13,7 @@ import com.aimozg.psvg.sliceFrom
 class SegmentedPath(
 		ctx: Context,
 		name: String?,
-		style: dynamic,
+		style: Style,
 		val segments: List<Segment>) :
 		AbstractPath(ctx, name, segments.map { it.asDependency }, style) {
 	companion object {
@@ -22,7 +21,7 @@ class SegmentedPath(
 		val PATH_SEGMENTED_LOADER = object : PartLoader(Category.PATH, SegmentedPath::class.simpleName!!, TYPE) {
 			override fun loadStrict(ctx: Context, json: SegmentedPathJson, vararg args: Any?) = SegmentedPath(ctx,
 					json.name,
-					json.style ?: jsobject { },
+					ctx.loadStyle(json.style) ?: Style(ctx,""),
 					json.segments?.map { ctx.loadSegment(it) } ?:
 							Segment.loadFromStream(ctx, json.stream!!.asSequence()))
 		}
@@ -44,7 +43,7 @@ class SegmentedPath(
 	override fun save(): SegmentedPathJson = jsobject2 {
 		it.type = TYPE
 		it.name = name
-		it.style = style
+		it.style = style.save()
 		val segdata: List<Any?> = segments.map { it.save() }
 		if (segdata.all { it is Array<*> } && segdata.isNotEmpty()) {
 			@Suppress("UNCHECKED_CAST")
