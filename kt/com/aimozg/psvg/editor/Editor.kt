@@ -114,16 +114,16 @@ class Editor(
 			Unit
 		}
 		editPane.ctx.onUpdate = { rslt ->
-			console.log("${rslt.size} elements updated")
+			//console.log("${rslt.size} elements updated")
 			for ((obj, _) in rslt) {
 				val id = obj.id
 				if (obj is ValueFloat || obj is FixedPoint) {
 					for (m in previews) {
 						val p = m.ctx.parts[id]
-						//console.log(obj,id,p);
-						/*if (p is FixedPoint && obj is FixedPoint) {
+						//console.log(obj.toString(),id,p?.toString())
+						if (p is FixedPoint && obj is FixedPoint) {
 							p.set(obj.x.get(), obj.y.get())
-						} else*/ if (p is ValueFloat && obj is ValueFloat) {
+						} else if (p is ValueFloat && obj is ValueFloat) {
 							p.set(obj.get())
 						}
 						// if (p) p.update();
