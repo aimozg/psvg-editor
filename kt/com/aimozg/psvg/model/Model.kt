@@ -5,13 +5,11 @@ import org.w3c.dom.svg.SVGGraphicsElement
 
 class Model(ctx: Context,
             name: String?,
-            val items: List<ModelElement>,
-            val parameters: List<Parameter>) :
+            val items: List<ModelElement>) :
 		VisibleElement(ctx, name, items.map { it.asDependency (null)}) {
 	override val category: Category = Category.MODEL
 	override fun save(): dynamic = jsobject {
 		it.name = name
-		it.params = parameters.map { it.save() }.toTypedArray()
 		it.items = jsobject { o->
 			for (part in items) {
 				val name = part.name ?: "#${part.id}"

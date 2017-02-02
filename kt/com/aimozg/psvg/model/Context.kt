@@ -92,8 +92,8 @@ class Context {
 	fun loadModel(json: dynamic): Model {
 		val model = Model(this,
 				json.name ?: "unnamed",
-				(json.items as Object?)?.entries()?.map { loadAnyPart(it[0] as String,it[1]) } ?: emptyList(),
-				(json.params as Array<dynamic>?)?.map { loadParam(it) } ?: emptyList())
+				(json.items as Object?)?.entries()?.map { loadAnyPart(it[0] as String,it[1]) } ?: emptyList()
+		)
 		for (function in postloadQueue) function()
 		postloadQueue.clear()
 		return model

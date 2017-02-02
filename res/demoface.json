@@ -1,9 +1,7 @@
 {
-  "name"  : "demo_face",
-  "params": [
-    { "name": "noseSz" }
-  ],
-  "items" : {
+  "name" : "demo_face",
+  "items": {
+    "noseSz"     : ["param", { "name": "noseSz" }],
     "_vtop"      : ["point", 0, -80],
     "_vbottom"   : ["point", 0, 50],
     "_hright"    : ["point", 50, 0],
@@ -85,9 +83,9 @@
     ],
     "nosefill"   : [
       "path", {
-        "type"    : "S",
-        "name"    : "nosefill",
-        "style"   : {
+        "type"  : "S",
+        "name"  : "nosefill",
+        "style" : {
           "fill": "hsla(26, 49%, 32%, 0.5)"
         },
         "stream": [
@@ -106,9 +104,9 @@
     ],
     "mouth"      : [
       "path", {
-        "type"    : "S",
-        "name"    : "mouth",
-        "style"   : {
+        "type"  : "S",
+        "name"  : "mouth",
+        "style" : {
           "stroke"      : "hsl(26, 49%, 16%)",
           "stroke-width": 0.5
         },
@@ -205,26 +203,26 @@
             }
           ], [
             "path", {
-              "type":"S",
-              "name":"eyer_lasht",
-              "style":{
-                "stroke":"#000"
+              "type"  : "S",
+              "name"  : "eyer_lasht",
+              "style" : {
+                "stroke": "#000"
               },
-              "stream":[
+              "stream": [
                 "MCZ",
-                [-14,7],
+                [-14, 7],
                 null,
                 "Smooth",
-                [-10,0],
+                [-10, 0],
                 "Smooth",
                 null,
-                [20,-5],
+                [20, -5],
                 null,
                 null,
-                [13,-2],
+                [13, -2],
                 null,
                 "Smooth",
-                [-9,2],
+                [-9, 2],
                 "Smooth",
                 null
               ]

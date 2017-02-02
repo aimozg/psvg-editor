@@ -53,7 +53,7 @@ class Editor(
 				}
 			}
 		})
-		val model = Model(Context(),"unnaned", emptyList(), emptyList())
+		val model = Model(Context(),"unnaned", emptyList())
 		editPane = ModelPane(model, DisplayMode.EDIT, canvasDiv,
 				SVGPathElement("M -5 0 0 -5 5 0 0 5 z") {
 					id = "svgpt_diamond_sm"
