@@ -54,6 +54,7 @@ abstract class Segment(ctx: Context,
 						val tc = type[1]
 						val closed = type.endsWith("Z")
 						while (i.hasNext()) rslt.add(loadOneFromStream(ctx, i, tc, closed))
+						if (closed && tc == 'L') rslt.add(ZSegment(ctx,null))
 					}
 					else -> error("Unknown segment $type")
 				}

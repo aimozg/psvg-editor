@@ -30,29 +30,29 @@
         "stream": [
           "MCZ",
           ["htopr", 35, -70],
-          ["Smooth"],
-          ["Smooth"],
+          "Smooth",
+          "Smooth",
           ["tempr", 50, -22],
-          ["Smooth"],
-          ["Smooth"],
+          "Smooth",
+          "Smooth",
           ["jawbr", 45, 0],
-          ["Smooth"],
-          ["Smooth"],
+          "Smooth",
+          "Smooth",
           ["chinr", 10, 44],
-          ["Smooth"],
-          ["Smooth"],
+          "Smooth",
+          "Smooth",
           { "name": "chinl", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@chinr", "scale": 2 },
-          ["Smooth"],
-          ["Smooth"],
+          "Smooth",
+          "Smooth",
           { "name": "jawbl", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@jawbr", "scale": 2 },
-          ["Smooth"],
-          ["Smooth"],
+          "Smooth",
+          "Smooth",
           { "name": "templ", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@tempr", "scale": 2 },
-          ["Smooth"],
-          ["Smooth"],
+          "Smooth",
+          "Smooth",
           { "name": "htopl", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@htopr", "scale": 2 },
-          ["Smooth"],
-          ["Smooth"]
+          "Smooth",
+          "Smooth"
         ]
       }
     ],
@@ -116,9 +116,9 @@
           "MC",
           [-9, 28],
           ["Flow", 0.1, 0.2],
-          ["Smooth"],
+          "Smooth",
           [0, 26],
-          ["Smooth"],
+          "Smooth",
           ["Flow", 0.1, 0.2],
           [9, 28]
         ]
@@ -142,17 +142,17 @@
             "stream": [
               "MCZ",
               "@eyer_left",
-              ["Smooth"],
-              ["Smooth"],
+              "Smooth",
+              "Smooth",
               "@eyer_top",
-              ["Smooth"],
-              ["Smooth"],
+              "Smooth",
+              "Smooth",
               "@eyer_right",
-              ["Smooth"],
-              ["Smooth"],
+              "Smooth",
+              "Smooth",
               "@eyer_bottom",
-              ["Smooth"],
-              ["Smooth"]
+              "Smooth",
+              "Smooth"
             ]
           }
           ], [
@@ -167,15 +167,15 @@
                 null,
                 [-14, 3],
                 ["Flow", 0.3, 0.2],
-                ["Smooth"],
+                "Smooth",
                 [-3, -13],
-                ["Smooth"],
+                "Smooth",
                 ["Flow", 0.1, 0.2],
                 [14, -3],
                 null,
-                ["Smooth"],
+                "Smooth",
                 [-9, 1],
-                ["Smooth"],
+                "Smooth",
                 null
               ]
             }
@@ -187,7 +187,7 @@
               "stream": [
                 "MCZ",
                 [3, 13],
-                ["Smooth"],
+                "Smooth",
                 ["Flow", 0.2, 0.3],
                 "@eyer_left",
                 ["Flow", 0.2, -0.2],
@@ -200,7 +200,33 @@
                 null,
                 [14, -3],
                 ["Flow", 0.3, 0.2],
-                ["Smooth"]
+                "Smooth"
+              ]
+            }
+          ], [
+            "path", {
+              "type":"S",
+              "name":"eyer_lasht",
+              "style":{
+                "stroke":"#000"
+              },
+              "stream":[
+                "MCZ",
+                [-14,7],
+                null,
+                "Smooth",
+                [-10,0],
+                "Smooth",
+                null,
+                [20,-5],
+                null,
+                null,
+                [13,-2],
+                null,
+                "Smooth",
+                [-9,2],
+                "Smooth",
+                null
               ]
             }
           ]
@@ -221,20 +247,20 @@
             "stream": [
               "MCZ",
               [-8, 7],
-              ["Smooth"],
+              "Smooth",
               null,
               ["eyel_cornero", -12, -1],
               null,
-              ["Smooth"],
+              "Smooth",
               [3, 0],
-              ["Smooth"],
-              ["Smooth"],
+              "Smooth",
+              "Smooth",
               ["eyel_corneri", 14, 7],
               ["Flow", 0.2, 0.3],
-              ["Smooth"],
+              "Smooth",
               [3, 13],
               ["Flow", 0.4, 0.2],
-              ["Smooth"]
+              "Smooth"
             ]
           }
           ]

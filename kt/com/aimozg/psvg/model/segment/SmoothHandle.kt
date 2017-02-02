@@ -14,37 +14,41 @@ class SmoothHandle(ctx: Context,
                    name: String?,
                    atStart: Boolean,
                    val size: ValueFloat,
-                   val rot: ValueFloat):
-	Handle(ctx, name, atStart, listOf(
-			size.asValDependency,
-			rot.asValDependency,
-			ItemDeclaration.Deferred {
-				it as SmoothHandle
-				if (atStart) it.segment?.prevInPath?.asStartDependency
-				else it.segment?.nextInPath?.asStopDependency
-			}
-	)){
+                   val rot: ValueFloat) :
+		Handle(ctx, name, atStart, listOf(
+				size.asValDependency,
+				rot.asValDependency,
+				ItemDeclaration.Deferred {
+					it as SmoothHandle
+					if (atStart) it.segment?.prevInPath?.asStartDependency
+					else it.segment?.nextInPath?.asStopDependency
+				}
+		)) {
 	companion object {
 		private const val TYPE = "Smooth"
-		val HANDLE_SMOOTH_LOADER = object: PartLoader(Category.HANDLE,SmoothHandle::class,TYPE,
-				JsTypename.OBJECT) {
+		val HANDLE_SMOOTH_LOADER = object : PartLoader(Category.HANDLE, SmoothHandle::class, TYPE,
+				JsTypename.OBJECT, JsTypename.STRING) {
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) =
 					SmoothHandle(ctx,
 							json.name,
 							args[0] as Boolean,
 							ctx.loadFloat("size", json.size, 0.3),
 							ctx.loadFloat("rot", json.rot, 0)
-			)
+					)
 
 			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): SmoothHandle? {
+				if (json === TYPE) return SmoothHandle(ctx,null,
+						args[0] as Boolean,
+						ctx.loadFloat("size",null,0.3),
+						ctx.loadFloat("rot",null,0))
 				if (json is Array<*>) {
-					val array:Array<*> = json
+					val array: Array<*> = json
 					if (array[0] != TYPE) return null
 					val atStart = args[0] as Boolean
 					val name: String?
 					val size: Any?
 					val rot: Any?
-					when(array.size) {
+					when (array.size) {
 						1 -> {
 							name = null
 							size = null
@@ -67,19 +71,24 @@ class SmoothHandle(ctx: Context,
 						}
 						else -> return null
 					}
-					return SmoothHandle(ctx,name,atStart,ctx.loadFloat("size",size,0.3),ctx.loadFloat("rot",rot,0))
+					return SmoothHandle(ctx, name,
+							atStart,
+							ctx.loadFloat("size", size, 0.3),
+							ctx.loadFloat("rot", rot, 0))
 				}
 				return null
 			}
 		}
 	}
 
-	override fun save(): dynamic  = jsobject{
-		it.type = TYPE
-		it.name = name
-		it.size = size.save()
-		it.rot = rot.save()
-	}
+	override fun save(): dynamic =
+			if (name == null && size.get() == size.def) TYPE
+			else jsobject {
+				it.type = TYPE
+				it.name = name
+				it.size = size.save()
+				it.rot = rot.save()
+			}
 
 	override fun calculate(segment: CubicTo, start: TXY, stop: TXY): TXY {
 		val b: TXY

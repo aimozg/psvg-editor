@@ -50,7 +50,7 @@ class SegmentedPath(
 			@Suppress("UNCHECKED_CAST")
 			segdata as List<Array<Any?>>
 			val first = segments[0]
-			var stream: Array<Any?>? = null
+			var stream: List<Any?>? = null
 			if (first is MoveTo && segdata.size > 1) {
 				val closed = segments.last() is ZSegment
 				val last = segments.size - if (closed) 1 else 0
@@ -59,9 +59,9 @@ class SegmentedPath(
 				else if (sublist.all { it is LineTo }) "L"
 				else null
 				if (t != null) stream = (listOf("M$t" + (if (closed) "Z" else ""),first.pt.save()) +
-						segdata.subList(1, last).flatMap { it.sliceFrom(1).asList() }).toTypedArray()
+						segdata.subList(1, last).flatMap { it.sliceFrom(1).asList() })
 			}
-			it.stream = stream ?: segdata.flatMap { (it as Array<*>).asIterable() }.toTypedArray()
+			it.stream = (stream ?: segdata.flatMap { it.asIterable() }).toTypedArray()
 		} else {
 			it.segments = segdata.toTypedArray()
 		}
