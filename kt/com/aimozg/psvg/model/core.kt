@@ -3,9 +3,8 @@
 package com.aimozg.psvg.model
 
 import com.aimozg.ktuple.Tuple2
-import com.aimozg.ktuple.i0
-import com.aimozg.ktuple.i1
 import com.aimozg.ktuple.tup
+import com.aimozg.psvg.wrap
 import org.w3c.dom.HTMLElement
 
 enum class JsTypename {
@@ -57,7 +56,8 @@ abstract class ModelElement(
 		protected set
 	private val _children = ArrayList<ModelElement>()
 	val children: List<ModelElement> get() = _children
-	protected val dependants = ArrayList<PartDependency>()
+	private val _dependants = ArrayList<PartDependency>()
+	val dependants: List<PartDependency> get() = _dependants
 	abstract val category: Category
 
 	init {
@@ -66,6 +66,8 @@ abstract class ModelElement(
 			depend(icd)
 		}
 	}
+
+	override fun toString(): String = (name?.wrap("\"") ?: "#$id") + " (" + classname + ")"
 
 	private fun depend(icd: ItemDeclaration?) {
 		if (icd == null) return
@@ -78,7 +80,7 @@ abstract class ModelElement(
 				}
 				val dep = icd.dependency
 				if (dep != null) {
-					item.dependants.add(dep tup this)
+					item._dependants.add(dep tup this)
 				}
 			}
 			is ItemDeclaration.Deferred -> {
@@ -88,15 +90,21 @@ abstract class ModelElement(
 			}
 		}
 	}
-
+	companion object {
+		private var indent = 0
+	}
 	open fun update(attr: String = "*") {
-		for (dep in dependants) {
-			if (attr == "*" || dep.i0 == "*" || dep.i0 == attr) dep.i1.updated(this, attr)
-			ctx.updated(this, attr)
-		}
+		/*for (dep in _dependants) {
+			if (attr == "*" || dep.i0 == "*" || dep.i0 == attr) {
+				//console.log(js("Array")(indent).join(" "),"->",dep.i1.toString(),dep.i0)
+				//dep.i1.updated(this, attr)
+			}
+		}*/
+		//indent--
+		ctx.updated(this, attr)
 	}
 
-	protected abstract fun updated(other: ModelElement, attr: String)
+	internal abstract fun updated(other: ModelElement, attr: String)
 
 	val classname = this::class.simpleName?:"ModelElement<?>"
 

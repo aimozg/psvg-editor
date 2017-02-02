@@ -15,7 +15,7 @@ class CubicTo(ctx: Context,
 				cp1?.asHandleDependency,
 				cp2?.asHandleDependency,
 				pt?.asPosDependency?:ItemDeclaration.Deferred{
-					(it as Segment).segsOfPath?.firstOrNull()?.asStartDependency
+					(it as Segment).segsOfPath?.firstOrNull()?.run { asStartDependency ?: asStopDependency}
 				})) {
 	override fun save(): Tuple =
 			if (name == null) Tuple4(TYPE, cp1?.save(), cp2?.save(), pt?.save())
@@ -79,7 +79,10 @@ class CubicTo(ctx: Context,
 
 	override fun updated(other: ModelElement, attr: String) {
 		super.updated(other, attr)
-		if (attr == "*" || attr == "pos") update("pos")
+		if (attr == "*" || attr == "pos") {
+			if (other == pt) update("pos")
+			else update("handle")
+		}
 		if (attr == "*" || attr == "handle") update("handle")
 	}
 }

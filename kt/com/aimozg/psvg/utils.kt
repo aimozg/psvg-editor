@@ -31,3 +31,17 @@ fun <T : Any> T.climb(step: T.() -> T?) = generateSequence({ this }, step)
 inline fun <TYPE, reified SUBTYPE : TYPE> Sequence<TYPE>.firstInstanceOf() = firstOrNull { it is SUBTYPE } as SUBTYPE?
 
 fun<T> Array<T>.sliceFrom(index:Int) = sliceArray(index..size-1)
+
+fun<T:Any> MutableIterable<T>.removeFirstOrNull():T? {
+	val i = iterator()
+	if (!i.hasNext()) return null
+	val ii = i.next()
+	i.remove()
+	return ii
+}
+fun<T:Any> MutableIterable<T>.removeFirst():T {
+	val i = iterator()
+	val ii = i.next()
+	i.remove()
+	return ii
+}

@@ -113,27 +113,24 @@ class Editor(
 			})
 			Unit
 		}
-		editPane.ctx.onUpdate = { obj, _ ->
-			//console.log(obj);
-			val id = obj.id
-			if (obj is ValueFloat || obj is FixedPoint) {
-				for (m in previews) {
-					val p = m.ctx.parts[id]
-					//console.log(obj,id,p);
-					if (p is FixedPoint && obj is FixedPoint) {
-						p.set(obj.x.get(), obj.y.get())
-					} else if (p is ValueFloat && obj is ValueFloat) {
-						p.set(obj.get())
+		editPane.ctx.onUpdate = { rslt ->
+			console.log("${rslt.size} elements updated")
+			for ((obj, _) in rslt) {
+				val id = obj.id
+				if (obj is ValueFloat || obj is FixedPoint) {
+					for (m in previews) {
+						val p = m.ctx.parts[id]
+						//console.log(obj,id,p);
+						/*if (p is FixedPoint && obj is FixedPoint) {
+							p.set(obj.x.get(), obj.y.get())
+						} else*/ if (p is ValueFloat && obj is ValueFloat) {
+							p.set(obj.get())
+						}
+						// if (p) p.update();
 					}
-					// if (p) p.update();
 				}
+				tree?.rename_node(obj.treeNodeId(), obj.treeNodeText())
 			}
-			if (obj is AbstractPath) {
-				for (m in previews) {
-
-				}
-			}
-			tree?.rename_node(obj.treeNodeId(), obj.treeNodeText())
 		}
 		editPane.eModel.addEventListener("click", { e: Event ->
 			var element = e.target as Element?
