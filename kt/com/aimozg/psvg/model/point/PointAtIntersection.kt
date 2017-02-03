@@ -21,9 +21,9 @@ class PointAtIntersection(ctx: Context,
 		Point(ctx, name, listOf(a1.asPosDependency, a2.asPosDependency, b1.asPosDependency, b2.asPosDependency)) {
 	private var l1: SVGLineElement? = null
 	private var l2: SVGLineElement? = null
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
-		update("pos")
+		update(Attribute.POS)
 	}
 
 	override fun calculate(): TXY = v22intersect(
@@ -36,7 +36,7 @@ class PointAtIntersection(ctx: Context,
 		l2 = null
 	}
 
-	override fun redraw(attr: String, g: SVGGraphicsElement) {
+	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
 		super.redraw(attr,g)
 		l1?.remove()
 		l2?.remove()

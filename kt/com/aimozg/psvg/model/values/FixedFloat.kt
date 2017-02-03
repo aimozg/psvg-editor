@@ -23,7 +23,7 @@ class FixedFloat(
 	}
 	private var input: HTMLInputElement? = null
 
-	override fun updated(other: ModelElement, attr: String) {}
+	override fun updated(other: ModelElement, attr: Attribute) {}
 
 	override fun save(): dynamic {
 		return get()
@@ -66,7 +66,7 @@ class FixedFloat(
 		if (!validate(value)) return
 		this.value = value.toDouble()
 		if (!suppressUpdate) input?.value = value.toString()
-		if (!suppressEvent) update("val")
+		if (!suppressEvent) update(Attribute.VAL)
 	}
 	fun validate(x:Number):Boolean = x.toDouble().let { it.isFinite() && it>=min && it<=max }
 

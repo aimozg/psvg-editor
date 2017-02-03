@@ -4,7 +4,6 @@ import com.aimozg.psvg.SVGUseElement
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.model.Category
 import com.aimozg.psvg.model.Context
-import com.aimozg.psvg.model.ItemDeclaration
 import com.aimozg.psvg.model.VisibleElement
 import com.aimozg.psvg.set
 import com.aimozg.psvg.tftranslate
@@ -24,11 +23,11 @@ abstract class Point(ctx: Context,
 		super.draw(g)
 	}
 
-	override fun redraw(attr: String, g: SVGGraphicsElement) {
+	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
 		use?.transform?.set(tftranslate(calculate()))
 	}
 
-	val asPosDependency get() = ItemDeclaration.Instant(this, "pos")
+	val asPosDependency get() = ItemDeclaration.Instant(this, Attribute.POS)
 	interface PointJson : VisualElementJson {
 
 	}

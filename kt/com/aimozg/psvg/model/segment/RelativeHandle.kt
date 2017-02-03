@@ -46,8 +46,8 @@ class RelativeHandle(ctx: Context,
 	override fun calculate(segment: CubicTo, start: TXY, stop: TXY): TXY =
 			(if (atStart) start else stop).plus(dx.get(),dy.get())
 
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
-		update("handle")
+		update(Attribute.HANDLE)
 	}
 }

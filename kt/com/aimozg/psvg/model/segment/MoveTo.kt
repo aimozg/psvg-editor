@@ -31,9 +31,9 @@ class MoveTo(ctx: Context,
 		}
 	}
 
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
-		if (attr == "*" || attr == "pos") update("pos")
+		if (attr eq Attribute.POS) update(Attribute.POS)
 	}
 
 	override fun start(): TXY = prevInList?.stop()?:pt.calculate()

@@ -15,7 +15,7 @@ class SegmentedPath(
 		name: String?,
 		style: Style,
 		val segments: List<Segment>) :
-		AbstractPath(ctx, name, segments.map { it.asDependency }, style) {
+		AbstractPath(ctx, name, segments.map { it.asDependency(Attribute.ALL) }, style) {
 	companion object {
 		const private val TYPE = "S"
 		val PATH_SEGMENTED_LOADER = object : PartLoader(Category.PATH, SegmentedPath::class.simpleName!!, TYPE) {
@@ -35,9 +35,9 @@ class SegmentedPath(
 	fun start() = segments.firstOrNull()?.start() ?: TXY(0, 0)
 	val closed: Boolean = segments.count { it is ZSegment } == 1
 
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
-		update("*")
+		update(Attribute.ALL)
 	}
 
 	override fun save(): SegmentedPathJson = jsobject2 {

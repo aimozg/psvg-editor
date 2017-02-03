@@ -30,10 +30,10 @@ class Flow1Node(ctx: Context,
 	private var ltan2: SVGLineElement? = null
 	private var lnorm2: SVGLineElement? = null
 
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
-		if (other is Point) update("*")
-		if (other is ModelNode && (attr == "pos" || attr == "*") || other is ValueFloat) update("handle")
+		if (other is Point) update(Attribute.ALL)
+		if (other is ModelNode && (attr eq Attribute.POS) || other is ValueFloat) update(Attribute.HANDLE)
 	}
 
 	override fun draw(g: SVGGraphicsElement) {
@@ -44,7 +44,7 @@ class Flow1Node(ctx: Context,
 		lnorm2 = null
 	}
 
-	override fun redraw(attr: String, g: SVGGraphicsElement) {
+	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
 		super.redraw(attr, g)
 		val pos = center()
 		ltan1?.remove()

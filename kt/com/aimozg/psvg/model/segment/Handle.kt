@@ -2,7 +2,10 @@ package com.aimozg.psvg.model.segment
 
 import com.aimozg.psvg.SVGLineElement
 import com.aimozg.psvg.TXY
-import com.aimozg.psvg.model.*
+import com.aimozg.psvg.model.Category
+import com.aimozg.psvg.model.Context
+import com.aimozg.psvg.model.ModelElement
+import com.aimozg.psvg.model.VisibleElement
 import com.aimozg.psvg.plusAssign
 import org.w3c.dom.svg.SVGGraphicsElement
 import org.w3c.dom.svg.SVGLineElement
@@ -22,7 +25,7 @@ abstract class Handle(ctx: Context,
 	var segment: CubicTo? = null
 		private set
 
-	val asHandleDependency get() = asDependency("handle")
+	val asHandleDependency get() = asDependency(Attribute.HANDLE)
 	abstract fun calculate(segment: CubicTo, start: TXY, stop: TXY): TXY
 
 	private var line: SVGLineElement? = null
@@ -31,9 +34,9 @@ abstract class Handle(ctx: Context,
 		super.draw(g)
 	}
 	fun redraw() {
-		this.redraw("handle",this.graphic)
+		this.redraw(Attribute.HANDLE,this.graphic)
 	}
-	override fun redraw(attr: String, g: SVGGraphicsElement) {
+	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
 		line?.remove()
 		line = null
 		val segment = segment ?: return

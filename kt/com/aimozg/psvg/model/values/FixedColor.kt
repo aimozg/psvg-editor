@@ -32,7 +32,7 @@ class FixedColor(ctx: Context,
 	}
 	private var value: TinyColor = value.clone()
 	val default:TinyColor? = default?.clone()
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 	}
 
 	override fun save(): dynamic = value.getOriginalInput() // TODO maybe check?
@@ -45,7 +45,7 @@ class FixedColor(ctx: Context,
 		if (!value.isValid()) return
 		this.value = value.clone()
 		if (!suppressUpdate) input?.value = value.toString()
-		if (!suppressEvent) update("val")
+		if (!suppressEvent) update(Attribute.VAL)
 	}
 
 	override fun editorElement(): HTMLElement {

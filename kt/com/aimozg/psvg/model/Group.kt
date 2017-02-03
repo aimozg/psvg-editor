@@ -11,7 +11,7 @@ import org.w3c.dom.svg.SVGGraphicsElement
 class Group(ctx: Context,
             name: String?,
             val origin: Point?,
-            val items: List<ModelElement>) : VisibleElement(ctx, name, items.map { it.asDependency }+listOf(origin?.asPosDependency)) {
+            val items: List<ModelElement>) : VisibleElement(ctx, name, items.map { it.asDependency(null) }+listOf(origin?.asPosDependency)) {
 	override val category: Category get() = Category.GROUP
 
 	companion object {
@@ -22,7 +22,7 @@ class Group(ctx: Context,
 		}
 	}
 
-	override fun update(attr: String) {
+	override fun update(attr: Attribute) {
 		super.update(attr)
 		translate(graphic)
 	}
@@ -32,10 +32,10 @@ class Group(ctx: Context,
 		translate(this)
 	}
 
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		if (other == origin) {
 			translate(graphic)
-			update("*")
+			update(Attribute.ALL)
 		}
 	}
 
@@ -44,7 +44,7 @@ class Group(ctx: Context,
 		if (pos != null) g?.transform?.set(tftranslate(pos.calculate()))
 	}
 
-	override fun redraw(attr: String, g: SVGGraphicsElement) {
+	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
 		translate(g)
 	}
 

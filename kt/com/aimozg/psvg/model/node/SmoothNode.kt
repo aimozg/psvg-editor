@@ -23,10 +23,10 @@ class SmoothNode(ctx: Context,
 						rot.asValDependency,
 						ItemDeclaration.Deferred { (it as ModelNode).prevNode.asPosDependency },
 						ItemDeclaration.Deferred { (it as ModelNode).nextNode.asPosDependency })) {
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
-		if (other is Point) update("*")
-		if (other is ModelNode && (attr == "pos" || attr=="*") || other is ValueFloat) update("handle")
+		if (other is Point) update(Attribute.ALL)
+		if (other is ModelNode && attr eq Attribute.POS || other is ValueFloat) update(Attribute.HANDLE)
 	}
 
 	override fun calcHandles(): Tuple2<TXY, TXY> = smoothHandles(

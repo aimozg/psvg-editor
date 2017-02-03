@@ -8,11 +8,11 @@ class NodePath(ctx: Context,
                val closed: Boolean,
                style: Style,
                val nodes: List<ModelNode>) :
-		AbstractPath(ctx, name, nodes.map { it.asDependency }, style) {
+		AbstractPath(ctx, name, nodes.map { it.asDependency(Attribute.ALL) }, style) {
 
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
-		if (other is ModelNode && (attr == "handle" || attr == "pos" || attr == "*")) update("*")
+		if (other is ModelNode && (attr eq Attribute.HANDLE || attr eq Attribute.POS)) update(Attribute.ALL)
 	}
 
 	override fun toSvgD(): String {

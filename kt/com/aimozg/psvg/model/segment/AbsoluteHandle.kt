@@ -41,8 +41,8 @@ class AbsoluteHandle(ctx: Context,
 
 	override fun calculate(segment: CubicTo, start: TXY, stop: TXY): TXY = pt.calculate()
 
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
-		update("handle")
+		update(Attribute.HANDLE)
 	}
 }

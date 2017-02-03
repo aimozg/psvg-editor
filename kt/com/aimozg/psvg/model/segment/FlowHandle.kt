@@ -76,8 +76,8 @@ class FlowHandle(ctx: Context,
 			if (atStart) norm2fixed(start, stop, alpha.get(), beta.get())
 			else norm2fixed(stop, start, alpha.get(), -beta.get())
 
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
-		update("handle")
+		update(Attribute.HANDLE)
 	}
 }

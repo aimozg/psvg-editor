@@ -16,10 +16,10 @@ class CuspNode(ctx: Context,
                val h1: Point?,
                val h2: Point?) :
 		CommonNode(ctx, name, pos, listOf(h1?.asPosDependency, h2?.asPosDependency)) {
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
-		if (other == pos) update("pos")
-		else update("handle")
+		if (other == pos) update(Attribute.POS)
+		else update(Attribute.HANDLE)
 	}
 
 	override fun calcHandles(): Tuple2<TXY, TXY> {

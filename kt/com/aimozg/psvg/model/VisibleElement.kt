@@ -15,16 +15,16 @@ abstract class VisibleElement(ctx: Context,
 		private set
 	val graphic: SVGGraphicsElement by lazy {
 		if (displayMode) display()?.apply {
-			redraw("*", this)
+			redraw(Attribute.ALL, this)
 		}?: SVGGElement {  } else SVGGElement {
 			draw(this)
 			classList.add("elem",category.name.toLowerCase())
 			setAttribute("data-partid", this@VisibleElement.id.toString())
-			redraw("*", this)
+			redraw(Attribute.ALL, this)
 		}
 	}
 
-	override fun update(attr: String) {
+	override fun update(attr: Attribute) {
 		super.update(attr)
 		redraw(attr,graphic)
 	}
@@ -34,11 +34,11 @@ abstract class VisibleElement(ctx: Context,
 		return graphic
 	}
 	protected open fun display():SVGGraphicsElement? = null
-	override fun updated(other: ModelElement, attr: String) {}
+	override fun updated(other: ModelElement, attr: Attribute) {}
 	protected open fun draw(g: SVGGraphicsElement) {
 		for (child in children) (child as? VisibleElement)?.graphic?.appendTo(g)
 	}
-	protected abstract fun redraw(attr: String, g: SVGGraphicsElement)
+	protected abstract fun redraw(attr: Attribute, g: SVGGraphicsElement)
 	interface VisualElementJson : ModelElementJson {
 	}
 }

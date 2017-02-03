@@ -25,7 +25,7 @@ class Model(ctx: Context,
 		}
 	}
 
-	override fun updated(other: ModelElement, attr: String) {}
+	override fun updated(other: ModelElement, attr: Attribute) {}
 
 	override fun draw(g: SVGGraphicsElement) {
 		g.appendAll(items.map{(it as? VisibleElement)?.graphic})
@@ -41,7 +41,7 @@ class Model(ctx: Context,
 		appendAll(items.map{(it as? VisibleElement)?.export()})
 	}
 
-	override fun redraw(attr: String, g: SVGGraphicsElement) {
+	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
 	}
 
 	fun clone(ctx: Context): Model = ctx.loadModel(save()) // TODO optimize

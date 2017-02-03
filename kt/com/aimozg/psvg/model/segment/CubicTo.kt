@@ -62,7 +62,7 @@ class CubicTo(ctx: Context,
 		super.draw(g)
 	}
 
-	override fun redraw(attr: String, g: SVGGraphicsElement) {
+	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
 		super.redraw(attr, g)
 		cp1?.redraw()
 		cp2?.redraw()
@@ -77,12 +77,12 @@ class CubicTo(ctx: Context,
 
 	override fun stop(): TXY = pt?.calculate()?: segsOfPath?.firstOrNull()?.start()?: TXY(0,0)
 
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
-		if (attr == "*" || attr == "pos") {
-			if (other == pt) update("pos")
-			else update("handle")
+		if (attr eq Attribute.POS) {
+			if (other == pt) update(Attribute.POS)
+			else update(Attribute.HANDLE)
 		}
-		if (attr == "*" || attr == "handle") update("handle")
+		if (attr eq Attribute.HANDLE) update(Attribute.HANDLE)
 	}
 }

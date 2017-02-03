@@ -5,7 +5,6 @@ import com.aimozg.ktuple.component1
 import com.aimozg.ktuple.component2
 import com.aimozg.psvg.*
 import com.aimozg.psvg.model.Context
-import com.aimozg.psvg.model.ItemDeclaration
 import com.aimozg.psvg.model.point.Point
 import org.w3c.dom.svg.SVGGraphicsElement
 import org.w3c.dom.svg.SVGLineElement
@@ -34,7 +33,7 @@ abstract class CommonNode(
 
 	override fun center(): TXY = pos.calculate()
 
-	override fun redraw(attr: String, g: SVGGraphicsElement) {
+	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
 		val u0 = u0
 		val xy = pos.calculate()
 		if (u0!=null){

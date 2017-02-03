@@ -42,8 +42,8 @@ class LineTo(ctx: Context,
 
 	override fun stop(): TXY = pt.calculate()
 
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
-		if (attr == "*" || attr == "pos") update("pos")
+		if (attr eq Attribute.POS) update(Attribute.POS)
 	}
 }

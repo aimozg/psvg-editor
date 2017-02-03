@@ -108,8 +108,8 @@ class SmoothHandle(ctx: Context,
 				if (atStart) 1 else 0]
 	}
 
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
-		update("handle")
+		update(Attribute.HANDLE)
 	}
 }

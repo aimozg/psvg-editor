@@ -34,7 +34,7 @@ class FixedPoint(ctx: Context,
 		if (this.x is FixedFloat && this.y is FixedFloat) {
 			this.x.set(x, true)
 			this.y.set(y, true)
-			update("pos")
+			update(Attribute.POS)
 		}
 	}
 	fun set(xy: TXY) {
@@ -43,10 +43,10 @@ class FixedPoint(ctx: Context,
 
 	override fun calculate(): TXY = TXY(x.get(),y.get())
 
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
 		if (other == x || other == y) {
-			update("pos")
+			update(Attribute.POS)
 		} else {
 			set(x.get(), y.get())
 		}

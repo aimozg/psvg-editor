@@ -18,7 +18,7 @@ class Style(ctx: Context,
 						fill?.asValDependency,
 						strokeWidth?.asValDependency)){
 	override val category: Category = Category.STYLE
-	val asStyleDependency get() = asDependency("style")
+	val asStyleDependency get() = asDependency(Attribute.STYLE)
 	companion object {
 		private const val TYPE = "style"
 		val STYLE_LOADER = object : PartLoader(Category.STYLE,Style::class,TYPE,
@@ -38,8 +38,8 @@ class Style(ctx: Context,
 			}
 		}
 	}
-	override fun updated(other: ModelElement, attr: String) {
-		if (attr == "val" || attr == "*") update("style")
+	override fun updated(other: ModelElement, attr: Attribute) {
+		if (attr eq Attribute.VAL) update(Attribute.STYLE)
 	}
 
 	fun applyTo(style:CSSStyleDeclaration) {

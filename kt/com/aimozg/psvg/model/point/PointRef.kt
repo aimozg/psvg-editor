@@ -20,9 +20,9 @@ class PointRef(
 		ctx.findPoint(ref) ?: throw NullPointerException("Cannot dereference Point.@$ref")
 	}
 
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
-		if (attr == "pos" || attr == "*") update("pos")
+		if (attr eq Attribute.POS) update(Attribute.POS)
 	}
 
 	override fun save(): dynamic {

@@ -1,7 +1,5 @@
 package com.aimozg.psvg.model
 
-import com.aimozg.ktuple.i0
-import com.aimozg.ktuple.i1
 import com.aimozg.psvg.Object
 import com.aimozg.psvg.entries
 import com.aimozg.psvg.model.node.ModelNode
@@ -19,7 +17,7 @@ class Context {
 	private val _parts = hashMapOf<Int, ModelElement>()
 	private var id = 0
 	private val postloadQueue = ArrayList<() -> Any?>()
-	var onUpdate: ((elAttrs: Collection<Pair<ModelElement, String>>) -> Unit)? = null
+	var onUpdate: ((elAttrs: Collection<Pair<ModelElement, ModelElement.Attribute>>) -> Unit)? = null
 	val parts: Map<Int, ModelElement> = _parts
 
 	fun clear() {
@@ -34,19 +32,18 @@ class Context {
 		_parts[modelElement.id] = modelElement
 	}
 
-	private data class Dependency(val from:ModelElement,val to:ModelElement,val attr:String)
 	//private val wave: LinkedHashSet<Pair<ModelElement, String>> = linkedSetOf()
-	private val wave: LinkedHashSet<Dependency> = linkedSetOf()
+	private val wave: LinkedHashSet<ModelElement.Dependency> = linkedSetOf()
 	private var cause: ModelElement? = null
 
-	fun updated(element: ModelElement, attr: String) {
+	fun updated(element: ModelElement, attr: ModelElement.Attribute) {
 		//console.log("updated ${cause.toString()} -> $element.$attr")
 		if (wave.isNotEmpty()) {
-			wave.add(Dependency(cause?:element,element,attr))
+			wave.add(ModelElement.Dependency(cause ?: element, element, attr))
 			return
 		}
-		val rslt = hashSetOf<Pair<ModelElement, String>>()
-		wave.add(Dependency(element,element,attr))
+		val rslt = hashSetOf<Pair<ModelElement, ModelElement.Attribute>>()
+		wave.add(ModelElement.Dependency(element, element, attr))
 		while (wave.isNotEmpty()) {
 			val first = wave.first()
 			val (isrc,i, iattr) = first
@@ -54,13 +51,13 @@ class Context {
 				console.warn("Complex dependency to", i.toString(), iattr,"from",isrc.toString())
 			} else {*/
 				rslt.add(i to iattr)
-				(if (iattr === "*") i.dependants else
+				(if (iattr == ModelElement.Attribute.ALL) i.dependants else
 					i.dependants.filter {
-						it.i0 === iattr || it.i0 === "*"
+						it.attr eq iattr
 					}).forEach {
 					val old = cause
 					cause = i
-					it.i1.updated(isrc, iattr)
+					it.target.updated(isrc, iattr)
 					cause = old
 				}
 			//}

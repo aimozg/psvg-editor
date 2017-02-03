@@ -1,7 +1,5 @@
 package com.aimozg.psvg.model
 
-import com.aimozg.ktuple.Tuple2
-import com.aimozg.ktuple.tup
 import com.aimozg.psvg.wrap
 import org.w3c.dom.HTMLElement
 import tinycolor.TinyColor
@@ -40,26 +38,38 @@ enum class Category {
 	VALUECOLOR,
 	STYLE
 }
-typealias PartDependency = Tuple2<String, ModelElement>
-sealed class ItemDeclaration {
-	class Instant(val modelElement: ModelElement,
-	              val dependency: String? = null) : ItemDeclaration()
-
-	class Deferred(val dep: (ModelElement) -> ItemDeclaration?) : ItemDeclaration()
-}
 
 abstract class ModelElement(
 		val ctx: Context,
 		val name: String?,
 		items: List<ItemDeclaration?>
 ) {
+	data class DependencyDef(val attr:Attribute, val target:ModelElement)
+	data class Dependency(val from:ModelElement,val to:ModelElement,val attr: ModelElement.Attribute)
+
+	enum class Attribute {
+		ALL,
+		VAL,
+		POS,
+		HANDLE,
+		STYLE;
+
+		infix fun eq(other:Attribute) = this == ALL || other == ALL || this == other
+	}
+	sealed class ItemDeclaration {
+		class Instant(val modelElement: ModelElement,
+		              val dependency: Attribute? = null) : ItemDeclaration()
+
+		class Deferred(val dep: (ModelElement) -> ItemDeclaration?) : ItemDeclaration()
+	}
+
 	val id: Int = ctx.nextId()
 	open var owner: ModelElement? = null
 		protected set
 	private val _children = ArrayList<ModelElement>()
 	val children: List<ModelElement> get() = _children
-	private val _dependants = ArrayList<PartDependency>()
-	val dependants: List<PartDependency> get() = _dependants
+	private val _dependants = ArrayList<DependencyDef>()
+	val dependants: List<DependencyDef> get() = _dependants
 	abstract val category: Category
 
 	init {
@@ -82,7 +92,7 @@ abstract class ModelElement(
 				}
 				val dep = icd.dependency
 				if (dep != null) {
-					item._dependants.add(dep tup this)
+					item._dependants.add(DependencyDef(dep,this))
 				}
 			}
 			is ItemDeclaration.Deferred -> {
@@ -92,34 +102,22 @@ abstract class ModelElement(
 			}
 		}
 	}
-	companion object {
-		private var indent = 0
-	}
-	open fun update(attr: String = "*") {
-		/*for (dep in _dependants) {
-			if (attr == "*" || dep.i0 == "*" || dep.i0 == attr) {
-				//console.log(js("Array")(indent).join(" "),"->",dep.i1.toString(),dep.i0)
-				//dep.i1.updated(this, attr)
-			}
-		}*/
-		//indent--
+	open fun update(attr: Attribute = Attribute.ALL) {
 		ctx.updated(this, attr)
 	}
 
-	internal abstract fun updated(other: ModelElement, attr: String)
+	internal abstract fun updated(other: ModelElement, attr: Attribute)
 
 	val classname = this::class.simpleName?:"ModelElement<?>"
 
 	abstract fun save(): dynamic
+	fun asDependency(dependency: Attribute?) = ItemDeclaration.Instant(this,dependency)
 }
-
-val ModelElement.asDependency get() = ItemDeclaration.Instant(this, "*")
-fun ModelElement.asDependency(dependency: String?) = ItemDeclaration.Instant(this,dependency)
 
 abstract class Value<out T>(ctx: Context,
                             name: String?,
                             declarations:List<ItemDeclaration> =emptyList()) : ModelElement(ctx, name, declarations) {
-	val asValDependency get() = ItemDeclaration.Instant(this,"val")
+	val asValDependency get() = ItemDeclaration.Instant(this, Attribute.VAL)
 	abstract fun get(): T
 	abstract fun editorElement(): HTMLElement
 }

@@ -29,9 +29,9 @@ class PointAtProjection(ctx: Context,
 		}
 	}
 
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
-		update("pos")
+		update(Attribute.POS)
 	}
 
 	override fun calculate(): TXY {
@@ -46,7 +46,7 @@ class PointAtProjection(ctx: Context,
 		lpq = null
 	}
 
-	override fun redraw(attr: String, g: SVGGraphicsElement) {
+	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
 		super.redraw(attr, g)
 		val a = a.calculate()
 		val b = b.calculate()

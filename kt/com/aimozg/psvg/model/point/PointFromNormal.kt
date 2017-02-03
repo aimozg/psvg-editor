@@ -15,9 +15,9 @@ class PointFromNormal(ctx: Context,
                       val alpha: ValueFloat,
                       val beta: ValueFloat):
 Point(ctx,name,listOf(pt0.asPosDependency,pt1.asPosDependency,alpha.asValDependency,beta.asValDependency)){
-	override fun updated(other: ModelElement, attr: String) {
+	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
-		update("pos")
+		update(Attribute.POS)
 	}
 
 	override fun calculate() = norm2fixed(pt0.calculate(),pt1.calculate(),alpha.get(),beta.get())

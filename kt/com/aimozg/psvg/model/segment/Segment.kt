@@ -5,7 +5,10 @@ import com.aimozg.ktuple.i0
 import com.aimozg.psvg.SVGPathElement
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.d
-import com.aimozg.psvg.model.*
+import com.aimozg.psvg.model.Category
+import com.aimozg.psvg.model.Context
+import com.aimozg.psvg.model.ModelElement
+import com.aimozg.psvg.model.VisibleElement
 import org.w3c.dom.svg.SVGGraphicsElement
 import org.w3c.dom.svg.SVGPathElement
 import kotlin.dom.appendTo
@@ -63,7 +66,7 @@ abstract class Segment(ctx: Context,
 		}
 	}
 	override final val category: Category get() = Category.SEGMENT
-	val asStopDependency get() = asDependency("pos")
+	val asStopDependency get() = asDependency(Attribute.POS)
 	val asStartDependency get() = prevInList?.asStopDependency
 
 	override var owner: ModelElement?
@@ -119,7 +122,7 @@ abstract class Segment(ctx: Context,
 	open fun start() = prevInList?.stop() ?: TXY(0, 0)
 	abstract fun stop(): TXY// toCmdAndPos(start()).i1
 
-	override fun redraw(attr: String, g: SVGGraphicsElement) {
+	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
 		val m1 = start()
 		p?.d = "M $m1 " + toCmdAndPos(m1).i0
 	}
