@@ -12,8 +12,6 @@ import com.aimozg.psvg.model.values.FixedFloat
 
 @Suppress("unused")
 val ALL_LOADERS: Collection<PartLoader> = listOf(
-		Parameter.PARAM_LOADER,
-
 		Group.GROUP_LOADER,
 		FixedFloat.FIXEDFLOAT_LOADER,
 

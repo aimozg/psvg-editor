@@ -117,7 +117,6 @@ class Context {
 			if (json == null) null
 			else loadPart(Category.HANDLE, json, atStart) as Handle
 
-	fun loadParam(json: dynamic): Parameter = loadPart(Category.PARAM, json) as Parameter
 	fun loadFloatOrNull(name: String,
 	              json: dynamic,
 	                    def: Number?= null,

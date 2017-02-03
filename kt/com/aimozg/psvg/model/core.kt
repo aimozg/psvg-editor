@@ -36,7 +36,6 @@ enum class Category {
 	PATH,
 	NODE,
 
-	PARAM,
 	VALUEFLOAT,
 	VALUECOLOR,
 	STYLE
