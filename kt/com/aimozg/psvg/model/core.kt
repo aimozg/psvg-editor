@@ -1,5 +1,3 @@
-@file:JsModule("svgedit-api")
-
 package com.aimozg.psvg.model
 
 import com.aimozg.ktuple.Tuple2

@@ -89,7 +89,7 @@ class FixedFloat(
 				} else if (json is Number) {
 					x = json
 				} else if (json is String) {
-					x = parseFloat(json)
+					x = (json as String).toDouble()
 					if (!x.isFinite()) error("Cannot load VALUEFLOAT ${JsTypename.of(json)} ${JSON.stringify(json)}")
 				} else error("Cannot load VALUEFLOAT ${JsTypename.of(json)} ${JSON.stringify(json)}")
 				return FixedFloat(ctx,name,x.toDouble(),def?.toDouble(),min.toDouble(),max.toDouble())

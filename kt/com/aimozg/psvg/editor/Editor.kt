@@ -16,6 +16,7 @@ import org.w3c.dom.events.Event
 import org.w3c.dom.events.WheelEvent
 import org.w3c.dom.svg.SVGGraphicsElement
 import kotlin.browser.document
+import kotlin.js.Math
 
 class Editor(
 		private val canvasDiv: HTMLElement,

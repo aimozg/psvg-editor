@@ -20,10 +20,6 @@ inline fun<T> jsobject2(init: (T) -> Unit): T {
 	return (Object().asDynamic() as T).also(init)
 }
 
-external fun parseFloat(s: String): Double
-
-fun String.toInt() = parseInt(this)
-fun String.toDouble() = parseFloat(this)
 fun String.prepend(other:String):String = other+this
 fun String.wrap(prefix:String,suffix:String=prefix):String = prefix+this+suffix
 

@@ -4,7 +4,7 @@ import com.aimozg.ktuple.*
 import org.w3c.dom.DOMPoint
 import org.w3c.dom.svg.SVGSVGElement
 import kotlin.browser.document
-
+import kotlin.js.Math
 /**
  * Created by aimozg on 26.01.2017.
  * Confidential

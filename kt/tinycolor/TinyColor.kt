@@ -102,7 +102,7 @@ external object TinyColor2 {
 	fun mostReadable(color: TinyColor, colorsToCompare: Array<TinyColor>): TinyColor
 
 	/**/
-	fun mix(color1: TinyColor, color2: TinyColor, amount: Double = noImpl): TinyColor
+	fun mix(color1: TinyColor, color2: TinyColor, amount: Double = definedExternally): TinyColor
 
 	/**
 	 * Returns a random color
@@ -249,7 +249,7 @@ external interface TinyColor {
 	 * @param format - The format to be used when displaying the String representation.
 	 *  The accepted values are: "rgb", "prgb", "hex6", "hex3", "hex8", "name", "hsl", "hsv".
 	 */
-	fun toString(format: String = noImpl): String
+	fun toString(format: String = definedExternally): String
 
 	/**
 	 * Lighten the color a given amount. Providing 100 will always return white.
@@ -257,7 +257,7 @@ external interface TinyColor {
 	 * @param amount - The amount to lighten by. The valid range is 0 to 100.
 	 *  Default value: 10.
 	 */
-	fun lighten(amount: Number = noImpl): TinyColor
+	fun lighten(amount: Number = definedExternally): TinyColor
 
 	/**
 	 * Brighten the color a given amount.
@@ -265,7 +265,7 @@ external interface TinyColor {
 	 * @param amount - The amount to brighten by. The valid range is 0 to 100.
 	 *  Default value: 10.
 	 */
-	fun brighten(amount: Number = noImpl): TinyColor
+	fun brighten(amount: Number = definedExternally): TinyColor
 
 	/**
 	 * Darken the color a given amount.
@@ -274,7 +274,7 @@ external interface TinyColor {
 	 * @param amount - The amount to darken by. The valid range is 0 to 100.
 	 *  Default value: 10.
 	 */
-	fun darken(amount: Number = noImpl): TinyColor
+	fun darken(amount: Number = definedExternally): TinyColor
 
 	/**
 	 * Desaturate the color a given amount.
@@ -283,7 +283,7 @@ external interface TinyColor {
 	 * @param amount - The amount to desaturate by. The valid range is 0 to 100.
 	 *  Default value: 10.
 	 */
-	fun desaturate(amount: Number = noImpl): TinyColor
+	fun desaturate(amount: Number = definedExternally): TinyColor
 
 	/**
 	 * Saturate the color a given amount.
@@ -291,7 +291,7 @@ external interface TinyColor {
 	 * @param amount - The amount to saturate by. The valid range is 0  to 100.
 	 *  Default value: 10.
 	 */
-	fun saturate(amount: Number = noImpl): TinyColor
+	fun saturate(amount: Number = definedExternally): TinyColor
 
 	/**
 	 * Completely desaturates a color into greyscale.
@@ -305,7 +305,7 @@ external interface TinyColor {
 	 * @param amount - The amount to spin by. The valid range is -360 to 360.
 	 *  Default value: 0.
 	 */
-	fun spin(amount: Number = noImpl): TinyColor
+	fun spin(amount: Number = definedExternally): TinyColor
 
 	/**
 	 * Gets an analogous color scheme based off of the current color.
@@ -315,7 +315,7 @@ external interface TinyColor {
 	 * @param slices - The amount to slice the input color by.
 	 *  Default value: 30.
 	 */
-	fun analogous(results: Number = noImpl, slices: Number = noImpl): Array<TinyColor>
+	fun analogous(results: Number = definedExternally, slices: Number = definedExternally): Array<TinyColor>
 
 	/**
 	 * Gets a monochromatic color scheme based off of the current color.
@@ -323,7 +323,7 @@ external interface TinyColor {
 	 * @param results - The amount of results to return.
 	 *  Default value: 6.
 	 */
-	fun monochromatic(results: Number = noImpl): Array<TinyColor>
+	fun monochromatic(results: Number = definedExternally): Array<TinyColor>
 
 	/**
 	 * Gets a split complement color scheme based off of the current color.

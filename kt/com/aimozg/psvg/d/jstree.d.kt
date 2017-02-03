@@ -38,23 +38,23 @@ external interface JSTree {
 	fun show_node(obj: String)
 	fun show_node(obj: Element)
 	fun show_node(obj: JQuery)
-	fun select_node(obj: String, supress_event: Boolean = noImpl, prevent_open: Boolean = noImpl)
-	fun select_node(obj: Element, supress_event: Boolean = noImpl, prevent_open: Boolean = noImpl)
-	fun select_node(obj: JQuery, supress_event: Boolean = noImpl, prevent_open: Boolean = noImpl)
+	fun select_node(obj: String, supress_event: Boolean = definedExternally, prevent_open: Boolean = definedExternally)
+	fun select_node(obj: Element, supress_event: Boolean = definedExternally, prevent_open: Boolean = definedExternally)
+	fun select_node(obj: JQuery, supress_event: Boolean = definedExternally, prevent_open: Boolean = definedExternally)
 	fun deselect_node(obj: String) // suppress_event
 	fun deselect_node(obj: Element) // suppress_event
 	fun deselect_node(obj: JQuery) // suppress_event
-	fun select_all(suppress_event: Boolean = noImpl)
-	fun deselect_all(suppress_event: Boolean = noImpl)
+	fun select_all(suppress_event: Boolean = definedExternally)
+	fun deselect_all(suppress_event: Boolean = definedExternally)
 	fun refresh_node(obj: String)
 	fun refresh_node(obj: Element)
 	fun refresh_node(obj: JQuery)
-	fun create_node(par: String, node: String, pos: Number = noImpl, callback: Function<Any?> = noImpl): String
-	fun create_node(par: Element, node: String, pos: Number = noImpl, callback: Function<Any?> = noImpl): String
-	fun create_node(par: JQuery, node: String, pos: Number = noImpl, callback: Function<Any?> = noImpl): String
-	fun create_node(par: String, node: JSTreeNodeInit, pos: Number = noImpl, callback: Function<Any?> = noImpl): String
-	fun create_node(par: Element, node: JSTreeNodeInit, pos: Number = noImpl, callback: Function<Any?> = noImpl): String
-	fun create_node(par: JQuery, node: JSTreeNodeInit, pos: Number = noImpl, callback: Function<Any?> = noImpl): String
+	fun create_node(par: String, node: String, pos: Number = definedExternally, callback: Function<Any?> = definedExternally): String
+	fun create_node(par: Element, node: String, pos: Number = definedExternally, callback: Function<Any?> = definedExternally): String
+	fun create_node(par: JQuery, node: String, pos: Number = definedExternally, callback: Function<Any?> = definedExternally): String
+	fun create_node(par: String, node: JSTreeNodeInit, pos: Number = definedExternally, callback: Function<Any?> = definedExternally): String
+	fun create_node(par: Element, node: JSTreeNodeInit, pos: Number = definedExternally, callback: Function<Any?> = definedExternally): String
+	fun create_node(par: JQuery, node: JSTreeNodeInit, pos: Number = definedExternally, callback: Function<Any?> = definedExternally): String
 	fun rename_node(obj: String, name: String): Boolean
 	fun rename_node(obj: Element, name: String): Boolean
 	fun rename_node(obj: JQuery, name: String): Boolean
@@ -67,9 +67,9 @@ external interface JSTree {
 	fun delete_node(obj: Array<String>, name: String): Boolean
 	fun delete_node(obj: Array<Element>, name: String): Boolean
 	fun delete_node(obj: Array<JQuery>, name: String): Boolean
-	fun move_node(obj: String, par: String, pos: String = noImpl, callback: Function<Any?> = noImpl)
-	fun move_node(obj: Element, par: Element, pos: String = noImpl, callback: Function<Any?> = noImpl)
-	fun move_node(obj: JQuery, par: JQuery, pos: String = noImpl, callback: Function<Any?> = noImpl)
+	fun move_node(obj: String, par: String, pos: String = definedExternally, callback: Function<Any?> = definedExternally)
+	fun move_node(obj: Element, par: Element, pos: String = definedExternally, callback: Function<Any?> = definedExternally)
+	fun move_node(obj: JQuery, par: JQuery, pos: String = definedExternally, callback: Function<Any?> = definedExternally)
 }
 
 external interface JSTreeNode {
