@@ -1,15 +1,11 @@
 package com.aimozg.psvg.editor
 
 import com.aimozg.psvg.*
-import com.aimozg.psvg.d.JSTree
-import com.aimozg.psvg.d.JSTreeNodeEvent
-import com.aimozg.psvg.d.tfscale
-import com.aimozg.psvg.d.withPlugins
+import com.aimozg.psvg.d.*
 import com.aimozg.psvg.model.*
 import com.aimozg.psvg.model.point.FixedPoint
 import com.aimozg.psvg.model.values.FixedColor
 import com.aimozg.psvg.model.values.FixedFloat
-import jquery.jq
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event

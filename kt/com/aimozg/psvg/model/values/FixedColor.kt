@@ -25,7 +25,7 @@ class FixedColor(ctx: Context,
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) = FixedColor(ctx, args[0] as String?,tinycolor2(json.value as ColorFormats.ColorFormat))
 
 			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): FixedColor? {
-				if (json is String) return FixedColor(ctx,args[0] as String?,tinycolor2(json as String))
+				if (json is String) return FixedColor(ctx,args[0] as String?,tinycolor2(""+json))
 				return null
 			}
 		}
