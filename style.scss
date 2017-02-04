@@ -118,6 +118,10 @@ body {
 	}
 
 	.point {
+		stroke: transparent;
+		fill: transparent;
+	}
+	.-selected .point, .point.-selected {
 		stroke-width: 2;
 		stroke: transparent;
 		> use {
