@@ -46,21 +46,17 @@ class Context {
 		wave.add(ModelElement.Dependency(element, element, attr))
 		while (wave.isNotEmpty()) {
 			val first = wave.first()
-			val (isrc,i, iattr) = first
-			/*if ((i to iattr) in rslt) {
-				console.warn("Complex dependency to", i.toString(), iattr,"from",isrc.toString())
-			} else {*/
-				rslt.add(i to iattr)
-				(if (iattr == ModelElement.Attribute.ALL) i.dependants else
-					i.dependants.filter {
-						it.attr eq iattr
-					}).forEach {
-					val old = cause
-					cause = i
-					it.target.updated(isrc, iattr)
-					cause = old
-				}
-			//}
+			val (isrc, i, iattr) = first
+			rslt.add(i to iattr)
+			(if (iattr == ModelElement.Attribute.ALL) i.dependants else
+				i.dependants.filter {
+					it.attr eq iattr
+				}).forEach {
+				val old = cause
+				cause = isrc
+				it.target.updated(i, iattr)
+				cause = old
+			}
 			wave.remove(first)
 		}
 		onUpdate?.invoke(rslt)
@@ -115,22 +111,25 @@ class Context {
 			else loadPart(Category.HANDLE, json, atStart) as Handle
 
 	fun loadFloatOrNull(name: String,
-	              json: dynamic,
-	                    def: Number?= null,
+	                    json: dynamic,
+	                    def: Number? = null,
 	                    min: Number = Double.NEGATIVE_INFINITY,
 	                    max: Number = Double.POSITIVE_INFINITY): ValueFloat? =
 			if (json == null) null
 			else loadPart(Category.VALUEFLOAT, json, name, def, min, max) as ValueFloat?
+
 	fun loadFloat(name: String,
 	              json: dynamic,
 	              def: Number? = null,
 	              min: Number = Double.NEGATIVE_INFINITY,
 	              max: Number = Double.POSITIVE_INFINITY): ValueFloat =
 			loadPart(Category.VALUEFLOAT, json, name, def, min, max) as ValueFloat
+
 	fun loadColor(name: String,
 	              json: dynamic): ValueColor? =
 			if (json == null) null
 			else loadPart(Category.VALUECOLOR, json, name) as ValueColor
+
 	fun loadStyle(json: dynamic): Style? =
 			loadPart(Category.STYLE, json) as Style
 

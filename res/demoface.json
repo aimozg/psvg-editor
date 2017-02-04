@@ -58,7 +58,7 @@
         "type"  : "S",
         "name"  : "noseline",
         "style" : {
-          "stroke"      : "hsl(26, 49%, 16%)",
+          "stroke"     : "hsl(26, 49%, 16%)",
           "strokeWidth": 0.5
         },
         "stream": [
@@ -106,7 +106,7 @@
         "type"  : "S",
         "name"  : "mouth",
         "style" : {
-          "stroke"      : "hsl(26, 49%, 16%)",
+          "stroke"     : "hsl(26, 49%, 16%)",
           "strokeWidth": 0.5
         },
         "stream": [
@@ -131,27 +131,56 @@
           ["point", ["eyer_bottom", 3, 12]],
           ["point", ["eyer_left", -13, 3]],
           ["point", ["eyer_right", 13, -3]],
+          ["point", ["eyer_lidtc", -9, 1]],
+          ["point", ["eyeri_origin", -1, 0]],
           [
             "path", {
             "type"  : "S",
             "name"  : "eyer_white",
             "style" : { "fill": "#fff" },
             "stream": [
-              "MCZ",
-              "@eyer_left",
-              "Smooth",
-              "Smooth",
-              "@eyer_top",
-              "Smooth",
-              "Smooth",
-              "@eyer_right",
-              "Smooth",
-              "Smooth",
-              "@eyer_bottom",
-              "Smooth",
-              "Smooth"
+              "MCZ", "@eyer_left",
+              "Smooth", "Smooth", "@eyer_top",
+              "Smooth", "Smooth", "@eyer_right",
+              "Smooth", "Smooth", "@eyer_bottom",
+              "Smooth", "Smooth"
             ]
           }
+          ], [
+            "group", {
+              "type"  : "group",
+              "name"  : "eyeri",
+              "origin": "@eyeri_origin",
+              "items" : [
+                [
+                  "path", {
+                  "type"  : "S",
+                  "name"  : "eyer_idark",
+                  "style" : { "fill": "hsl(200,48%,15%)" },
+                  "stream": [
+                    "MCZ", [0, -7],
+                    "Smooth", "Smooth", [6, 0],
+                    "Smooth", "Smooth", [0, 7],
+                    "Smooth", "Smooth", [-6, 0],
+                    "Smooth", "Smooth"
+                  ]
+                }
+                ], [
+                  "path", {
+                    "type"  : "S",
+                    "name"  : "eyer_pupil",
+                    "style" : { "fill": "hsl(180,24%,35%)" },
+                    "stream": [
+                      "MCZ", [0, -3],
+                      "Smooth", "Smooth", [2, 0],
+                      "Smooth", "Smooth", [0, 3],
+                      "Smooth", "Smooth", [-2, 0],
+                      "Smooth", "Smooth"
+                    ]
+                  }
+                ]
+              ]
+            }
           ], [
             "path", {
               "type"  : "S",
@@ -162,16 +191,16 @@
                 [-14, 7],
                 null,
                 null,
-                [-14, 3],
+                { "type": "N", "pt0": [0, 0], "pt1": "@eyer_left", "alpha": 1.1 },
                 ["Flow", 0.3, 0.2],
                 "Smooth",
-                [-3, -13],
+                { "type": "N", "pt0": "@eyer_bottom", "pt1": "@eyer_top", "alpha": 1.05 },
                 "Smooth",
                 ["Flow", 0.1, 0.2],
-                [14, -3],
+                { "type": "N", "pt0": [0, 0], "pt1": "@eyer_right", "alpha": 1.1 },
                 null,
                 "Smooth",
-                [-9, 1],
+                "@eyer_lidtc",
                 "Smooth",
                 null
               ]
@@ -188,9 +217,9 @@
                 ["Flow", 0.2, 0.3],
                 "@eyer_left",
                 ["Flow", 0.2, -0.2],
-                ["Flow", 0.4, -0.2],
+                "Smooth",
                 [0, 11],
-                ["Flow", 0.25, -0.25],
+                "Smooth",
                 ["Flow", 0.25, -0.25],
                 "@eyer_right",
                 null,
@@ -205,14 +234,15 @@
               "type"  : "S",
               "name"  : "eyer_lasht",
               "style" : {
-                "stroke": "#000"
+                "stroke": "#201710",
+                "fill"  : "#201710"
               },
               "stream": [
                 "MCZ",
                 [-14, 7],
                 null,
                 "Smooth",
-                [-10, 0],
+                { "type": "N", "pt0": "@eyer_lidtc", "pt1": "@eyer_bottom", "alpha": -0.1 },
                 "Smooth",
                 null,
                 [20, -5],
@@ -221,7 +251,7 @@
                 [13, -2],
                 null,
                 "Smooth",
-                [-9, 2],
+                { "type": "N", "pt0": "@eyer_lidtc", "pt1": "@eyer_bottom", "alpha": 0.1 },
                 "Smooth",
                 null
               ]

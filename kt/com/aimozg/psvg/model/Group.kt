@@ -11,32 +11,32 @@ import org.w3c.dom.svg.SVGGraphicsElement
 class Group(ctx: Context,
             name: String?,
             val origin: Point?,
-            val items: List<ModelElement>) : VisibleElement(ctx, name, items.map { it.asDependency(null) }+listOf(origin?.asPosDependency)) {
+            val items: List<ModelElement>) : VisibleElement(ctx, name,
+		items.map { it.asDependency(null) } + listOf(origin?.asPosDependency)) {
 	override val category: Category get() = Category.GROUP
 
 	companion object {
 		private const val TYPE = "group"
 		val GROUP_LOADER = object : PartLoader(Category.GROUP, Group::class, TYPE) {
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): Group =
-					Group(ctx, json.name, ctx.loadPoint(json.origin), (json.items as Array<*>).map { ctx.loadAnyPart(null, it) })
+					Group(ctx, json.name,
+							ctx.loadPoint(json.origin),
+							(json.items as Array<*>).map { ctx.loadAnyPart(null, it) })
 		}
 	}
 
 	override fun update(attr: Attribute) {
 		super.update(attr)
-		translate(graphic)
 	}
 
 	override fun display() = SVGGElement {
 		appendAll(items.map { (it as? VisibleElement)?.export() })
-		translate(this)
+		//translate(this)
 	}
 
 	override fun updated(other: ModelElement, attr: Attribute) {
-		if (other == origin) {
-			translate(graphic)
-			update(Attribute.ALL)
-		}
+		super.updated(other, attr)
+		if (other == origin) update(Attribute.ALL)
 	}
 
 	private fun translate(g: SVGGraphicsElement?) {
@@ -52,6 +52,6 @@ class Group(ctx: Context,
 		it.type = TYPE
 		it.name = name
 		it.origin = origin?.save()
-		it.items = items.map { arrayOf(it.category.toString(),it.save()) }.toTypedArray()
+		it.items = items.map { arrayOf(it.category.toString(), it.save()) }.toTypedArray()
 	}
 }
