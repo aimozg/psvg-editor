@@ -1,7 +1,6 @@
 {
   "name" : "demo_face",
   "items": {
-    "noseSz"     : ["param", { "name": "noseSz" }],
     "_vtop"      : ["point", 0, -80],
     "_vbottom"   : ["point", 0, 50],
     "_hright"    : ["point", 50, 0],

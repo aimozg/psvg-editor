@@ -19,8 +19,8 @@ module.exports = {
     },
     devtool: "#source-map",
     resolve: {
-        root: path.normalize(__dirname),
-        extensions: ['', '.webpack.js', '.web.js', '.ts', '.js'],
+        modules: [ path.normalize(__dirname) ],
+        extensions: ['.webpack.js', '.web.js', '.ts', '.js'],
         alias: {
             "jquery": path.join(node_dir,'jquery/dist/jquery.min.js'),
             "tinycolor2": path.join(node_dir,'tinycolor2/dist/tinycolor-min.js'),
@@ -39,24 +39,27 @@ module.exports = {
       })*/
     ],
     module: {
-        loaders: [/*{
+        rules: [/*{
             test: /\.ts$/,
-            loader: 'uglify'
-        }/**/,{
+            use: 'uglify'
+        },/**/{
             test: /\.css$/,
-            loaders: [ 'style', 'css' ]
+            use: [
+                'style-loader',
+                'css-loader'
+            ]
         },{
             test: /\.ts$/, 
-            loader: 'ts-loader' 
+            use: 'ts-loader'
         },{
             test: /jquery\.min\.js|jstree\.js|underscore(-min)?\.js$/,
-            loader: 'script-loader'
+            use: 'script-loader'
         }, {
             test: /\.png|\.gif$/,
-            loader: 'url-loader?limit=100000'
+            use: 'url-loader?limit=100000'
         }, {
             test: /\.jpg$/,
-            loader: 'file-loader'
+            use: 'file-loader'
         }]
     }
 };
