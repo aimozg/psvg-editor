@@ -68,21 +68,22 @@ body {
 .Value {
 	display: flex;
 	margin: 2px 0;
+
+	> label {
+		flex-basis: 20%;
+		margin: 0 4px;
+	}
+
+	> input {
+		flex-basis: 80%;
+		margin: 0 4px;
+		&.-error {
+			color: #ff0000;
+		}
+	}
+
 }
 
-.Value > label {
-	flex-basis: 20%;
-	margin: 0 4px;
-}
-
-.Value > input {
-	flex-basis: 80%;
-	margin: 0 4px;
-}
-
-.Value > input.-error {
-	color: #ff0000;
-}
 
 .jstree {
 	user-select: none;
@@ -110,11 +111,7 @@ body {
 			stroke: #0ff;
 			stroke-opacity: 1;
 		}
-
-	}
-	.-selected .segment,
-	.-selected.segment {
-		> path{
+		&.-selected > path {
 			stroke: #fff;
 			stroke-opacity: 1;
 		}
@@ -147,38 +144,29 @@ body {
 			}
 		}
 	}
-
-	line.handle,
-	line.lineref {
-		stroke-width: 2;
-		stroke-opacity: 1;
-		vector-effect: non-scaling-stroke;
+	* {
+		> line.handle,
+		> line.lineref {
+			stroke-width: 2;
+			stroke-opacity: 1;
+			vector-effect: non-scaling-stroke;
+		}
+		> line.lineref {
+			stroke-dasharray: 2 2;
+		}
+		&.-selected > line.handle {
+			stroke: #088;
+			stroke-opacity: 1;
+		}
+		&.-primary > line.handle,
+		&.-primary > line.lineref {
+			stroke: #0ff;
+			stroke-opacity: 1;
+		}
 	}
 
-	line.lineref {
-		stroke-dasharray: 2 2;
-	}
-
-	.handles-visible .pt_handle,
-	.handles-visible line.handle,
-	.refs-visible line.lineref,
-	.nodes-visible .node > use {
-		stroke: #444;
-	}
-
-	:not(.group).-selected line.handle,
-	.-selected use {
-		stroke: #088;
-		stroke-opacity: 1;
-	}
-
-	.node.-selected.-primary > line.handle,
-	.node.-selected.-primary > line.lineref,
 	.node.-selected.-primary > use,
-	.handle.-selected.-primary line,
-	.point.-selected.-primary > line.handle,
-	.point.-selected.-primary > line.lineref
-	{
+	.handle.-selected.-primary line {
 		stroke: #0ff;
 		stroke-opacity: 1;
 	}
