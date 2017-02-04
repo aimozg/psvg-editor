@@ -1,0 +1,192 @@
+body {
+	margin: 0;
+	overflow: hidden;
+	min-height: 100vh;
+}
+
+.frow {
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: row;
+}
+
+.frows {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+}
+
+.fcol {
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: column;
+}
+
+.fcols {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+}
+
+.ffix {
+	flex-grow: 0;
+	flex-shrink: 0;
+}
+
+.fgrow {
+	flex-grow: 1;
+	flex-shrink: 0;
+}
+
+.fstretch {
+	flex-grow: 1;
+	flex-shrink: 1;
+}
+
+#main {
+	height: 100vh;
+}
+
+.canvas {
+	overflow: scroll;
+	border: 1px solid red;
+	/*width:100%;*/
+	height: 100%;
+	background: #033;
+	box-sizing: border-box;
+	svg {
+		display: block;
+		margin: 0 auto;
+		min-height: 100%;
+	}
+}
+
+#treeview, #objview {
+	overflow-y: auto;
+}
+
+.Value {
+	display: flex;
+	margin: 2px 0;
+}
+
+.Value > label {
+	flex-basis: 20%;
+	margin: 0 4px;
+}
+
+.Value > input {
+	flex-basis: 80%;
+	margin: 0 4px;
+}
+
+.Value > input.-error {
+	color: #ff0000;
+}
+
+.jstree {
+	user-select: none;
+}
+
+.viewport {
+	fill: #000;
+}
+
+.modelpane-edit {
+	.segment, .path {
+		> path {
+			stroke-width: 4;
+			stroke-opacity: 0.5;
+			pointer-events: stroke;
+			fill: none;
+			vector-effect: non-scaling-stroke;
+			stroke: #808080;
+			&:hover {
+				stroke: #ffff00;
+				stroke-opacity: 1;
+			}
+		}
+		&.-selected.-primary > path {
+			stroke: #0ff;
+			stroke-opacity: 1;
+		}
+
+	}
+	.-selected .segment,
+	.-selected.segment {
+		> path{
+			stroke: #fff;
+			stroke-opacity: 1;
+		}
+	}
+
+	.point {
+		stroke-width: 2;
+		stroke: transparent;
+		> use {
+			fill: #fff;
+			&[href="#svg_FixedPoint"] {
+				fill: #ff0000;
+				stroke-width: 2;
+				stroke: #fff;
+				:hover {
+					fill: #ffff00;
+				}
+			}
+		}
+		&.-selected {
+			> use[href="#svg_FixedPoint"] {
+				stroke: #088;
+			}
+		}
+		&.-selected.-primary {
+			stroke: #0ff;
+			stroke-opacity: 1;
+			> use[href="#svg_FixedPoint"] {
+				stroke: #0ff;
+			}
+		}
+	}
+
+	line.handle,
+	line.lineref {
+		stroke-width: 2;
+		stroke-opacity: 1;
+		vector-effect: non-scaling-stroke;
+	}
+
+	line.lineref {
+		stroke-dasharray: 2 2;
+	}
+
+	.handles-visible .pt_handle,
+	.handles-visible line.handle,
+	.refs-visible line.lineref,
+	.nodes-visible .node > use {
+		stroke: #444;
+	}
+
+	:not(.group).-selected line.handle,
+	.-selected use {
+		stroke: #088;
+		stroke-opacity: 1;
+	}
+
+	.node.-selected.-primary > line.handle,
+	.node.-selected.-primary > line.lineref,
+	.node.-selected.-primary > use,
+	.handle.-selected.-primary line,
+	.point.-selected.-primary > line.handle,
+	.point.-selected.-primary > line.lineref
+	{
+		stroke: #0ff;
+		stroke-opacity: 1;
+	}
+
+	#svg_CuspNode, #svg_SmoothNode, #svg_Flow1Node {
+		fill: transparent;
+		stroke-width: 2;
+		stroke: inherit;
+	}
+}
+

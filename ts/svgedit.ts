@@ -1,6 +1,7 @@
 import dom = require('./dom');
 import svg = require("./svg");
 require("jstree-css");
+require("style.scss");
 
 import kotlinjs = require("kotlinjs");
 import Editor = kotlinjs.com.aimozg.psvg.editor.Editor;
