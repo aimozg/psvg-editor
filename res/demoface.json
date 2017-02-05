@@ -188,7 +188,7 @@
               "style" : { "fill": "hsl(26, 49%, 64%)" },
               "stream": [
                 "MCZ",
-                [-14, 7],
+                ["eyer_corneri", -14, 7],
                 null,
                 null,
                 { "type": "N", "pt0": [0, 0], "pt1": "@eyer_left", "alpha": 1.1 },
@@ -239,7 +239,7 @@
               },
               "stream": [
                 "MCZ",
-                [-14, 7],
+                "@eyer_corneri",
                 null,
                 "Smooth",
                 { "type": "N", "pt0": "@eyer_lidtc", "pt1": "@eyer_bottom", "alpha": -0.1 },
