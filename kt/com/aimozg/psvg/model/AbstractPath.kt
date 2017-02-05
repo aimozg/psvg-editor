@@ -26,7 +26,7 @@ abstract class AbstractPath(ctx: Context,
 		styledef.applyTo(style)
 	}
 
-	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
+	override fun doRedraw(attr: Attribute, g: SVGGraphicsElement) {
 		val p = p
 		if (p!=null) {
 			if (attr eq Attribute.POS || attr eq Attribute.HANDLE) p.d = toSvgD()

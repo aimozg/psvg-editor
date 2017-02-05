@@ -29,6 +29,11 @@ abstract class VisibleElement(ctx: Context,
 		redraw(attr,graphic)
 	}
 
+	override fun remove() {
+		graphic.remove()
+		super.remove()
+	}
+
 	fun export(): SVGGraphicsElement? {
 		displayMode = true
 		return graphic
@@ -38,7 +43,11 @@ abstract class VisibleElement(ctx: Context,
 	protected open fun draw(g: SVGGraphicsElement) {
 		for (child in children) (child as? VisibleElement)?.graphic?.appendTo(g)
 	}
-	protected abstract fun redraw(attr: Attribute, g: SVGGraphicsElement)
+	protected fun redraw(attr: Attribute, g: SVGGraphicsElement) {
+		if (removed) return
+		doRedraw(attr,g)
+	}
+	protected abstract fun doRedraw(attr: Attribute, g: SVGGraphicsElement)
 	interface VisualElementJson : ModelElementJson {
 	}
 }

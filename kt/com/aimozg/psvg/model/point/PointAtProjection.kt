@@ -46,8 +46,8 @@ class PointAtProjection(ctx: Context,
 		lpq = null
 	}
 
-	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
-		super.redraw(attr, g)
+	override fun doRedraw(attr: Attribute, g: SVGGraphicsElement) {
+		super.doRedraw(attr, g)
 		val a = a.calculate()
 		val b = b.calculate()
 		val p = p.calculate()

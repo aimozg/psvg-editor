@@ -71,6 +71,7 @@ abstract class ModelElement(
 	private val _dependants = ArrayList<DependencyDef>()
 	val dependants: List<DependencyDef> get() = _dependants
 	abstract val category: Category
+	var removed = false; private set
 
 	init {
 		ctx.register(this)
@@ -105,6 +106,25 @@ abstract class ModelElement(
 	open fun update(attr: Attribute = Attribute.ALL) {
 		ctx.updated(this, attr)
 	}
+	open fun remove() {
+		removed = true
+
+		val children = _children.toTypedArray()
+		children.forEach { it.removed = true }
+		children.forEach { it.remove() }
+		_children.clear()
+
+		dependants.toTypedArray().forEach { it.target.removed(this) }
+		_dependants.clear()
+
+		owner?.removed(this)
+		ctx.removed(this)
+	}
+	open fun removed(dependency: ModelElement) {
+		_children.remove(dependency)
+		update(Attribute.ALL)
+	}
+
 
 	internal abstract fun updated(other: ModelElement, attr: Attribute)
 

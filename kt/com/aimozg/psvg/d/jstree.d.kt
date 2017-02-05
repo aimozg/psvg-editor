@@ -60,12 +60,12 @@ external interface JSTree {
 	fun rename_node(obj: Array<String>, name: String): Boolean
 	fun rename_node(obj: Array<Element>, name: String): Boolean
 	fun rename_node(obj: Array<JQuery>, name: String): Boolean
-	fun delete_node(obj: String, name: String): Boolean
-	fun delete_node(obj: Element, name: String): Boolean
-	fun delete_node(obj: JQuery, name: String): Boolean
-	fun delete_node(obj: Array<String>, name: String): Boolean
-	fun delete_node(obj: Array<Element>, name: String): Boolean
-	fun delete_node(obj: Array<JQuery>, name: String): Boolean
+	fun delete_node(obj: String): Boolean
+	fun delete_node(obj: Element): Boolean
+	fun delete_node(obj: JQuery): Boolean
+	fun delete_node(obj: Array<String>): Boolean
+	fun delete_node(obj: Array<Element>): Boolean
+	fun delete_node(obj: Array<JQuery>): Boolean
 	fun move_node(obj: String, par: String, pos: String = definedExternally, callback: Function<Any?> = definedExternally)
 	fun move_node(obj: Element, par: Element, pos: String = definedExternally, callback: Function<Any?> = definedExternally)
 	fun move_node(obj: JQuery, par: JQuery, pos: String = definedExternally, callback: Function<Any?> = definedExternally)

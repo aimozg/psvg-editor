@@ -62,8 +62,8 @@ class CubicTo(ctx: Context,
 		super.draw(g)
 	}
 
-	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
-		super.redraw(attr, g)
+	override fun doRedraw(attr: Attribute, g: SVGGraphicsElement) {
+		super.doRedraw(attr, g)
 		cp1?.redraw()
 		cp2?.redraw()
 	}

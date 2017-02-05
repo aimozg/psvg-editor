@@ -44,8 +44,8 @@ class Flow1Node(ctx: Context,
 		lnorm2 = null
 	}
 
-	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
-		super.redraw(attr, g)
+	override fun doRedraw(attr: Attribute, g: SVGGraphicsElement) {
+		super.doRedraw(attr, g)
 		val pos = center()
 		ltan1?.remove()
 		lnorm1?.remove()

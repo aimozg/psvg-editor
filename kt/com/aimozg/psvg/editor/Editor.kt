@@ -133,6 +133,13 @@ class Editor(
 				tree?.rename_node(obj.treeNodeId(), obj.treeNodeText())
 			}
 		}
+		editPane.ctx.onRemoved = { rslt ->
+			tree?.delete_node(rslt.map { it.treeNodeId() }.toTypedArray())
+			for (m in previews) {
+				m.model = editPane.model
+				// for (i in rslt) m.ctx.parts[i.id]?.remove()
+			}
+		}
 		editPane.eModel.addEventListener("click", { e: Event ->
 			var element = e.target as Element?
 			while (element != null) {

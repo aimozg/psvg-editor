@@ -36,7 +36,7 @@ abstract class Handle(ctx: Context,
 	fun redraw() {
 		this.redraw(Attribute.HANDLE,this.graphic)
 	}
-	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
+	override fun doRedraw(attr: Attribute, g: SVGGraphicsElement) {
 		line?.remove()
 		line = null
 		val segment = segment ?: return

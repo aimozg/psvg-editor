@@ -29,10 +29,10 @@ inline fun SVGLineElement(x1: Number? = null,
                           y2: Number? = null,
                           init: SVGLineElement.() -> Unit): SVGLineElement =
 		(document.createElementNS(SVGNS, "line") as SVGLineElement).apply {
-			if (x1 != null) this.x1.u = x1.toFloat()
-			if (y1 != null) this.y1.u = y1.toFloat()
-			if (x2 != null) this.x2.u = x2.toFloat()
-			if (y2 != null) this.y2.u = y2.toFloat()
+			if (x1!=null && x1.toDouble().isFinite()) this.x1.u = x1.toFloat()
+			if (y1!=null && y1.toDouble().isFinite()) this.y1.u = y1.toFloat()
+			if (x2!=null && x2.toDouble().isFinite()) this.x2.u = x2.toFloat()
+			if (y2!=null && y2.toDouble().isFinite()) this.y2.u = y2.toFloat()
 			init()
 		}
 

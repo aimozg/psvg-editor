@@ -36,8 +36,8 @@ class PointAtIntersection(ctx: Context,
 		l2 = null
 	}
 
-	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
-		super.redraw(attr,g)
+	override fun doRedraw(attr: Attribute, g: SVGGraphicsElement) {
+		super.doRedraw(attr,g)
 		l1?.remove()
 		l2?.remove()
 		val a1 = a1.calculate()

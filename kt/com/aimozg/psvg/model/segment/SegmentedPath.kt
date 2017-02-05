@@ -14,7 +14,7 @@ class SegmentedPath(
 		ctx: Context,
 		name: String?,
 		style: Style,
-		val segments: List<Segment>) :
+		segments: List<Segment>) :
 		AbstractPath(ctx, name, segments.map { it.asDependency(Attribute.ALL) }, style) {
 	companion object {
 		const private val TYPE = "S"
@@ -34,6 +34,7 @@ class SegmentedPath(
 
 	fun start() = segments.firstOrNull()?.start() ?: TXY(0, 0)
 	val closed: Boolean = segments.count { it is ZSegment } == 1
+	val segments: List<Segment> get() = children.filterIsInstance<Segment>()
 
 	override fun updated(other: ModelElement, attr: Attribute) {
 		super.updated(other, attr)
@@ -44,6 +45,7 @@ class SegmentedPath(
 		it.type = TYPE
 		it.name = name
 		it.style = style.save()
+		val segments = segments
 		val segdata: List<Any?> = segments.map { it.save() }
 		if (segdata.all { it is Array<*> } && segdata.isNotEmpty()) {
 			@Suppress("UNCHECKED_CAST")

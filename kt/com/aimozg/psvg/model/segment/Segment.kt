@@ -122,7 +122,7 @@ abstract class Segment(ctx: Context,
 	open fun start() = prevInList?.stop() ?: TXY(0, 0)
 	abstract fun stop(): TXY// toCmdAndPos(start()).i1
 
-	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
+	override fun doRedraw(attr: Attribute, g: SVGGraphicsElement) {
 		val m1 = start()
 		p?.d = "M $m1 " + toCmdAndPos(m1).i0
 	}

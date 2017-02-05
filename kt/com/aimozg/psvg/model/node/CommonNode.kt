@@ -33,7 +33,7 @@ abstract class CommonNode(
 
 	override fun center(): TXY = pos.calculate()
 
-	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
+	override fun doRedraw(attr: Attribute, g: SVGGraphicsElement) {
 		val u0 = u0
 		val xy = pos.calculate()
 		if (u0!=null){

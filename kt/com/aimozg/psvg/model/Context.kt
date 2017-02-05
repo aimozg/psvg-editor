@@ -7,6 +7,7 @@ import com.aimozg.psvg.model.point.Point
 import com.aimozg.psvg.model.segment.Handle
 import com.aimozg.psvg.model.segment.Segment
 import com.aimozg.psvg.sliceFrom
+import kotlin.browser.window
 import kotlin.collections.set
 
 /**
@@ -18,6 +19,8 @@ class Context {
 	private var id = 0
 	private val postloadQueue = ArrayList<() -> Any?>()
 	var onUpdate: ((elAttrs: Collection<Pair<ModelElement, ModelElement.Attribute>>) -> Unit)? = null
+	var onRemoved: ((els: Collection<ModelElement>) -> Unit)? = null
+	private val removing = mutableSetOf<ModelElement>()
 	val parts: Map<Int, ModelElement> = _parts
 
 	fun clear() {
@@ -168,5 +171,18 @@ class Context {
 
 		fun loadersFor(category: Category): List<PartLoader> = loaders[category]?.all ?: emptyList<PartLoader>()
 		private val loaders = HashMap<Category, LoaderLib>()
+	}
+
+	fun removed(element: ModelElement) {
+		_parts.remove(element.id)
+		if (removing.isEmpty()) {
+			removing.add(element)
+			window.setTimeout({
+				onRemoved?.invoke(removing.toList())
+				removing.clear()
+			})
+		} else {
+			removing.add(element)
+		}
 	}
 }

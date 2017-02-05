@@ -23,7 +23,7 @@ abstract class Point(ctx: Context,
 		super.draw(g)
 	}
 
-	override fun redraw(attr: Attribute, g: SVGGraphicsElement) {
+	override fun doRedraw(attr: Attribute, g: SVGGraphicsElement) {
 		use?.transform?.set(tftranslate(calculate()))
 	}
 
