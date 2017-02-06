@@ -32,14 +32,14 @@
           ["tempr", 50, -22],
           "Smooth",
           "Smooth",
-          ["jawbr", 45, 0],
+          ["jawbr", 40, 20],
           "Smooth",
-          "Smooth",
+          ["Smooth", 0.1, 0],
           ["chinr", 10, 44],
           "Smooth",
           "Smooth",
           { "name": "chinl", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@chinr", "scale": 2 },
-          "Smooth",
+          ["Smooth", 0.1, 0],
           "Smooth",
           { "name": "jawbl", "type": "PROJ", "a": "@_vtop", "b": "@_vbottom", "p": "@jawbr", "scale": 2 },
           "Smooth",
@@ -62,13 +62,7 @@
           "strokeWidth": 0.5
         },
         "stream": [
-          "MC",
-          "@nosetop",
-          null,
-          ["Flow", 0.2, -0.1],
-          "@nosetip",
-          ["Flow", 0.2, 0.1],
-          ["Flow", 0.3, 0.1],
+          "M",
           {
             "name" : "noseleft",
             "type" : "PROJ",
@@ -76,7 +70,12 @@
             "b"    : "@nosetip",
             "p"    : "@noseright",
             "scale": 2
-          }
+          },
+          "C",
+          ["Flow", 0.3, -0.1],
+          ["Flow", 0.2, -0.1],
+          "@nosetip",
+          "@nosevline"
         ]
       }
     ],
@@ -88,16 +87,18 @@
           "fill": "hsla(26, 49%, 32%, 0.5)"
         },
         "stream": [
-          "MCZ",
+          "M",
           ["nosetip", -0, 19],
-          ["Flow", 0.2, 0.1],
-          null,
-          ["nosetop", 0, -3],
+          ["C", "nosevline", ["Flow", 0.2, 0.1], null, ["nosetop", 0, -3]],
+          "C",
           ["Flow", 0.2, 0.1],
           ["Flow", 0.1, 0.1],
           ["noseright", 8, 15],
+          "C",
           ["Flow", 0.3, 0.1],
-          ["Flow", 0.2, 0.1]
+          ["Flow", 0.2, 0.1],
+          null,
+          "Z"
         ]
       }
     ],

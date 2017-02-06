@@ -35,8 +35,8 @@ class FixedFloat(
 		val handler = {e: Event ->
 			val input = e.target as HTMLInputElement
 			val s = input.value.trim()
-			val value = if (s == "" && def != null) def else s.toDouble()
-			if (validate(value)) {
+			val value = if (s == "" && def != null) def else s.toDoubleOrNull()
+			if (value != null && validate(value)) {
 				set(value,suppressUpdate = true)
 				input.classList -= "-error"
 			} else {

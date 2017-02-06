@@ -2,6 +2,7 @@ package com.aimozg.psvg.model.segment
 
 import com.aimozg.ktuple.*
 import com.aimozg.psvg.TXY
+import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.model.*
 import com.aimozg.psvg.model.point.Point
 import org.w3c.dom.svg.SVGGraphicsElement
@@ -17,9 +18,15 @@ class CubicTo(ctx: Context,
 				pt?.asPosDependency?:ItemDeclaration.Deferred{
 					(it as Segment).segsOfPath?.firstOrNull()?.run { asStartDependency ?: asStopDependency}
 				})) {
-	override fun save(): Tuple =
+	override fun save(): dynamic =
 			if (name == null) Tuple4(TYPE, cp1?.save(), cp2?.save(), pt?.save())
-			else Tuple5(TYPE, name, cp1?.save(), cp2?.save(), pt?.save())
+			else jsobject {
+				it.type = TYPE
+				it.name = name
+				it.cp1 = cp1?.save()
+				it.cp2 = cp2?.save()
+				it.pt = pt?.save()
+			}
 
 	companion object {
 		private const val TYPE = "C"
@@ -35,6 +42,10 @@ class CubicTo(ctx: Context,
 			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): CubicTo? {
 				if (json is Array<dynamic> && json[0] == TYPE) {
 					when ((json as Array<*>).size) {
+						2 -> {
+							val a0: Tuple2<String,Array<dynamic>> = json
+							return loadRelaxed(ctx,a0[1],*args)
+						}
 						4 -> {
 							val a1: Tuple4<String, dynamic, dynamic, dynamic> = json
 							return CubicTo(ctx,

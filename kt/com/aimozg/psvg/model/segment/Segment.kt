@@ -21,50 +21,53 @@ abstract class Segment(ctx: Context,
 				ItemDeclaration.Deferred { (it as Segment).prevInList?.asStopDependency }
 		)) {
 	companion object {
-		fun loadOneFromStream(ctx: Context, i:Iterator<Any?>, tc:Char, closed:Boolean):Segment = when(tc) {
+		fun loadOneFromStream(ctx: Context, i: Iterator<Any?>, tc: Char, closed: Boolean): Segment = when (tc) {
 			'L' -> {
-				if (i.hasNext()) LineTo(ctx,null,ctx.loadPoint(i.next())!!)
-				else if (closed) ZSegment(ctx,null)
+				if (i.hasNext()) LineTo(ctx, null, ctx.loadPoint(i.next())!!)
+				else if (closed) ZSegment(ctx, null)
 				else error("Unexpected end of compact stream")
 			}
-			'C' -> CubicTo(ctx,null,
-					ctx.loadHandle(i.next(),true),
-					ctx.loadHandle(i.next(),false),
+			'C' -> CubicTo(ctx, null,
+					ctx.loadHandle(i.next(), true),
+					ctx.loadHandle(i.next(), false),
 					if (i.hasNext()) ctx.loadPoint(i.next())
 					else if (closed) null
 					else error("Unexpected end of compact stream")
 			)
 			else -> error("Unknown segment $tc in compact stream")
 		}
-		fun loadFromStream(ctx:Context, stream:Sequence<Any?>):List<Segment>{
+
+		fun loadFromStream(ctx: Context, stream: Sequence<Any?>): List<Segment> {
 			val i = stream.iterator()
 			val rslt = ArrayList<Segment>()
-			while(i.hasNext()) {
-				val type:String? = i.next() as String?
-				when(type) {
-					"M" -> rslt.add(MoveTo(ctx,null,
+			while (i.hasNext()) {
+				val next = i.next()
+				when (next) {
+					"M" -> rslt.add(MoveTo(ctx, null,
 							ctx.loadPoint(i.next())!!))
-					"L" -> rslt.add(LineTo(ctx,null,
+					"L" -> rslt.add(LineTo(ctx, null,
 							ctx.loadPoint(i.next())!!))
-					"C" -> rslt.add(CubicTo(ctx,null,
-							ctx.loadHandle(i.next(),true),
-							ctx.loadHandle(i.next(),false),
+					"C" -> rslt.add(CubicTo(ctx, null,
+							ctx.loadHandle(i.next(), true),
+							ctx.loadHandle(i.next(), false),
 							ctx.loadPoint(i.next())))
-					"Z" -> rslt.add(ZSegment(ctx,null))
-					"ML","MLZ","MC","MCZ" -> {
-						rslt.add(MoveTo(ctx,null,
+					"Z" -> rslt.add(ZSegment(ctx, null))
+					"ML", "MLZ", "MC", "MCZ" -> {
+						rslt.add(MoveTo(ctx, null,
 								ctx.loadPoint(i.next())!!))
+						val type = next as String
 						val tc = type[1]
 						val closed = type.endsWith("Z")
 						while (i.hasNext()) rslt.add(loadOneFromStream(ctx, i, tc, closed))
-						if (closed && tc == 'L') rslt.add(ZSegment(ctx,null))
+						if (closed && tc == 'L') rslt.add(ZSegment(ctx, null))
 					}
-					else -> error("Unknown segment $type")
+					else -> rslt.add(ctx.loadSegment(next))
 				}
 			}
 			return rslt
 		}
 	}
+
 	override final val category: Category get() = Category.SEGMENT
 	val asStopDependency get() = asDependency(Attribute.POS)
 	val asStartDependency get() = prevInList?.asStopDependency

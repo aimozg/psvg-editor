@@ -55,9 +55,9 @@ class SegmentedPath(
 			if (first is MoveTo && segdata.size > 1) {
 				val closed = segments.last() is ZSegment
 				val last = segments.size - if (closed) 1 else 0
-				val sublist = segments.subList(1, last)
-				val t = if (sublist.any { it is CubicTo }) "C"
-				else if (sublist.all { it is LineTo }) "L"
+				val sublist = segdata.subList(1, last)
+				val t = if (sublist.all { it[0] == "C" && it.size==4}) "C"
+				else if (sublist.all { it[0] == "L" && it.size==3 }) "L"
 				else null
 				if (t != null) stream = (listOf("M$t" + (if (closed) "Z" else ""),first.pt.save()) +
 						segdata.subList(1, last).flatMap { it.sliceFrom(1).asList() })

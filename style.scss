@@ -64,6 +64,9 @@ body {
 #treeview, #objview {
 	overflow-y: auto;
 }
+#objview {
+	flex-shrink: 0;
+}
 
 .Value {
 	display: flex;

@@ -65,7 +65,9 @@ class Context {
 		onUpdate?.invoke(rslt)
 	}
 
-	fun findPoint(name: String) = parts.values.find { it is Point && it.name == name } as Point?
+	fun findPart(name: String, cat: Category) = _parts.values.find { it.name == name && it.category == cat}
+	fun findPart(name: String) = _parts.values.find { it.name == name }
+	fun findPoint(name: String) = findPart(name,Category.POINT) as Point?
 
 	private fun loadPart(cat: Category, json: dynamic, vararg args: Any?): ModelElement {
 		val type = JsTypename.of(json)
