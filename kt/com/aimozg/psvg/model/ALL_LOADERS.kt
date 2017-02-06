@@ -40,6 +40,7 @@ val ALL_LOADERS: Collection<PartLoader> = listOf(
 		PointFromNormal.POINT_FROM_NORMAL_LOADER,
 		PointAtIntersection.POINT_AT_INTERSECTION_LOADER,
 		PointAtProjection.POINT_AT_PROJECTION_LOADER,
+		PointZero.POINT_ZERO_LOADER,
 
 		CuspNode.NODE_CUSP_LOADER,
 		Flow1Node.NODE_FLOW1_LOADER,

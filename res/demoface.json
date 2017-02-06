@@ -130,8 +130,8 @@
         "items" : [
           ["point", ["eyer_top", -3, -12]],
           ["point", ["eyer_right", 13, -3]],
-          ["point", { "type": "N", "name": "eyer_left", "pt0": [0, 0], "pt1": "@eyer_right", "alpha": -1.0 }],
-          ["point", { "type": "N", "name": "eyer_bottom", "pt0": [0, 0], "pt1": "@eyer_top", "alpha": -1.0 }],
+          ["point", { "type": "N", "name": "eyer_left", "pt0": 0, "pt1": "@eyer_right", "alpha": -1.0 }],
+          ["point", { "type": "N", "name": "eyer_bottom", "pt0": 0, "pt1": "@eyer_top", "alpha": -1.0 }],
           ["point", ["eyer_lidtc", -9, 1]],
           ["point", ["eyeri_origin", -1, 0]],
           [
@@ -158,7 +158,7 @@
                   "type"  : "ellipse",
                   "name"  : "eyer_idark",
                   "style" : { "fill": "hsl(200,48%,15%)" },
-                  "center": [0, 0],
+                  "center": 0,
                   "radius": [6, 7]
                 }
                 ], [
@@ -166,7 +166,7 @@
                     "type"  : "ellipse",
                     "name"  : "eyer_pupil",
                     "style" : { "fill": "hsl(180,24%,35%)" },
-                    "center": [0, 0],
+                    "center": 0,
                     "radius": [2, 3]
                   }
                 ]
@@ -182,13 +182,13 @@
                 ["eyer_corneri", -14, 7],
                 null,
                 null,
-                { "type": "N", "pt0": [0, 0], "pt1": "@eyer_left", "alpha": 1.1 },
+                { "type": "N", "pt0": 0, "pt1": "@eyer_left", "alpha": 1.1 },
                 ["Flow", 0.3, 0.2],
                 "Smooth",
                 { "type": "N", "pt0": "@eyer_bottom", "pt1": "@eyer_top", "alpha": 1.05 },
                 "Smooth",
                 ["Flow", 0.1, 0.2],
-                { "type": "N", "pt0": [0, 0], "pt1": "@eyer_right", "alpha": 1.1 },
+                { "type": "N", "pt0": 0, "pt1": "@eyer_right", "alpha": 1.1 },
                 null,
                 "Smooth",
                 "@eyer_lidtc",

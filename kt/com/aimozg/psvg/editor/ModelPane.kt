@@ -55,6 +55,16 @@ class ModelPane(
 				},
 				zoombox
 		)
+		var us:String = ""
+		addEventListener("mouseenter",{
+			ownerDocument?.body?.style?.let {
+				us = it.getPropertyValue("user-select")
+				it.setProperty("user-select","none")
+			}
+		})
+		addEventListener("mouseleave",{
+			ownerDocument?.body?.style?.setProperty("user-select",us)
+		})
 	}
 	private var _zoomfact = 1.0
 	var zoomfact: Double

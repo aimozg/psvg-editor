@@ -64,6 +64,7 @@ body {
 #treeview, #objview {
 	overflow-y: auto;
 }
+
 #objview {
 	flex-shrink: 0;
 }
@@ -87,7 +88,6 @@ body {
 
 }
 
-
 .jstree {
 	user-select: none;
 }
@@ -96,28 +96,34 @@ body {
 	fill: #000;
 }
 
+@mixin linelike($child) {
+	#{$child} {
+		stroke-width: 4;
+		stroke-opacity: 0.5;
+		pointer-events: stroke;
+		fill: none;
+		vector-effect: non-scaling-stroke;
+		stroke: #808080;
+		&:hover {
+			stroke: #ffff00;
+			stroke-opacity: 1;
+		}
+	}
+	&.-selected > #{$child} {
+		stroke: #fff;
+		stroke-opacity: 1;
+	}
+	&.-selected.-primary > #{$child} {
+		stroke: #0ff;
+	}
+}
+
 .modelpane-edit {
-	.segment, .path, .shape {
-		> *:not(.point) {
-			stroke-width: 4;
-			stroke-opacity: 0.5;
-			pointer-events: stroke;
-			fill: none;
-			vector-effect: non-scaling-stroke;
-			stroke: #808080;
-			&:hover {
-				stroke: #ffff00;
-				stroke-opacity: 1;
-			}
-		}
-		&.-selected.-primary > *:not(.point) {
-			stroke: #0ff;
-			stroke-opacity: 1;
-		}
-		&.-selected > *:not(.point) {
-			stroke: #fff;
-			stroke-opacity: 1;
-		}
+	.segment, .path {
+		@include linelike(path)
+	}
+	.shape {
+		@include linelike(":not(.point)")
 	}
 
 	.point {
