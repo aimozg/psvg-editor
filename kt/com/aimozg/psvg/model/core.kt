@@ -33,6 +33,7 @@ enum class Category {
 	SEGMENT,
 	PATH,
 	NODE,
+	SHAPE,
 
 	VALUEFLOAT,
 	VALUECOLOR,

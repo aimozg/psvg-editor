@@ -16,6 +16,7 @@
 		<button type="button" onclick="editor_save()">Save to localStorage</button>
 		<!--<button type="button" onclick="editor_load1()">Load from file</button>-->
 		<button type="button" onclick="editor_load2()">Load from localStorage</button>
+		<button type="button" onclick="editor_load({})">Clear</button>
 		<span style="float:right;">
 			Ctrl+Wheel to zoom. Click to select. <span style="background:#000;color:#f00">FixedPoints</span> are draggable.
 		</span>
@@ -63,19 +64,17 @@
         localStorage.setItem('svgedit_model',JSON.stringify(editor.save()));
         alert('Done!');
     }
+    function editor_load(data){
+        editor.loadJson(data);
+        $("#name").text(editor.model.name);
+    }
     function editor_load2() {
         var data = localStorage.getItem('svgedit_model');
-        if (data) {
-            editor.loadJson(JSON.parse(data));
-            $("#name").text(editor.model.name);
-        } else editor_load3();
+        if (data) editor_load(JSON.parse(data));
+        else editor_load3();
     }
     function editor_load3() {
-        $.getJSON('res/demoface.json',function(json){
-            editor.loadJson(json);
-            //editor.zoom = 4;
-            $("#name").text(editor.model.name);
-        });
+        $.getJSON('res/demoface.json',editor_load);
     }
     function editor_load1() {
         $.when($(function () {

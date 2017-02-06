@@ -22,6 +22,20 @@ inline fun SVGCircleElement(cx0: Number? = null,
 }
 
 inline fun SVGDefsElement(init: SVGDefsElement.() -> Unit): SVGDefsElement = (document.createElementNS(SVGNS, "defs") as SVGDefsElement).apply(init)
+inline fun SVGEllipseElement(center: TXY? = null,
+                             rx: Number? = null,
+                             ry: Number? = rx,
+                             init: SVGEllipseElement.() -> Unit): SVGEllipseElement =
+		(document.createElementNS(SVGNS, "ellipse") as SVGEllipseElement).apply {
+			if (center != null && center.x.isFinite() && center.y.isFinite()) {
+				this.cx.u = center.x.toFloat()
+				this.cy.u = center.y.toFloat()
+			}
+			if (rx != null && rx.toDouble().isFinite()) this.rx.u = rx.toFloat()
+			if (ry != null && ry.toDouble().isFinite()) this.ry.u = ry.toFloat()
+			init()
+		}
+
 inline fun SVGGElement(init: SVGGElement.() -> Unit): SVGGElement = (document.createElementNS(SVGNS, "g") as SVGGElement).apply(init)
 inline fun SVGLineElement(x1: Number? = null,
                           y1: Number? = null,
@@ -29,19 +43,20 @@ inline fun SVGLineElement(x1: Number? = null,
                           y2: Number? = null,
                           init: SVGLineElement.() -> Unit): SVGLineElement =
 		(document.createElementNS(SVGNS, "line") as SVGLineElement).apply {
-			if (x1!=null && x1.toDouble().isFinite()) this.x1.u = x1.toFloat()
-			if (y1!=null && y1.toDouble().isFinite()) this.y1.u = y1.toFloat()
-			if (x2!=null && x2.toDouble().isFinite()) this.x2.u = x2.toFloat()
-			if (y2!=null && y2.toDouble().isFinite()) this.y2.u = y2.toFloat()
+			if (x1 != null && x1.toDouble().isFinite()) this.x1.u = x1.toFloat()
+			if (y1 != null && y1.toDouble().isFinite()) this.y1.u = y1.toFloat()
+			if (x2 != null && x2.toDouble().isFinite()) this.x2.u = x2.toFloat()
+			if (y2 != null && y2.toDouble().isFinite()) this.y2.u = y2.toFloat()
 			init()
 		}
 
 inline fun SVGPathElement(d: String? = null,
                           init: SVGPathElement.() -> Unit): SVGPathElement =
-		(document.createElementNS(SVGNS, "path") as SVGPathElement).apply{
+		(document.createElementNS(SVGNS, "path") as SVGPathElement).apply {
 			if (d != null) this.d = d
 			init()
 		}
+
 inline fun SVGRectElement(x0: Number? = null,
                           y0: Number? = null,
                           width0: Number? = null,
@@ -102,13 +117,14 @@ var SVGAnimatedLength.u: Float
 		baseVal.value = value
 	}
 
-fun<T:SVGElement> T.appendAll(vararg children: SVGElement?):T {
+fun <T : SVGElement> T.appendAll(vararg children: SVGElement?): T {
 	children
 			.filterNotNull()
 			.forEach { appendChild(it) }
 	return this
 }
-fun<T:SVGElement> T.appendAll(children: Iterable<SVGElement?>):T {
+
+fun <T : SVGElement> T.appendAll(children: Iterable<SVGElement?>): T {
 	children
 			.filterNotNull()
 			.forEach { appendChild(it) }

@@ -97,8 +97,8 @@ body {
 }
 
 .modelpane-edit {
-	.segment, .path {
-		> path {
+	.segment, .path, .shape {
+		> *:not(.point) {
 			stroke-width: 4;
 			stroke-opacity: 0.5;
 			pointer-events: stroke;
@@ -110,11 +110,11 @@ body {
 				stroke-opacity: 1;
 			}
 		}
-		&.-selected.-primary > path {
+		&.-selected.-primary > *:not(.point) {
 			stroke: #0ff;
 			stroke-opacity: 1;
 		}
-		&.-selected > path {
+		&.-selected > *:not(.point) {
 			stroke: #fff;
 			stroke-opacity: 1;
 		}

@@ -129,9 +129,9 @@
         "origin": "@eyer_origin",
         "items" : [
           ["point", ["eyer_top", -3, -12]],
-          ["point", ["eyer_bottom", 3, 12]],
-          ["point", ["eyer_left", -13, 3]],
           ["point", ["eyer_right", 13, -3]],
+          ["point", { "type": "N", "name": "eyer_left", "pt0": [0, 0], "pt1": "@eyer_right", "alpha": -1.0 }],
+          ["point", { "type": "N", "name": "eyer_bottom", "pt0": [0, 0], "pt1": "@eyer_top", "alpha": -1.0 }],
           ["point", ["eyer_lidtc", -9, 1]],
           ["point", ["eyeri_origin", -1, 0]],
           [
@@ -154,30 +154,20 @@
               "origin": "@eyeri_origin",
               "items" : [
                 [
-                  "path", {
-                  "type"  : "S",
+                  "shape", {
+                  "type"  : "ellipse",
                   "name"  : "eyer_idark",
                   "style" : { "fill": "hsl(200,48%,15%)" },
-                  "stream": [
-                    "MCZ", [0, -7],
-                    "Smooth", "Smooth", [6, 0],
-                    "Smooth", "Smooth", [0, 7],
-                    "Smooth", "Smooth", [-6, 0],
-                    "Smooth", "Smooth"
-                  ]
+                  "center": [0, 0],
+                  "radius": [6, 7]
                 }
                 ], [
-                  "path", {
-                    "type"  : "S",
+                  "shape", {
+                    "type"  : "ellipse",
                     "name"  : "eyer_pupil",
                     "style" : { "fill": "hsl(180,24%,35%)" },
-                    "stream": [
-                      "MCZ", [0, -3],
-                      "Smooth", "Smooth", [2, 0],
-                      "Smooth", "Smooth", [0, 3],
-                      "Smooth", "Smooth", [-2, 0],
-                      "Smooth", "Smooth"
-                    ]
+                    "center": [0, 0],
+                    "radius": [2, 3]
                   }
                 ]
               ]
