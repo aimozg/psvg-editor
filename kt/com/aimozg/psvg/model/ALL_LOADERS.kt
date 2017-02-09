@@ -25,7 +25,6 @@ val ALL_LOADERS: Collection<PartLoader> = listOf(
 		SegmentedPath.PATH_SEGMENTED_LOADER,
 
 		MoveTo.SEGMENT_M_LOADER,
-		LineTo.SEGMENT_L_LOADER,
 		CubicTo.SEGMENT_C_LOADER,
 		ZSegment.SEGMENT_Z_LOADER,
 		CopySegment.SEGMENT_COPY_LOADER,
