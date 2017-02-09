@@ -6,6 +6,7 @@ import com.aimozg.psvg.model.*
 import com.aimozg.psvg.model.point.FixedPoint
 import com.aimozg.psvg.model.values.FixedColor
 import com.aimozg.psvg.model.values.FixedFloat
+import org.jquery.jq
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event
