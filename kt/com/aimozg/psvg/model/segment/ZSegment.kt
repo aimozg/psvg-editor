@@ -1,9 +1,8 @@
 package com.aimozg.psvg.model.segment
 
 import com.aimozg.ktuple.Tuple
-import com.aimozg.ktuple.Tuple1
 import com.aimozg.ktuple.Tuple2
-import com.aimozg.ktuple.tup
+import com.aimozg.ktuple.get
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.model.Category
 import com.aimozg.psvg.model.Context
@@ -16,7 +15,7 @@ import com.aimozg.psvg.model.PartLoader
  */
 class ZSegment(ctx: Context, name: String?):
 	Segment(ctx, name, emptyList(), false) {
-	override fun save(): Tuple = if (name == null) Tuple1(TYPE) else Tuple2(TYPE, name)
+	override fun save(): Tuple = if (name == null) Tuple[TYPE] else Tuple[TYPE, name]
 	companion object {
 		private const val TYPE = "Z"
 		val SEGMENT_Z_LOADER = object : PartLoader(Category.SEGMENT, ZSegment::class, TYPE,
@@ -35,7 +34,7 @@ class ZSegment(ctx: Context, name: String?):
 		}
 	}
 
-	override fun toCmdAndPos(start: TXY): Tuple2<String, TXY> = "Z" tup start
+	override fun toCmdAndPos(start: TXY): Tuple2<String, TXY> = Tuple["Z", start]
 	override fun stop(): TXY = nextInLoop?.start()?:start()
 
 }

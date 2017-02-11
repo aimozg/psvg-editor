@@ -34,12 +34,12 @@ class LineTo(ctx: Context,
 	}
 
 	override fun save(): Tuple {
-		return if (name == null) TYPE tup pt.save() else Tuple3(TYPE, name, pt.save())
+		return if (name == null) Tuple[TYPE, pt.save()] else Tuple[TYPE, name, pt.save()]
 	}
 
 	override fun toCmdAndPos(start: TXY): Tuple2<String, TXY> {
 		val pos = pt.calculate()
-		return "$TYPE $pos" tup pos
+		return Tuple["$TYPE $pos",pos]
 	}
 
 	override fun stop(): TXY = pt.calculate()

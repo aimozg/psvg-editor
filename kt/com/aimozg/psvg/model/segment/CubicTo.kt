@@ -19,7 +19,7 @@ class CubicTo(ctx: Context,
 					(it as Segment).segsOfPath?.firstOrNull()?.run { asStartDependency ?: asStopDependency}
 				})) {
 	override fun save(): dynamic =
-			if (name == null) Tuple4(TYPE, cp1?.save(), cp2?.save(), pt?.save())
+			if (name == null) Tuple[TYPE, cp1?.save(), cp2?.save(), pt?.save()]
 			else jsobject {
 				it.type = TYPE
 				it.name = name
@@ -84,11 +84,11 @@ class CubicTo(ctx: Context,
 		val cp1 = cp1
 		val cp2 = cp2
 		if (cp1 == null && cp2 == null) {
-			return "L $ptxy" tup ptxy
+			return Tuple["L $ptxy",ptxy]
 		} else {
 			val cp1xy = cp1?.calculate(this, start, ptxy) ?: start
 			val cp2xy = cp2?.calculate(this, start, ptxy) ?: ptxy
-			return "$TYPE $cp1xy $cp2xy $ptxy" tup ptxy
+			return Tuple["$TYPE $cp1xy $cp2xy $ptxy",ptxy]
 		}
 	}
 

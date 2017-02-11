@@ -1,6 +1,8 @@
 package com.aimozg.psvg.model.segment
 
+import com.aimozg.ktuple.Tuple
 import com.aimozg.ktuple.Tuple2
+import com.aimozg.ktuple.get
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.model.*
@@ -40,7 +42,7 @@ class CopySegment(ctx: Context,
 		it.ref = ref
 	}
 
-	override fun toCmdAndPos(start: TXY): Tuple2<String, TXY> = obj?.toCmdAndPos(start)?:Tuple2("",start)
+	override fun toCmdAndPos(start: TXY): Tuple2<String, TXY> = obj?.toCmdAndPos(start)?: Tuple["",start]
 
 	override fun stop(): TXY = obj?.stop()?:start()
 

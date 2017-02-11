@@ -5,6 +5,7 @@ import org.w3c.dom.DOMPoint
 import org.w3c.dom.svg.SVGSVGElement
 import kotlin.browser.document
 import kotlin.js.Math
+
 /**
  * Created by aimozg on 26.01.2017.
  * Confidential
@@ -27,7 +28,7 @@ class TXY(val x: Double, val y: Double) {
 }
 
 operator fun TXY.plus(other: TXY) = TXY(x + other.x, y + other.y)
-fun TXY.plus(dx: Number,dy:Number) = TXY(x + dx.toDouble(), y + dy.toDouble())
+fun TXY.plus(dx: Number, dy: Number) = TXY(x + dx.toDouble(), y + dy.toDouble())
 operator fun TXY.minus(other: TXY) = TXY(x - other.x, y - other.y)
 operator fun TXY.times(other: Number) = TXY(x * other.toDouble(), y * other.toDouble())
 operator fun TXY.div(other: Number) = TXY(x / other.toDouble(), y / other.toDouble())
@@ -54,7 +55,11 @@ operator fun DOMPoint.minus(other: DOMPoint) = svgsvg.createSVGPoint().also {
 	it.y = y - other.y
 }
 
-fun vlinj(vararg kvs: Tuple2<Number, TXY>): TXY = TXY(kvs.map { (k, v) -> k.toDouble() * v.x tup k.toDouble() * v.y }.fold(0.0 tup 0.0) { v1, v2 -> (v1[0] + v2[0]) tup (v1[1] + v2[1]) })
+fun vlinj(vararg kvs: Tuple2<Number, TXY>): TXY =
+		TXY(kvs.map { (k, v) ->
+			Tuple[k.toDouble() * v.x, k.toDouble() * v.y]
+		}.fold(Tuple[0.0,0.0]) { v1, v2 ->
+			Tuple[v1[0] + v2[0], v1[1] + v2[1]] })
 
 fun vnormbisect(ab: TXY, ac: TXY, ablen: Double = ab.vlength, aclen: Double = ac.vlength): TXY {
 	if (ablen == 0.0 || aclen == 0.0) return TXY(1, 0)
@@ -67,7 +72,7 @@ fun smoothHandles(b: TXY, a: TXY, c: TXY, abq: Number = 0.3, acq: Number = 0.3, 
 	val ablen = ab.vlength
 	val aclen = ac.vlength
 	val dir = vnormbisect(ab, ac, ablen, aclen).toUnit().rotate(rot)
-	return Tuple2(a - dir * (ablen * abq.toDouble()), a + dir * (aclen * acq.toDouble()))
+	return Tuple[a - dir * (ablen * abq.toDouble()), a + dir * (aclen * acq.toDouble())]
 }
 
 fun fixed2norm(a: TXY, c: TXY, b: TXY): TXY {
@@ -80,7 +85,7 @@ fun fixed2norm(a: TXY, c: TXY, b: TXY): TXY {
 fun norm2fixed(a: TXY, b: TXY, alpha: Number, beta: Number): TXY {
 	val v1 = b - a
 	val v2 = v1.rot90()
-	return vlinj(1 tup a, alpha tup v1, beta tup v2)
+	return vlinj(Tuple[1,a], Tuple[alpha,v1], Tuple[beta, v2])
 }
 
 /**
@@ -91,7 +96,7 @@ fun ptproj(a: TXY, b: TXY, p: TXY): TXY {
 	val ab1 = ab.toUnit()
 	val ap = p - a
 	val n = ap dot ab1
-	return a + ab1*n
+	return a + ab1 * n
 }
 
 class Vector3(val x: Double, val y: Double, val z: Double) {

@@ -1,5 +1,6 @@
 package com.aimozg.psvg.model.node
 
+import com.aimozg.ktuple.Tuple
 import com.aimozg.ktuple.Tuple2
 import com.aimozg.ktuple.get
 import com.aimozg.psvg.*
@@ -91,16 +92,16 @@ class Flow1Node(ctx: Context,
 		val b2 = h2b?.get()
 		val prev = prevNode.center()
 		val next = nextNode.center()
-		return Tuple2(if (a1 != null && b1 != null) norm2fixed(pos, prev, a1, -b1) else pos,
-				if (a2 != null && b2 != null) norm2fixed(pos, next, a2, b2) else pos)
+		return Tuple[if (a1 != null && b1 != null) norm2fixed(pos, prev, a1, -b1) else pos,
+				if (a2 != null && b2 != null) norm2fixed(pos, next, a2, b2) else pos]
 	}
 
 	override fun save(): dynamic = jsobject2<Flow1NodeJson> {
 		it.type = NODE_FLOW1_TYPE
 		it.name = name
 		it.pos = pos.save()
-		it.h1ab = if (h1a != null && h1b != null) Tuple2(h1a.save(), h1b.save()) else null
-		it.h2ab = if (h2a != null && h2b != null) Tuple2(h2a.save(), h2b.save()) else null
+		it.h1ab = if (h1a != null && h1b != null) Tuple[h1a.save(), h1b.save()] else null
+		it.h2ab = if (h2a != null && h2b != null) Tuple[h2a.save(), h2b.save()] else null
 	}
 
 	companion object {

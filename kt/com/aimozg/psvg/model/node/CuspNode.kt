@@ -1,6 +1,8 @@
 package com.aimozg.psvg.model.node
 
+import com.aimozg.ktuple.Tuple
 import com.aimozg.ktuple.Tuple2
+import com.aimozg.ktuple.get
 import com.aimozg.psvg.TXY
 import com.aimozg.psvg.jsobject2
 import com.aimozg.psvg.model.*
@@ -24,7 +26,7 @@ class CuspNode(ctx: Context,
 
 	override fun calcHandles(): Tuple2<TXY, TXY> {
 		val xy = pos.calculate()
-		return Tuple2(h1?.calculate() ?: xy, h2?.calculate() ?: xy)
+		return Tuple[h1?.calculate() ?: xy, h2?.calculate() ?: xy]
 	}
 
 	override fun save() = jsobject2<CuspNodeJson> {

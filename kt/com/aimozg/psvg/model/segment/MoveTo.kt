@@ -36,13 +36,13 @@ class MoveTo(ctx: Context,
 		if (attr eq Attribute.POS) update(Attribute.POS)
 	}
 
-	override fun start(): TXY = prevInList?.stop()?:pt.calculate()
+	override fun start(): TXY = prevInList?.stop() ?: pt.calculate()
 	override fun stop(): TXY = pt.calculate()
 
-	override fun save() = if (name == null) TYPE tup pt.save() else Tuple3(TYPE, name, pt.save())
+	override fun save() = if (name == null) Tuple[TYPE, pt.save()] else Tuple[TYPE, name, pt.save()]
 
 	override fun toCmdAndPos(start: TXY): Tuple2<String, TXY> {
 		val pos = pt.calculate()
-		return "$TYPE $pos" tup pos
+		return Tuple["$TYPE $pos",pos]
 	}
 }
