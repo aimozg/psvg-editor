@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.aimozg.psvg.d
+package org.jquery
 
 import org.w3c.dom.Element
 

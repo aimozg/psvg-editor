@@ -10,9 +10,9 @@ import com.aimozg.psvg.model.*
  */
 class PointRef(
 		ctx: Context,
-		name:String?,
-		val ref:String
-): Point(ctx,name,listOf(ItemDeclaration.Deferred { (it as PointRef).obj.asPosDependency })) {
+		name: String?,
+		val ref: String
+) : Point(ctx, name, listOf(ItemDeclaration.Deferred { (it as PointRef).obj.asPosDependency })) {
 
 	override fun calculate(): TXY = obj.calculate()
 
@@ -27,24 +27,23 @@ class PointRef(
 
 	override fun save(): dynamic {
 		if (name == null) return "@$ref"
-		return jsobject{
+		return jsobject {
 			it.name = name
 			it.type = "@$ref"
 		}
 	}
+
 	companion object {
 		const val POINT_REF_TYPE = "@"
-		val POINT_REF_LOADER = object: PartLoader(Category.POINT,PointRef::class, POINT_REF_TYPE,
+		val POINT_REF_LOADER = object : PartLoader(Category.POINT, PointRef::class, POINT_REF_TYPE,
 				JsTypename.STRING, JsTypename.OBJECT) {
-			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): ModelElement {
-				return PointRef(ctx,json.name,json.ref)
-			}
+			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) = PointRef(ctx, json.name, json.ref)
 
-			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): ModelElement? {
-				val a:Any? = json
-				if (a is String) return PointRef(ctx,null,a.substring(1))
+			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): PointRef? {
+				val a: Any? = json
+				if (a is String) return PointRef(ctx, null, a.substring(1))
 				val type: Any? = json.type
-				if (type is String && type[0] == '@') return PointRef(ctx,json["type"],type.substring(1))
+				if (type is String && type[0] == '@') return PointRef(ctx, args[0] as? String?, type.substring(1))
 				return null
 			}
 		}

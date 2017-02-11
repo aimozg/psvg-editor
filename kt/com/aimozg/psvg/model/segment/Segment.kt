@@ -23,7 +23,7 @@ abstract class Segment(ctx: Context,
 	companion object {
 		fun loadOneFromStream(ctx: Context, i: Iterator<Any?>, tc: Char, closed: Boolean): Segment = when (tc) {
 			'L' -> {
-				if (i.hasNext()) LineTo(ctx, null, ctx.loadPoint(i.next())!!)
+				if (i.hasNext()) CubicTo(ctx,null,null,null,ctx.loadPoint(i.next()))
 				else if (closed) ZSegment(ctx, null)
 				else error("Unexpected end of compact stream")
 			}
@@ -45,7 +45,7 @@ abstract class Segment(ctx: Context,
 				when (next) {
 					"M" -> rslt.add(MoveTo(ctx, null,
 							ctx.loadPoint(i.next())!!))
-					"L" -> rslt.add(LineTo(ctx, null,
+					"L" -> rslt.add(CubicTo(ctx, null,null,null,
 							ctx.loadPoint(i.next())!!))
 					"C" -> rslt.add(CubicTo(ctx, null,
 							ctx.loadHandle(i.next(), true),

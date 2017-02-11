@@ -22,10 +22,12 @@ class FixedColor(ctx: Context,
 		val FIXEDCOLOR_LOADER = object: PartLoader(Category.VALUECOLOR,FixedColor::class,TYPE,
 				JsTypename.STRING) {
 			@Suppress("UNCHECKED_CAST_TO_NATIVE_INTERFACE")
-			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) = FixedColor(ctx, args[0] as String?,tinycolor2(json.value as ColorFormats.ColorFormat))
+			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?) = FixedColor(ctx,
+					json.name as? String ?: args[0] as? String?,
+					tinycolor2(json.value as ColorFormats.ColorFormat))
 
 			override fun loadRelaxed(ctx: Context, json: dynamic, vararg args: Any?): FixedColor? {
-				if (json is String) return FixedColor(ctx,args[0] as String?,tinycolor2(""+json))
+				if (json is String && (json as String)[0] != '@') return FixedColor(ctx,args[0] as String?,tinycolor2(""+json))
 				return null
 			}
 		}
@@ -35,7 +37,15 @@ class FixedColor(ctx: Context,
 	override fun updated(other: ModelElement, attr: Attribute) {
 	}
 
-	override fun save(): dynamic = value.getOriginalInput() // TODO maybe check?
+	override fun save(): dynamic {
+		val v = value.getOriginalInput()
+		if (v is String && v[0] != '@' && name == null) return v
+		return jsobject {
+			it.type = TYPE
+			it.name = name
+			it.value = v
+		}
+	}
 
 	override fun get() = value
 

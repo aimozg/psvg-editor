@@ -1,6 +1,15 @@
 {
   "name" : "demo_face",
   "items": {
+    "Palette"    : [
+      "group", {
+        "type"  : "group",
+        "name"  : "Palette",
+        "items" : {
+          "skinColor": ["valuecolor", "hsl(26, 49%, 64%)"]
+        }
+      }
+    ],
     "_vtop"      : ["point", 0, -80],
     "_vbottom"   : ["point", 0, 50],
     "_hright"    : ["point", 50, 0],
@@ -22,7 +31,7 @@
         "name"  : "face",
         "style" : {
           "stroke": "hsl(26, 49%, 16%)",
-          "fill"  : "hsl(26, 49%, 64%)"
+          "fill"  : "@skinColor"
         },
         "stream": [
           "MCZ",
@@ -176,7 +185,7 @@
             "path", {
               "type"  : "S",
               "name"  : "eyer_lidt",
-              "style" : { "fill": "hsl(26, 49%, 64%)" },
+              "style" : { "fill": "@skinColor" },
               "stream": [
                 "MCZ",
                 ["eyer_corneri", -14, 7],
@@ -200,7 +209,7 @@
             "path", {
               "type"  : "S",
               "name"  : "eyer_lidb",
-              "style" : { "fill": "hsl(26, 49%, 64%)" },
+              "style" : { "fill": "@skinColor" },
               "stream": [
                 "MCZ",
                 [3, 13],

@@ -5,6 +5,8 @@ import com.aimozg.psvg.TXY
 import com.aimozg.psvg.model.*
 import com.aimozg.psvg.model.point.Point
 
+@Suppress("DEPRECATION")
+@Deprecated("Use CubicTo")
 class LineTo(ctx: Context,
              name: String?,
              val pt: Point) : Segment(ctx, name, listOf(pt.asPosDependency)) {

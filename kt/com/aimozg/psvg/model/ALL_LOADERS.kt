@@ -6,6 +6,7 @@ import com.aimozg.psvg.model.node.NodePath
 import com.aimozg.psvg.model.node.SmoothNode
 import com.aimozg.psvg.model.point.*
 import com.aimozg.psvg.model.segment.*
+import com.aimozg.psvg.model.values.ColorRef
 import com.aimozg.psvg.model.values.FixedColor
 import com.aimozg.psvg.model.values.FixedFloat
 
@@ -13,9 +14,11 @@ import com.aimozg.psvg.model.values.FixedFloat
 @Suppress("unused")
 val ALL_LOADERS: Collection<PartLoader> = listOf(
 		Group.GROUP_LOADER,
+
 		FixedFloat.FIXEDFLOAT_LOADER,
 
 		FixedColor.FIXEDCOLOR_LOADER,
+		ColorRef.COLOR_REF_LOADER,
 
 		Style.STYLE_LOADER,
 
@@ -25,7 +28,6 @@ val ALL_LOADERS: Collection<PartLoader> = listOf(
 		SegmentedPath.PATH_SEGMENTED_LOADER,
 
 		MoveTo.SEGMENT_M_LOADER,
-		LineTo.SEGMENT_L_LOADER,
 		CubicTo.SEGMENT_C_LOADER,
 		ZSegment.SEGMENT_Z_LOADER,
 		CopySegment.SEGMENT_COPY_LOADER,

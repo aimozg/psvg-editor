@@ -21,7 +21,8 @@ class Group(ctx: Context,
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): Group =
 					Group(ctx, json.name,
 							ctx.loadPoint(json.origin),
-							(json.items as Array<*>).map { ctx.loadAnyPart(null, it) })
+							if (json.items is Array<*>) (json.items as Array<*>).map { ctx.loadAnyPart(null, it) }
+							else ctx.loadPartsFromMap(json.items ?: Object()))
 		}
 	}
 

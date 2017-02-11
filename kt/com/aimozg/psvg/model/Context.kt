@@ -101,7 +101,7 @@ class Context {
 					type,
 					arrayOf(name) + array.sliceFrom(1),
 					name)
-		} else return loadPart(type, array[1])
+		} else return loadPart(type, array[1], name)
 	}
 
 	fun loadPoint(json: dynamic): Point? =
@@ -138,10 +138,13 @@ class Context {
 	fun loadStyle(json: dynamic): Style? =
 			loadPart(Category.STYLE, json) as Style
 
+	fun loadPartsFromMap(o: Object) =
+		o.entries().map { loadAnyPart(it[0] as String, it[1]) }
+
 	fun loadModel(json: dynamic): Model {
 		val model = Model(this,
 				json.name ?: "unnamed",
-				(json.items as Object?)?.entries()?.map { loadAnyPart(it[0] as String, it[1]) } ?: emptyList()
+				loadPartsFromMap(json.items?:Object())
 		)
 		for (function in postloadQueue) function()
 		postloadQueue.clear()
