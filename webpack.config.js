@@ -27,7 +27,7 @@ module.exports = {
             "underscore": path.join(node_dir,'underscore/underscore-min.js'),
             "jstree-css": path.join(node_dir,'jstree/dist/themes/default/style.css'),
             "jstree": path.join(node_dir,'jstree/dist/jstree.js'),
-            "kotlinjs": path.join(__dirname, 'js/production/tfgame/tfgame.js'),
+            "kotlinjs": path.join(__dirname, 'js/psvg.js'),
             "kotlin": path.join(__dirname, 'js/production/tfgame/kotlin.js'),
             "dom": path.join(__dirname, 'ts/dom.ts'),
             "svg": path.join(__dirname, 'ts/svg.ts')

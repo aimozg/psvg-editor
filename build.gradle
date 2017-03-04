@@ -1,0 +1,29 @@
+group 'com.aimozg'
+version '0.1-SNAPSHOT'
+
+buildscript {
+    ext.kotlin_version = '1.1.0'
+    ext.kotlinx_dom_version = '0.0.10'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+apply plugin: 'kotlin2js'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+compileKotlin2Js {
+    kotlinOptions {
+        moduleKind = "commonjs"
+        outputFile = "js/psvg.js"
+    }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+}

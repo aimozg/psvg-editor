@@ -1,13 +1,23 @@
 .c9/
 .idea/
+
 js/
 node_modules/
 tsout/
 
+*.jar
+lib/
+libs/
+
+watcher.bat
+.htaccess
+
+.gradle/
+gradlew
+gradlew.bat
+gradle/
+build/
+
 .dropbox
 .dropbox.attr
-.htaccess
 desktop.ini
-watcher.bat
-
-*.jar
