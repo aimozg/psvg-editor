@@ -44,7 +44,7 @@ class Ellipse(ctx: Context,
 		}
 	}
 
-	override fun save() = jsobject {
+	override fun save(): dynamic = jsobject {
 		it.name = name
 		it.type = TYPE
 		it.style = style?.save()

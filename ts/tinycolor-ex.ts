@@ -20,13 +20,13 @@ export class TinyColorEx {
         return this;
     }
     mulL(l:number):this {
-        var hsl = this.c.toHsl();
+        const hsl = this.c.toHsl();
         hsl.l *= l;
         this.c = tinycolor2(hsl);
         return this;
     }
     darkenTo(max:number):this {
-        var hsl = this.c.toHsl();
+        const hsl = this.c.toHsl();
         hsl.l = Math.max(hsl.l,max);
         this.c = tinycolor2(hsl);
         return this;

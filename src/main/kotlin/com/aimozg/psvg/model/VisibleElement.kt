@@ -48,6 +48,5 @@ abstract class VisibleElement(ctx: Context,
 		doRedraw(attr,g)
 	}
 	protected abstract fun doRedraw(attr: Attribute, g: SVGGraphicsElement)
-	interface VisualElementJson : ModelElementJson {
-	}
+	interface VisualElementJson : ModelElementJson
 }

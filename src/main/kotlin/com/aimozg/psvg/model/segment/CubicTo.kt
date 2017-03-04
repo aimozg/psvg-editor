@@ -88,7 +88,7 @@ class CubicTo(ctx: Context,
 		} else {
 			val cp1xy = cp1?.calculate(this, start, ptxy) ?: start
 			val cp2xy = cp2?.calculate(this, start, ptxy) ?: ptxy
-			return Tuple["${TYPE} $cp1xy $cp2xy $ptxy",ptxy]
+			return Tuple["$TYPE $cp1xy $cp2xy $ptxy",ptxy]
 		}
 	}
 

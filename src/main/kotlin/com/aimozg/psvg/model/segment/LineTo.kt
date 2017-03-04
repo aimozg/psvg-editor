@@ -39,7 +39,7 @@ class LineTo(ctx: Context,
 
 	override fun toCmdAndPos(start: TXY): Tuple2<String, TXY> {
 		val pos = pt.calculate()
-		return Tuple["${TYPE} $pos",pos]
+		return Tuple["$TYPE $pos",pos]
 	}
 
 	override fun stop(): TXY = pt.calculate()

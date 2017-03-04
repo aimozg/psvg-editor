@@ -48,7 +48,7 @@ class Style(ctx: Context,
 		strokeWidth?.get()?.styleAs("stroke-width",style)
 	}
 
-	override fun save() = jsobject {
+	override fun save(): dynamic = jsobject {
 		it.stroke = stroke?.save()
 		it.fill = fill?.save()
 		it.strokeWidth = strokeWidth?.save()

@@ -21,7 +21,5 @@ abstract class ModelNode(ctx: Context,
 
 	abstract fun center(): TXY
 	abstract fun toDNode(): DNode
-	interface ModelNodeJson : VisualElementJson {
-
-	}
+	interface ModelNodeJson : VisualElementJson
 }

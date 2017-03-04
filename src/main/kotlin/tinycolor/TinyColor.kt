@@ -352,7 +352,7 @@ external interface TinyColor {
 }
 
 external sealed class ColorFormats {
-	interface ColorFormat {}
+	interface ColorFormat
 	interface RGB : ColorFormat{
 		val r: Double
 		val g: Double

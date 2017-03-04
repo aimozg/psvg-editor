@@ -20,6 +20,7 @@ repositories {
 compileKotlin2Js {
     kotlinOptions {
         moduleKind = "commonjs"
+        //noinspection GroovyAssignabilityCheck
         outputFile = "js/psvg.js"
     }
 }

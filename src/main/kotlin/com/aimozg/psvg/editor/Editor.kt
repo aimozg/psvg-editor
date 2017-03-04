@@ -56,7 +56,7 @@ class Editor(
 				}
 			}
 		})
-		val model = Model(Context(),"unnaned", emptyList())
+		val model = Model(Context(), "unnaned", emptyList())
 		editPane = ModelPane(model, DisplayMode.EDIT, canvasDiv,
 				SVGPathElement("M -5 0 0 -5 5 0 0 5 z") {
 					id = "svgpt_diamond_sm"
@@ -121,18 +121,17 @@ class Editor(
 			for ((obj, _) in rslt) {
 				val id = obj.id
 				if (obj is FixedFloat || obj is FixedPoint || obj is FixedColor) {
-					for (m in previews) {
-						val p = m.ctx.parts[id]
-						//console.log(obj.toString(),id,p?.toString())
-						if (p is FixedPoint && obj is FixedPoint) {
-							p.set(obj.x.get(), obj.y.get())
-						} else if (p is FixedFloat && obj is FixedFloat) {
-							p.set(obj.get())
-						} else if (p is FixedColor && obj is FixedColor) {
-							p.set(obj.get())
-						}
-						// if (p) p.update();
-					}
+					previews.asSequence()
+							.map { it.ctx.parts[id] }
+							.forEach {
+								if (it is FixedPoint && obj is FixedPoint) {
+									it.set(obj.x.get(), obj.y.get())
+								} else if (it is FixedFloat && obj is FixedFloat) {
+									it.set(obj.get())
+								} else if (it is FixedColor && obj is FixedColor) {
+									it.set(obj.get())
+								}
+							}
 				}
 				tree?.rename_node(obj.treeNodeId(), obj.treeNodeText())
 			}

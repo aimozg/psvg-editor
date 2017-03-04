@@ -16,11 +16,11 @@ export interface Passage {
 export type TPassage = Passage|[string,TPassageAction[]];
 export type FPassage = ()=>TPassage;
 
-var jPassage:JQuery;
-var jActions:JQuery; 
+let jPassage: JQuery;
+let jActions: JQuery;
 export function displayPassage(passage:TPassage){
-    var p:Passage = typeof passage[0] == 'string' ? 
-        {body:passage[0], actions:passage[1]} : passage as Passage;
+    const p: Passage = typeof passage[0] == 'string' ?
+        {body: passage[0], actions: passage[1]} : passage as Passage;
     jPassage.html('').append(typeof p.body == 'string' ? 
         dom.createElement({tag:'div',text:p.body}) : p.body);
     jActions.html('').append(p.actions.map(a=>{

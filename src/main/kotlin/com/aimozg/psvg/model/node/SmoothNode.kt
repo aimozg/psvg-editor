@@ -59,7 +59,5 @@ class SmoothNode(ctx: Context,
 					ctx.loadFloat("rotation",json.rot,0))
 		}
 	}
-	interface SmoothNodeJson : ModelNodeJson {
-
-	}
+	interface SmoothNodeJson : ModelNodeJson
 }

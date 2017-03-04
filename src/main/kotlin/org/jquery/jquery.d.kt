@@ -8,7 +8,7 @@ import org.w3c.dom.Element
  * Created by aimozg on 03.02.2017.
  * Copy of jquery/common.kt of Kotlin js stdlib as of 1.1 b38
  */
-external class JQuery() {
+external class JQuery {
 	fun addClass(className: String): JQuery
 	fun addClass(f: Element.(Int, String) -> String): JQuery
 
@@ -48,14 +48,14 @@ external class JQuery() {
 	fun `val`(): String?
 }
 
-open external class MouseEvent() {
+open external class MouseEvent {
 	val pageX: Double
 	val pageY: Double
 	fun preventDefault()
 	fun isDefaultPrevented(): Boolean
 }
 
-external class MouseClickEvent() : MouseEvent {
+external class MouseClickEvent : MouseEvent {
 	val which: Int
 }
 
