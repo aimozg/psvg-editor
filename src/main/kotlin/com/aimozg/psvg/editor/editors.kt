@@ -1,78 +1,50 @@
 package com.aimozg.psvg.editor
 
-import com.aimozg.psvg.*
 import com.aimozg.psvg.model.EditorElement
 import com.aimozg.psvg.model.ModelElement
 import com.aimozg.psvg.model.values.FixedColor
 import com.aimozg.psvg.model.values.FixedFloat
-import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.events.Event
+import tinycolor.TinyColor
 import tinycolor.tinycolor2
 
-fun editorFor(e:ModelElement):EditorElement? = when(e) {
-	is FixedColor -> colorEditor(e)
-	is FixedFloat -> floatEditor(e)
+fun editorFor(e: ModelElement): EditorElement? = when (e) {
+	is FixedColor -> ColorEditor(e)
+	is FixedFloat -> FloatEditor(e)
 	else -> null
 }
-fun colorEditor(color: FixedColor): EditorElement {
-	val handler = {e: Event ->
-		val input = e.target as HTMLInputElement
-		val s = input.value.trim()
-		val value = if (s == "" && color.default != null) color.default.clone() else tinycolor2(s)
-		if (value.isValid()) {
-			color.set(value, suppressUpdate = true)
-			input.classList -= "-error"
-		} else {
-			input.classList += "-error"
-		}
+
+class ColorEditor(val color: FixedColor) :
+		InputEditor<TinyColor>(vid = "valuefloat_${color.id}",
+		                       vname = color.name ?: "",
+		                       vclassname = color.classname,
+		                       vvalue = color.get(),
+		                       vdefval = color.default
+		) {
+	override fun convert(s: String): Pair<Boolean, TinyColor> {
+		val c = if (s == "" && color.default != null) color.default.clone() else tinycolor2(s)
+		return c.isValid() to c
 	}
-	val vval = color.get()
-	val vid = "valuefloat_${color.id}"
-	val vname = color.name
-	val input = HTMLInputElement("text") {
-		placeholder = color.default?.toString() ?: ""
-		id = vid
-		value = if (vval.toHex() == color.default?.toString()) "" else vval.toString()
-		addEventListener("change", handler)
-		addEventListener("input", handler)
+
+	override fun update(value: TinyColor) {
+		color.set(value, suppressUpdate = true)
 	}
-	val div = HTMLDivElement {
-		classList.add("Value", color.classname)
-		appendAll(HTMLLabelElement {
-			htmlFor = vid
-			textContent = vname
-		}, input)
-	}
-	return InputEditor(div, input)
 }
-fun floatEditor(float: FixedFloat): EditorElement {
-	val handler = {e: Event ->
-		val input = e.target as HTMLInputElement
-		val s = input.value.trim()
-		val value = if (s == "" && float.def != null) float.def else s.toDoubleOrNull()
-		if (value != null && float.validate(value)) {
-			float.set(value, suppressUpdate = true)
-			input.classList -= "-error"
-		} else {
-			input.classList += "-error"
-		}
+
+class FloatEditor(val float: FixedFloat) :
+		InputEditor<Double>(
+				vid = "valuefloat_${float.id}",
+		        vname = float.name,
+		        vclassname = float.classname,
+		        vvalue = float.get(),
+		        vdefval = float.def
+		) {
+
+	override fun convert(s: String): Pair<Boolean, Double?> {
+		val v = if (s == "" && float.def != null) float.def else s.toDoubleOrNull()
+		return (v!=null) to v
 	}
-	val vval = float.get()
-	val vid = "valuefloat_${float.id}"
-	val vname = float.name
-	val input = HTMLInputElement("text") {
-		placeholder = float.def?.toString() ?: ""
-		id = vid
-		value = if (vval == float.def) "" else vval.toString()
-		addEventListener("change", handler)
-		addEventListener("input", handler)
+
+	override fun update(value: Double) {
+		float.set(value,suppressUpdate = true)
 	}
-	val div = HTMLDivElement {
-		classList.add("Value", float.classname)
-		appendAll(HTMLLabelElement {
-			htmlFor = vid
-			textContent = vname
-		}, input)
-	}
-	return InputEditor(div, input)
 }
