@@ -16,17 +16,21 @@ import org.w3c.dom.events.Event
 import org.w3c.dom.events.WheelEvent
 import org.w3c.dom.svg.SVGGraphicsElement
 import kotlin.browser.document
+import kotlin.dom.addClass
 import kotlin.js.Math
 
 class Editor(
-		private val canvasDiv: HTMLElement,
-		private val treeDiv: HTMLElement,
-		private val previewDivs: Array<HTMLElement>,
-		private val objviewDiv: HTMLElement) {
+		canvasDiv: HTMLElement,
+        sidebar: HTMLElement,
+		previewDivs: Array<HTMLElement>
+		) {
 	private var tree: JSTree? = null
 	private lateinit var editPane: ModelPane
 	private var previews = ArrayList<ModelPane>()
 	private var scaledown = ArrayList<SVGGraphicsElement>()
+	private val treeCtrlDiv: HTMLElement
+	private val treeDiv: HTMLElement
+	private val objviewDiv: HTMLElement
 
 	val model: Model get() = editPane.model
 
@@ -93,6 +97,10 @@ class Editor(
 		for (pd in previewDivs) {
 			previews.add(ModelPane(model, DisplayMode.VIEW, pd))
 		}
+		treeCtrlDiv = HTMLDivElement { addClass("treectrl") }
+		treeDiv = HTMLDivElement { addClass("treeview") }
+		objviewDiv = HTMLDivElement { addClass("objview") }
+		sidebar.appendAll(treeCtrlDiv,treeDiv,objviewDiv)
 	}
 
 	private fun recreateView(model: Model) {

@@ -61,11 +61,11 @@ body {
 	}
 }
 
-#treeview, #objview {
+.treeview, .objview {
 	overflow-y: auto;
 }
 
-#objview {
+.treectrl, .objview {
 	flex-shrink: 0;
 }
 

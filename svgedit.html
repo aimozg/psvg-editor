@@ -32,10 +32,6 @@
 		</div>
 		<div class="fcol" style="flex-basis:300px;">
 			<div id="sidebar" class="fcol">
-				<div id="treeview"></div>
-				<div id="objview">
-
-				</div>
 			</div>
 		</div>
 	</div>
@@ -54,9 +50,8 @@
         var canvas = $('.canvas-editor');
         canvas.css('height', (document.body.clientHeight - canvas.offset().top).toFixed() + 'px');
         editor = svgedit.setup(canvas[0],
-            $('#treeview')[0],
-            $('.canvas-preview').toArray(),
-            $('#objview')[0]);
+            $('#sidebar')[0],
+            $('.canvas-preview').toArray());
         editor.zoom = 4;
         editor_load3();
     });

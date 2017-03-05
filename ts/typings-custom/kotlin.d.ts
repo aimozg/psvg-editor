@@ -10,9 +10,8 @@ declare namespace kotlinjs {
 				namespace editor {
 					class Editor {
 						constructor(canvasDiv: HTMLElement,
-									treeDiv: HTMLElement,
-									previewDivs: HTMLElement[],
-									objviewDiv: HTMLElement);
+									sidebar: HTMLElement,
+									previewDivs: HTMLElement[]);
 
 					}
 				}
