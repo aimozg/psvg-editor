@@ -14,6 +14,7 @@ import org.w3c.dom.svg.SVGUseElement
  * Created by aimozg on 26.01.2017.
  * Confidential
  */
+@Deprecated("Use PathV2")
 abstract class CommonNode(
 		ctx: Context,
 		name: String?,

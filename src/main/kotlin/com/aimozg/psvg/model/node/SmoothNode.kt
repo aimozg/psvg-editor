@@ -11,6 +11,7 @@ import com.aimozg.psvg.smoothHandles
  * Created by aimozg on 26.01.2017.
  * Confidential
  */
+@Deprecated("Use PathV2")
 class SmoothNode(ctx: Context,
                  name: String?,
                  pos: Point,

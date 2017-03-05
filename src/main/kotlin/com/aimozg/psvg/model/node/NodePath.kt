@@ -3,6 +3,7 @@ package com.aimozg.psvg.model.node
 import com.aimozg.ktuple.*
 import com.aimozg.psvg.model.*
 
+@Deprecated("Use PathV2")
 class NodePath(ctx: Context,
                name: String?,
                val closed: Boolean,

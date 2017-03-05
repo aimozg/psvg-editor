@@ -12,6 +12,7 @@ import com.aimozg.psvg.model.point.Point
  * Created by aimozg on 26.01.2017.
  * Confidential
  */
+@Deprecated("Use PathV2")
 class CuspNode(ctx: Context,
                name: String?,
                pos: Point,

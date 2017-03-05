@@ -12,6 +12,7 @@ import org.w3c.dom.svg.SVGLineElement
 /**
 * Created by aimozg on 26.01.2017.
 */
+@Deprecated("Use PathV2")
 class Flow1Node(ctx: Context,
                 name: String?,
                 pos: Point,

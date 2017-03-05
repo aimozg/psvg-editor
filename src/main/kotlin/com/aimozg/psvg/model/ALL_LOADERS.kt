@@ -1,11 +1,8 @@
 package com.aimozg.psvg.model
 
-import com.aimozg.psvg.model.node.CuspNode
-import com.aimozg.psvg.model.node.Flow1Node
-import com.aimozg.psvg.model.node.NodePath
-import com.aimozg.psvg.model.node.SmoothNode
 import com.aimozg.psvg.model.point.*
 import com.aimozg.psvg.model.segment.*
+import com.aimozg.psvg.model.shape.Ellipse
 import com.aimozg.psvg.model.values.ColorRef
 import com.aimozg.psvg.model.values.FixedColor
 import com.aimozg.psvg.model.values.FixedFloat
@@ -24,7 +21,6 @@ val ALL_LOADERS: Collection<PartLoader> = listOf(
 
 		Ellipse.ELLIPSE_LOADER,
 
-		NodePath.PATH_LOADER,
 		SegmentedPath.PATH_SEGMENTED_LOADER,
 
 		MoveTo.SEGMENT_M_LOADER,
@@ -42,9 +38,5 @@ val ALL_LOADERS: Collection<PartLoader> = listOf(
 		PointFromNormal.POINT_FROM_NORMAL_LOADER,
 		PointAtIntersection.POINT_AT_INTERSECTION_LOADER,
 		PointAtProjection.POINT_AT_PROJECTION_LOADER,
-		PointZero.POINT_ZERO_LOADER,
-
-		CuspNode.NODE_CUSP_LOADER,
-		Flow1Node.NODE_FLOW1_LOADER,
-		SmoothNode.NODE_SMOOTH_LOADER
+		PointZero.POINT_ZERO_LOADER
 )

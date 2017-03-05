@@ -1,10 +1,10 @@
-package com.aimozg.psvg.model
+package com.aimozg.psvg.model.shape
 
 import com.aimozg.psvg.SVGEllipseElement
 import com.aimozg.psvg.appendTo
 import com.aimozg.psvg.jsobject
+import com.aimozg.psvg.model.*
 import com.aimozg.psvg.model.point.Point
-import com.aimozg.psvg.model.shape.Shape
 import com.aimozg.psvg.u
 import org.w3c.dom.svg.SVGEllipseElement
 import org.w3c.dom.svg.SVGGraphicsElement
@@ -19,14 +19,14 @@ class Ellipse(ctx: Context,
               val center: Point,
               val rx: ValueFloat,
               val ry: ValueFloat) :
-		Shape(ctx, name, style, listOf(center.asPosDependency,rx.asValDependency,ry.asValDependency)) {
+		Shape(ctx, name, style, listOf(center.asPosDependency, rx.asValDependency, ry.asValDependency)) {
 	companion object {
 		private const val TYPE = "ellipse"
-		val ELLIPSE_LOADER = object: PartLoader(Category.SHAPE,Ellipse::class, TYPE){
+		val ELLIPSE_LOADER = object: PartLoader(Category.SHAPE, Ellipse::class, TYPE){
 			override fun loadStrict(ctx: Context, json: dynamic, vararg args: Any?): Ellipse {
 				val radius: Any = json.radius
-				val rx:ValueFloat
-				val ry:ValueFloat
+				val rx: ValueFloat
+				val ry: ValueFloat
 				if (radius is Array<dynamic>) {
 					rx = ctx.loadFloat("rx",radius[0])
 					ry = ctx.loadFloat("ry",radius[1])

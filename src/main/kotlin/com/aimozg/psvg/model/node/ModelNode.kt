@@ -6,6 +6,8 @@ import com.aimozg.psvg.model.Category
 import com.aimozg.psvg.model.Context
 import com.aimozg.psvg.model.VisibleElement
 
+
+@Deprecated("Use PathV2")
 abstract class ModelNode(ctx: Context,
                          name: String?,
                          items: List<ItemDeclaration?>) :
