@@ -195,7 +195,9 @@ class Editor(
 					HTMLDivElement {
 						className = "partValues"
 						for (v in modelElement.children) {
-							if (v is Value<*>) appendChild(v.editorElement())
+							val editor = editorFor(v)
+							v.editor = editor
+							if (editor != null) appendChild(editor.container)
 						}
 					}, HTMLDivElement {
 				className = "partReplace"

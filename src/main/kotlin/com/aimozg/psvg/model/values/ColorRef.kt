@@ -1,9 +1,7 @@
 package com.aimozg.psvg.model.values
 
-import com.aimozg.psvg.HTMLDivElement
 import com.aimozg.psvg.jsobject
 import com.aimozg.psvg.model.*
-import org.w3c.dom.HTMLElement
 
 /**
  * Created by aimozg on 09.02.2017.
@@ -43,6 +41,4 @@ class ColorRef(ctx: Context,
 
 	override fun get() = obj.get()
 
-	override fun editorElement(): HTMLElement = HTMLDivElement {
-	}
 }

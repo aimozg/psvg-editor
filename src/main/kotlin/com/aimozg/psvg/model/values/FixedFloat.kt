@@ -1,10 +1,6 @@
 package com.aimozg.psvg.model.values
 
-import com.aimozg.psvg.*
 import com.aimozg.psvg.model.*
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.events.Event
 
 /**
  * Created by aimozg on 25.01.2017.
@@ -21,7 +17,6 @@ class FixedFloat(
 	init {
 		if (def?:min<min || def?:max>max || min>max) error("Illegal bounds for $name: def=$def min=$min max=$max")
 	}
-	private var input: HTMLInputElement? = null
 
 	override fun updated(other: ModelElement, attr: Attribute) {}
 
@@ -31,41 +26,10 @@ class FixedFloat(
 
 	override fun get(): Double = value
 
-	override fun editorElement(): HTMLElement {
-		val handler = {e: Event ->
-			val input = e.target as HTMLInputElement
-			val s = input.value.trim()
-			val value = if (s == "" && def != null) def else s.toDoubleOrNull()
-			if (value != null && validate(value)) {
-				set(value,suppressUpdate = true)
-				input.classList -= "-error"
-			} else {
-				input.classList += "-error"
-			}
-		}
-		val vval = get()
-		val vid = "valuefloat_${this.id}"
-		val vname = name
-		return HTMLDivElement {
-			classList.add("Value",classname)
-			appendAll(HTMLLabelElement {
-				htmlFor = vid
-				textContent = vname
-			}, HTMLInputElement("text") {
-				input = this
-				placeholder = def?.toString()?:""
-				id = vid
-				value = if (vval == def) "" else vval.toString()
-				addEventListener("change",handler)
-				addEventListener("input",handler)
-			})
-		}
-	}
-
 	fun set(value:Number, suppressEvent:Boolean = false, suppressUpdate:Boolean = false) {
 		if (!validate(value)) return
 		this.value = value.toDouble()
-		if (!suppressUpdate) input?.value = value.toString()
+		if (!suppressUpdate) editor?.notify(value)
 		if (!suppressEvent) update(Attribute.VAL)
 	}
 	fun validate(x:Number):Boolean = x.toDouble().let { it.isFinite() && it>=min && it<=max }
@@ -97,3 +61,4 @@ class FixedFloat(
 		}
 	}
 }
+

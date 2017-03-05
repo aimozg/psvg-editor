@@ -130,6 +130,7 @@ abstract class ModelElement(
 	internal abstract fun updated(other: ModelElement, attr: Attribute)
 
 	val classname = this::class.simpleName?:"ModelElement<?>"
+	open var editor: EditorElement? = null
 
 	abstract fun save(): dynamic
 	fun asDependency(dependency: Attribute?) = ItemDeclaration.Instant(this, dependency)
@@ -140,7 +141,6 @@ abstract class Value<out T>(ctx: Context,
                             declarations:List<ItemDeclaration> =emptyList()) : ModelElement(ctx, name, declarations) {
 	val asValDependency get() = ItemDeclaration.Instant(this, Attribute.VAL)
 	abstract fun get(): T
-	abstract fun editorElement(): HTMLElement
 }
 interface ModelElementJson {
 	var type: String
@@ -152,4 +152,8 @@ abstract class ValueFloat(ctx: Context, name: String?, declarations: List<ItemDe
 }
 abstract class ValueColor(ctx: Context, name: String?, declarations: List<ItemDeclaration> = emptyList()) : Value<TinyColor>(ctx, name, declarations) {
 	override val category: Category = Category.VALUECOLOR
+}
+interface EditorElement {
+	val container:HTMLElement
+	fun notify(value:Any?)
 }
