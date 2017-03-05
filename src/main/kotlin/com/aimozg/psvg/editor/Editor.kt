@@ -21,9 +21,9 @@ import kotlin.js.Math
 
 class Editor(
 		canvasDiv: HTMLElement,
-        sidebar: HTMLElement,
+		sidebar: HTMLElement,
 		previewDivs: Array<HTMLElement>
-		) {
+) {
 	private var tree: JSTree? = null
 	private lateinit var editPane: ModelPane
 	private var previews = ArrayList<ModelPane>()
@@ -62,11 +62,11 @@ class Editor(
 		})
 		val model = Model(Context(), "unnaned", emptyList())
 		editPane = ModelPane(model, DisplayMode.EDIT, canvasDiv,
-				SVGPathElement("M -5 0 0 -5 5 0 0 5 z") {
-					id = "svgpt_diamond_sm"
-					style.any = "inherit"
-					scaledown.add(this)
-				}, SVGPathElement("M -10 0 0 -10 10 0 0 10 z") {
+		                     SVGPathElement("M -5 0 0 -5 5 0 0 5 z") {
+			                     id = "svgpt_diamond_sm"
+			                     style.any = "inherit"
+			                     scaledown.add(this)
+		                     }, SVGPathElement("M -10 0 0 -10 10 0 0 10 z") {
 			id = "svgpt_diamond"
 			style.any = "inherit"
 			scaledown.add(this)
@@ -87,20 +87,20 @@ class Editor(
 			style.any = "inherit"
 			scaledown.add(this)
 		}, SVGUseElement("#svgpt_box") { id = "svg_FixedPoint" },
-				SVGUseElement("#svgpt_box_sm") { id = "svg_PointAtProjection" },
-				SVGUseElement("#svgpt_box_sm") { id = "svg_PointAtIntersection" },
-				SVGUseElement("#svgpt_box_sm") { id = "svg_PointFromNormal" },
-				SVGUseElement("#svgpt_diamond") { id = "svg_CuspNode" },
-				SVGUseElement("#svgpt_circle") { id = "svg_Flow1Node" },
-				SVGUseElement("#svgpt_circle") { id = "svg_SmoothNode" },
-				SVGUseElement("#svgpt_box") { id = "svg_SymmetricNode" })
+		                     SVGUseElement("#svgpt_box_sm") { id = "svg_PointAtProjection" },
+		                     SVGUseElement("#svgpt_box_sm") { id = "svg_PointAtIntersection" },
+		                     SVGUseElement("#svgpt_box_sm") { id = "svg_PointFromNormal" },
+		                     SVGUseElement("#svgpt_diamond") { id = "svg_CuspNode" },
+		                     SVGUseElement("#svgpt_circle") { id = "svg_Flow1Node" },
+		                     SVGUseElement("#svgpt_circle") { id = "svg_SmoothNode" },
+		                     SVGUseElement("#svgpt_box") { id = "svg_SymmetricNode" })
 		for (pd in previewDivs) {
 			previews.add(ModelPane(model, DisplayMode.VIEW, pd))
 		}
 		treeCtrlDiv = HTMLDivElement { addClass("treectrl") }
 		treeDiv = HTMLDivElement { addClass("treeview") }
 		objviewDiv = HTMLDivElement { addClass("objview") }
-		sidebar.appendAll(treeCtrlDiv,treeDiv,objviewDiv)
+		sidebar.appendAll(treeCtrlDiv, treeDiv, objviewDiv)
 	}
 
 	private fun recreateView(model: Model) {
@@ -168,20 +168,21 @@ class Editor(
 		select(null)
 	}
 
-	fun select(modelElement: ModelElement?) {
-		if (selection == modelElement) return
+	fun select(ele: ModelElement?) {
+		if (selection == ele) return
 		val model = editPane.model
 		var s = selection
 		while (s != null && s is VisibleElement && s != model) {
 			s.graphic.classList.remove("-selected", "-primary")
+			s.editor = null
 			s = s.owner
 		}
 		tree?.deselect_all(true)
-		selection = modelElement
-		if (modelElement != null && modelElement is VisibleElement && modelElement != model) {
-			tree?.select_node(modelElement.treeNodeId(), true)
-			modelElement.graphic.classList.add("-selected", "-primary")
-			var p2: ModelElement? = modelElement
+		selection = ele
+		if (ele != null && ele is VisibleElement && ele != model) {
+			tree?.select_node(ele.treeNodeId(), true)
+			ele.graphic.classList.add("-selected", "-primary")
+			var p2: ModelElement? = ele
 			while (p2 != null && p2 is VisibleElement && p2 != model) {
 				val g = p2.graphic
 				g.classList.add("-selected")
@@ -190,24 +191,23 @@ class Editor(
 			}
 		}
 		objviewDiv.innerHTML = ""
-		if (modelElement != null) {
+		treeCtrlDiv.innerHTML = ""
+		if (ele != null) {
 			objviewDiv.appendAll(
 					HTMLDivElement {
 						className = "partValues"
-						for (v in modelElement.children) {
-							val editor = editorFor(v)
-							v.editor = editor
-							if (editor != null) appendChild(editor.container)
+						val editor = editorFor(ele)
+						ele.editor = editor
+						if (editor != null) append(editor.container)
+					},
+					HTMLDivElement {
+						className = "partReplace"
+						for (v in Context.loadersFor(ele.category)) {
+							appendChild(HTMLDivElement {
+								textContent = v.name
+							})
 						}
-					}, HTMLDivElement {
-				className = "partReplace"
-				for (v in Context.loadersFor(modelElement.category)) {
-					appendChild(HTMLDivElement {
-						textContent = v.name
 					})
-				}
-			}
-			)
 		}
 
 	}

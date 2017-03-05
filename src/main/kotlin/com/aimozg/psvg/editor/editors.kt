@@ -4,13 +4,29 @@ import com.aimozg.psvg.model.EditorElement
 import com.aimozg.psvg.model.ModelElement
 import com.aimozg.psvg.model.values.FixedColor
 import com.aimozg.psvg.model.values.FixedFloat
+import kotlinx.html.dom.create
+import kotlinx.html.js.div
 import tinycolor.TinyColor
 import tinycolor.tinycolor2
+import kotlin.browser.document
 
-fun editorFor(e: ModelElement): EditorElement? = when (e) {
+fun editorFor(e: ModelElement, allowGroup: Boolean = true): EditorElement? = when (e) {
 	is FixedColor -> ColorEditor(e)
 	is FixedFloat -> FloatEditor(e)
-	else -> null
+	else -> if (!allowGroup) null
+	else {
+		val editors = e.children.mapNotNull { it.editor = editorFor(it,false); it.editor }
+		if (editors.isEmpty()) null else GroupEditor(editors)
+	}
+}
+
+class GroupEditor(editors: List<EditorElement>) : EditorElement {
+	override val container = document.create.div{}.apply {
+		for (e in editors) appendChild(e.container)
+	}
+
+	override fun notify(value: Any?) {
+	}
 }
 
 class ColorEditor(val color: FixedColor) :
@@ -33,18 +49,18 @@ class ColorEditor(val color: FixedColor) :
 class FloatEditor(val float: FixedFloat) :
 		InputEditor<Double>(
 				vid = "valuefloat_${float.id}",
-		        vname = float.name,
-		        vclassname = float.classname,
-		        vvalue = float.get(),
-		        vdefval = float.def
+				vname = float.name,
+				vclassname = float.classname,
+				vvalue = float.get(),
+				vdefval = float.def
 		) {
 
 	override fun convert(s: String): Pair<Boolean, Double?> {
 		val v = if (s == "" && float.def != null) float.def else s.toDoubleOrNull()
-		return (v!=null) to v
+		return (v != null) to v
 	}
 
 	override fun update(value: Double) {
-		float.set(value,suppressUpdate = true)
+		float.set(value, suppressUpdate = true)
 	}
 }

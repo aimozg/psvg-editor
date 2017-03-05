@@ -28,7 +28,8 @@ module.exports = {
             "jstree-css": path.join(node_dir,'jstree/dist/themes/default/style.css'),
             "jstree": path.join(node_dir,'jstree/dist/jstree.js'),
             "kotlinjs": path.join(__dirname, 'js/psvg.js'),
-            "kotlin": path.join(__dirname, 'js/production/tfgame/kotlin.js'),
+            "kotlin": path.join(__dirname, 'js/kotlin.js'),
+            "kotlinx-html-js": path.join(__dirname, 'js/kotlinx-html-js.js'),
             "dom": path.join(__dirname, 'ts/dom.ts'),
             "svg": path.join(__dirname, 'ts/svg.ts')
         }
