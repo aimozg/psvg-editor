@@ -188,7 +188,7 @@ export function eltonodes(path: IPathDEl[]): NodePath {
 		});
 	}
 	for (let i = 0; i < n; i++) {
-		let a = pts[i].p, bi = (i + n - 1) % n, b = pts[bi].p;
+		let a = pts[i].p/*, bi = (i + n - 1) % n, b = pts[bi].p*/;
 		let ci = (i + 1) % n, c = pts[ci].p;
 		nodes.push({
 			p: [a[2][0], a[2][1]],
@@ -251,17 +251,17 @@ export function tf2list(src: SVGTransform, dst: SVGTransformList) {
 	dst.clear();
 	dst.appendItem(src);
 }
-export function svgscale(svg: SVGTransformable, sx: number, sy: number = sx) {
+export function svgscale(svg: SVGGraphicsElement, sx: number, sy: number = sx) {
 	let val = svg.transform.baseVal;
 	val.appendItem(tfscale(sx, sy));
 	val.consolidate();
 }
-export function svgrotate(svg: SVGTransformable, angle: number, cx: number = 0, cy: number = 0) {
+export function svgrotate(svg: SVGGraphicsElement, angle: number, cx: number = 0, cy: number = 0) {
 	let val = svg.transform.baseVal;
 	val.appendItem(tfrotate(angle, cx, cy));
 	val.consolidate();
 }
-export function svgtranslate(svg: SVGTransformable, tx: number, ty: number) {
+export function svgtranslate(svg: SVGGraphicsElement, tx: number, ty: number) {
 	let val = svg.transform.baseVal;
 	val.appendItem(tftranslate(tx, ty));
 	val.consolidate();
@@ -307,13 +307,13 @@ export function rect_cpy(src: SVGRect|ClientRect, dst: SVGRect = svgsvg.createSV
 	dst.height = src.height;
 	return dst;
 }
-export function unproject(svg: SVGLocatable, x: number, y: number): SVGPoint {
+// SVG 1.1 export type SVGGraphicsElement = SVGElement & SVGTransformable & SVGLocatable;
+export function unproject(svg: SVGGraphicsElement, x: number, y: number): SVGPoint {
 	let pt = svgsvg.createSVGPoint();
 	pt.x = x;
 	pt.y = y;
 	return pt.matrixTransform(svg.getScreenCTM().inverse());
 }
-export type SVGLocatableElement = SVGElement & SVGTransformable;
 type SvgDragEventType = 'sdrag'|'sdragstart'|'sdragstop';
 export interface SvgDragEvent extends Event {
 	type: SvgDragEventType;
@@ -321,7 +321,7 @@ export interface SvgDragEvent extends Event {
 	movement: SVGPoint;
 	initEvent(eventTypeArg: SvgDragEventType, canBubbleArg: boolean, cancelableArg: boolean): void;
 }
-export function makeDraggable(el: SVGLocatableElement) {
+export function makeDraggable(el: SVGGraphicsElement) {
 	let start = svgsvg.createSVGPoint();
 	let movement = svgsvg.createSVGPoint();
 	let dragging = false;
