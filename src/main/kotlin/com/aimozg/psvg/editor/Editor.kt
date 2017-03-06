@@ -9,6 +9,9 @@ import com.aimozg.psvg.model.*
 import com.aimozg.psvg.model.point.FixedPoint
 import com.aimozg.psvg.model.values.FixedColor
 import com.aimozg.psvg.model.values.FixedFloat
+import kotlinx.html.div
+import kotlinx.html.dom.append
+import kotlinx.html.js.div
 import org.jquery.jq
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
@@ -16,7 +19,6 @@ import org.w3c.dom.events.Event
 import org.w3c.dom.events.WheelEvent
 import org.w3c.dom.svg.SVGGraphicsElement
 import kotlin.browser.document
-import kotlin.dom.addClass
 import kotlin.js.Math
 
 class Editor(
@@ -97,10 +99,9 @@ class Editor(
 		for (pd in previewDivs) {
 			previews.add(ModelPane(model, DisplayMode.VIEW, pd))
 		}
-		treeCtrlDiv = HTMLDivElement { addClass("treectrl") }
-		treeDiv = HTMLDivElement { addClass("treeview") }
-		objviewDiv = HTMLDivElement { addClass("objview") }
-		sidebar.appendAll(treeCtrlDiv, treeDiv, objviewDiv)
+		treeCtrlDiv = sidebar.append.div("treectrl")
+		treeDiv = sidebar.append.div("treeview")
+		objviewDiv = sidebar.append.div("objview")
 	}
 
 	private fun recreateView(model: Model) {
@@ -193,21 +194,14 @@ class Editor(
 		objviewDiv.innerHTML = ""
 		treeCtrlDiv.innerHTML = ""
 		if (ele != null) {
-			objviewDiv.appendAll(
-					HTMLDivElement {
-						className = "partValues"
-						val editor = editorFor(ele)
-						ele.editor = editor
-						if (editor != null) append(editor.container)
-					},
-					HTMLDivElement {
-						className = "partReplace"
-						for (v in Context.loadersFor(ele.category)) {
-							appendChild(HTMLDivElement {
-								textContent = v.name
-							})
-						}
-					})
+			val editor = editorFor(ele)
+			ele.editor = editor
+			if (editor != null) objviewDiv.append.div("partValues").append(editor.container)
+			objviewDiv.append.div("partReplace") {
+				for (v in Context.loadersFor(ele.category)) {
+					div{+v.name}
+				}
+			}
 		}
 
 	}

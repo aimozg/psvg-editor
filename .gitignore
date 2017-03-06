@@ -1,22 +1,22 @@
-.c9/
-.idea/
+/.c9/
+/.idea/
 
-js/
-node_modules/
-tsout/
+/js/
+/node_modules/
+/tsout/
 
 *.jar
-lib/
-libs/
+/lib/
+/libs/
 
 watcher.bat
 .htaccess
 
-.gradle/
+/.gradle/
 gradlew
 gradlew.bat
-gradle/
-build/
+/gradle/
+/build/
 
 .dropbox
 .dropbox.attr

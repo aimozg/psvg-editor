@@ -7,6 +7,8 @@ import com.aimozg.psvg.d.rect_scale
 import com.aimozg.psvg.model.Context
 import com.aimozg.psvg.model.DisplayMode
 import com.aimozg.psvg.model.Model
+import kotlinx.html.js.append
+import kotlinx.html.js.g
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.svg.SVGElement
 import org.w3c.dom.svg.SVGGElement
@@ -23,7 +25,7 @@ class ModelPane(
 		private set
 	private val zoombox: SVGGElement = SVGGElement {
 	}
-	var eModel: SVGElement = SVGGElement { appendTo(zoombox) }
+	var eModel: SVGElement = zoombox.append.g()
 		private set
 	var model: Model = model1.clone(ctx)
 		set(value) {

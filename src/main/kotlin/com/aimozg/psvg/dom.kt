@@ -1,8 +1,8 @@
 package com.aimozg.psvg
 
-import org.w3c.dom.*
+import org.w3c.dom.DOMTokenList
+import org.w3c.dom.Node
 import org.w3c.dom.css.CSSStyleDeclaration
-import kotlin.browser.document
 
 /**
  * Created by aimozg on 25.01.2017.
@@ -22,19 +22,6 @@ operator fun CSSStyleDeclaration.set(prop: String, value: String) {
 }
 
 operator fun CSSStyleDeclaration.get(prop: String) = getPropertyValue(prop)
-
-inline fun HTMLDivElement(init: HTMLDivElement.() -> Unit): HTMLDivElement = (document.createElement("div") as HTMLDivElement).apply(init)
-inline fun HTMLInputElement(type: String, init: HTMLInputElement.() -> Unit): HTMLInputElement = (document.createElement("input") as HTMLInputElement).apply {
-	this.type = type
-	init(this)
-}
-
-inline fun HTMLLabelElement(init: HTMLLabelElement.() -> Unit): HTMLLabelElement = (document.createElement("label") as HTMLLabelElement).apply(init)
-
-fun HTMLElement.appendAll(vararg children: Element?) {
-	children.filterNotNull()
-			.forEach { appendChild(it) }
-}
 
 fun Node.appendTo(parent:Node) {
 	parent.appendChild(this)
