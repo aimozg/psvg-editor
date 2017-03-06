@@ -1,21 +1,10 @@
 package com.aimozg.psvg.editor
 
-import com.aimozg.psvg.minusAssign
+import com.aimozg.psvg.*
 import com.aimozg.psvg.model.EditorElement
-import com.aimozg.psvg.plusAssign
-import kotlinx.html.InputType
-import kotlinx.html.dom.append
-import kotlinx.html.dom.create
-import kotlinx.html.id
-import kotlinx.html.js.div
-import kotlinx.html.js.input
-import kotlinx.html.js.onChangeFunction
-import kotlinx.html.js.onInputFunction
-import kotlinx.html.label
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
-import kotlin.browser.document
 
 abstract class InputEditor<T:Any>(
 		vid: String,
@@ -36,18 +25,19 @@ abstract class InputEditor<T:Any>(
 		}
 	}
 	private lateinit var input: HTMLInputElement
-	override val container: HTMLElement = document.create.div("Value $vclassname").apply {
-		append.label {
-			for_ = vid
-			+(vname?:"")
-		}
-		input = append.input(InputType.text) {
+	override val container: HTMLElement = HTMLDivElement {
+		classList.add("Value", vclassname)
+		appendAll(HTMLLabelElement {
+			htmlFor = vid
+			textContent = vname?:""
+		}, HTMLInputElement("text") {
 			id = vid
 			placeholder = vplaceholder
 			value = if (vvalue == vdefval) "" else vtos(vvalue)
-			onChangeFunction = handler
-			onInputFunction = handler
-		}
+			addEventListener("change", handler)
+			addEventListener("input", handler)
+			input = this
+		})
 	}
 
 	override fun notify(value: Any?) {

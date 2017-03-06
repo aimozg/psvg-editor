@@ -1,14 +1,12 @@
 package com.aimozg.psvg.editor
 
+import com.aimozg.psvg.HTMLDivElement
 import com.aimozg.psvg.model.EditorElement
 import com.aimozg.psvg.model.ModelElement
 import com.aimozg.psvg.model.values.FixedColor
 import com.aimozg.psvg.model.values.FixedFloat
-import kotlinx.html.dom.create
-import kotlinx.html.js.div
 import tinycolor.TinyColor
 import tinycolor.tinycolor2
-import kotlin.browser.document
 
 fun editorFor(e: ModelElement, allowGroup: Boolean = true): EditorElement? = when (e) {
 	is FixedColor -> ColorEditor(e)
@@ -21,7 +19,7 @@ fun editorFor(e: ModelElement, allowGroup: Boolean = true): EditorElement? = whe
 }
 
 class GroupEditor(editors: List<EditorElement>) : EditorElement {
-	override val container = document.create.div{}.apply {
+	override val container = HTMLDivElement {
 		for (e in editors) appendChild(e.container)
 	}
 

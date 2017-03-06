@@ -1,16 +1,11 @@
 package kotlinx.html.js
 
 import kotlinx.html.*
-import kotlinx.html.consumers.onFinalize
-import kotlinx.html.dom.JSDOMBuilder
 import org.w3c.dom.Document
-import org.w3c.dom.HTMLElement
 import org.w3c.dom.Node
 import org.w3c.dom.asList
 import org.w3c.dom.events.Event
 import org.w3c.dom.svg.SVGElement
-import org.w3c.dom.svg.SVGSVGElement
-import kotlin.browser.document
 
 
 @Suppress("NOTHING_TO_INLINE")
@@ -105,7 +100,7 @@ class JSSVGBuilder<out R : SVGElement>(val document : Document) : TagConsumer<R>
 
 }
 
-
+/*
 fun Document.createSvgTree() : TagConsumer<SVGElement> = JSSVGBuilder(this)
 val TagConsumer<HTMLElement>.svg : TagConsumer<SVGElement> get() = JSSVGBuilder((this as? JSDOMBuilder<*>)?.document?: document)
 val SVGSVGElement.create : TagConsumer<SVGElement>
@@ -119,3 +114,4 @@ private val SVGElement.ownerDocumentEx: Document
 		this is Document -> this
 		else -> ownerDocument ?: throw IllegalStateException("SVGElement has no ownerDocument")
 	}
+*/

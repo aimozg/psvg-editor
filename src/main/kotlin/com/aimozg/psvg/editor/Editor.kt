@@ -9,14 +9,6 @@ import com.aimozg.psvg.model.*
 import com.aimozg.psvg.model.point.FixedPoint
 import com.aimozg.psvg.model.values.FixedColor
 import com.aimozg.psvg.model.values.FixedFloat
-import kotlinx.html.div
-import kotlinx.html.dom.append
-import kotlinx.html.dom.create
-import kotlinx.html.id
-import kotlinx.html.js.circle
-import kotlinx.html.js.div
-import kotlinx.html.js.svg
-import kotlinx.html.style
 import org.jquery.jq
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
@@ -69,21 +61,23 @@ class Editor(
 		})
 		val model = Model(Context(), "unnaned", emptyList())
 		editPane = ModelPane(model, DisplayMode.EDIT, canvasDiv,
-		                     SVGPathElement("M -5 0 0 -5 5 0 0 5 z") {
-			                     id = "svgpt_diamond_sm"
-			                     style.any = "inherit"
-			                     scaledown.add(this)
-		                     }, SVGPathElement("M -10 0 0 -10 10 0 0 10 z") {
+				SVGPathElement("M -5 0 0 -5 5 0 0 5 z") {
+					id = "svgpt_diamond_sm"
+					style.any = "inherit"
+					scaledown.add(this)
+				}, SVGPathElement("M -10 0 0 -10 10 0 0 10 z") {
 			id = "svgpt_diamond"
 			style.any = "inherit"
 			scaledown.add(this)
-		}, document.create.svg.circle(cx=0, cy=0, r=5) {
+		}, SVGCircleElement(0, 0, 5) {
 			id = "svgpt_circle_sm"
-			style = "any:inherit"
-		}.apply { scaledown.add(this) }, document.create.svg.circle(cx=0, cy=0, r=10) {
+			style.any = "inherit"
+			scaledown.add(this)
+		}, SVGCircleElement(0, 0, 10) {
 			id = "svgpt_circle"
-			style = "any:inherit"
-		}.apply { scaledown.add(this) }, SVGRectElement(-3, -3, 6, 6) {
+			style.any = "inherit"
+			scaledown.add(this)
+		}, SVGRectElement(-3, -3, 6, 6) {
 			id = "svgpt_box_sm"
 			style.any = "inherit"
 			scaledown.add(this)
@@ -92,19 +86,19 @@ class Editor(
 			style.any = "inherit"
 			scaledown.add(this)
 		}, SVGUseElement("#svgpt_box") { id = "svg_FixedPoint" },
-		                     SVGUseElement("#svgpt_box_sm") { id = "svg_PointAtProjection" },
-		                     SVGUseElement("#svgpt_box_sm") { id = "svg_PointAtIntersection" },
-		                     SVGUseElement("#svgpt_box_sm") { id = "svg_PointFromNormal" },
-		                     SVGUseElement("#svgpt_diamond") { id = "svg_CuspNode" },
-		                     SVGUseElement("#svgpt_circle") { id = "svg_Flow1Node" },
-		                     SVGUseElement("#svgpt_circle") { id = "svg_SmoothNode" },
-		                     SVGUseElement("#svgpt_box") { id = "svg_SymmetricNode" })
+				SVGUseElement("#svgpt_box_sm") { id = "svg_PointAtProjection" },
+				SVGUseElement("#svgpt_box_sm") { id = "svg_PointAtIntersection" },
+				SVGUseElement("#svgpt_box_sm") { id = "svg_PointFromNormal" },
+				SVGUseElement("#svgpt_diamond") { id = "svg_CuspNode" },
+				SVGUseElement("#svgpt_circle") { id = "svg_Flow1Node" },
+				SVGUseElement("#svgpt_circle") { id = "svg_SmoothNode" },
+				SVGUseElement("#svgpt_box") { id = "svg_SymmetricNode" })
 		for (pd in previewDivs) {
 			previews.add(ModelPane(model, DisplayMode.VIEW, pd))
 		}
-		treeCtrlDiv = sidebar.append.div("treectrl")
-		treeDiv = sidebar.append.div("treeview")
-		objviewDiv = sidebar.append.div("objview")
+		treeCtrlDiv = HTMLDivElement { className = "treeview" }.appendTo(sidebar)
+		treeDiv = HTMLDivElement { className = "treeview" }.appendTo(sidebar)
+		objviewDiv = HTMLDivElement { className = "objview" }.appendTo(sidebar)
 	}
 
 	private fun recreateView(model: Model) {
@@ -197,14 +191,21 @@ class Editor(
 		objviewDiv.innerHTML = ""
 		treeCtrlDiv.innerHTML = ""
 		if (ele != null) {
-			val editor = editorFor(ele)
-			ele.editor = editor
-			if (editor != null) objviewDiv.append.div("partValues").append(editor.container)
-			objviewDiv.append.div("partReplace") {
-				for (v in Context.loadersFor(ele.category)) {
-					div{+v.name}
-				}
-			}
+			objviewDiv.appendAll(
+					HTMLDivElement {
+						className = "partValues"
+						val editor = editorFor(ele)
+						ele.editor = editor
+						if (editor != null) append(editor.container)
+					},
+					HTMLDivElement {
+						className = "partReplace"
+						for (v in Context.loadersFor(ele.category)) {
+							appendChild(HTMLDivElement {
+								textContent = v.name
+							})
+						}
+					})
 		}
 
 	}

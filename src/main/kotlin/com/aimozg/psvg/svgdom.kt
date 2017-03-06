@@ -11,6 +11,16 @@ const val SVGNS = "http://www.w3.org/2000/svg"
 
 private val svgsvg = document.createElementNS(SVGNS, "svg") as SVGSVGElement
 
+inline fun SVGCircleElement(cx0: Number? = null,
+                            cy0: Number? = null,
+                            r0: Number? = null,
+                            init: SVGCircleElement.() -> Unit): SVGCircleElement = (document.createElementNS(SVGNS, "circle") as SVGCircleElement).apply {
+	if (cx0 != null) cx.u = cx0.toFloat()
+	if (cy0 != null) cy.u = cy0.toFloat()
+	if (r0 != null) r.u = r0.toFloat()
+	init()
+}
+
 inline fun SVGDefsElement(init: SVGDefsElement.() -> Unit): SVGDefsElement = (document.createElementNS(SVGNS, "defs") as SVGDefsElement).apply(init)
 inline fun SVGEllipseElement(center: TXY? = null,
                              rx: Number? = null,
