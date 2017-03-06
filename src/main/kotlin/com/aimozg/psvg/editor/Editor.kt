@@ -11,7 +11,12 @@ import com.aimozg.psvg.model.values.FixedColor
 import com.aimozg.psvg.model.values.FixedFloat
 import kotlinx.html.div
 import kotlinx.html.dom.append
+import kotlinx.html.dom.create
+import kotlinx.html.id
+import kotlinx.html.js.circle
 import kotlinx.html.js.div
+import kotlinx.html.js.svg
+import kotlinx.html.style
 import org.jquery.jq
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
@@ -72,15 +77,13 @@ class Editor(
 			id = "svgpt_diamond"
 			style.any = "inherit"
 			scaledown.add(this)
-		}, SVGCircleElement(0, 0, 5) {
+		}, document.create.svg.circle(cx=0, cy=0, r=5) {
 			id = "svgpt_circle_sm"
-			style.any = "inherit"
-			scaledown.add(this)
-		}, SVGCircleElement(0, 0, 10) {
+			style = "any:inherit"
+		}.apply { scaledown.add(this) }, document.create.svg.circle(cx=0, cy=0, r=10) {
 			id = "svgpt_circle"
-			style.any = "inherit"
-			scaledown.add(this)
-		}, SVGRectElement(-3, -3, 6, 6) {
+			style = "any:inherit"
+		}.apply { scaledown.add(this) }, SVGRectElement(-3, -3, 6, 6) {
 			id = "svgpt_box_sm"
 			style.any = "inherit"
 			scaledown.add(this)
