@@ -25,19 +25,20 @@ abstract class InputEditor<T:Any>(
 		}
 	}
 	private lateinit var input: HTMLInputElement
-	override val container: HTMLElement = HTMLDivElement {
-		classList.add("Value", vclassname)
-		appendAll(HTMLLabelElement {
-			htmlFor = vid
-			textContent = vname?:""
-		}, HTMLInputElement("text") {
-			id = vid
-			placeholder = vplaceholder
-			value = if (vvalue == vdefval) "" else vtos(vvalue)
-			addEventListener("change", handler)
-			addEventListener("input", handler)
-			input = this
-		})
+	override val container: HTMLElement = html.div {
+		it.classList.add("Value", vclassname)
+		+label {
+			it.htmlFor = vid
+			it.textContent = vname?:""
+		}
+		+textInput {
+			it.id = vid
+			it.placeholder = vplaceholder
+			it.value = if (vvalue == vdefval) "" else vtos(vvalue)
+			it.addEventListener("change", handler)
+			it.addEventListener("input", handler)
+			input = it
+		}
 	}
 
 	override fun notify(value: Any?) {

@@ -1,6 +1,7 @@
 package com.aimozg.psvg.editor
 
-import com.aimozg.psvg.HTMLDivElement
+import com.aimozg.psvg.div
+import com.aimozg.psvg.html
 import com.aimozg.psvg.model.EditorElement
 import com.aimozg.psvg.model.ModelElement
 import com.aimozg.psvg.model.values.FixedColor
@@ -19,8 +20,8 @@ fun editorFor(e: ModelElement, allowGroup: Boolean = true): EditorElement? = whe
 }
 
 class GroupEditor(editors: List<EditorElement>) : EditorElement {
-	override val container = HTMLDivElement {
-		for (e in editors) appendChild(e.container)
+	override val container = html.div {
+		for (e in editors) +e.container
 	}
 
 	override fun notify(value: Any?) {

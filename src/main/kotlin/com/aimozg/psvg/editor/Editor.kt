@@ -27,9 +27,9 @@ class Editor(
 	private lateinit var editPane: ModelPane
 	private var previews = ArrayList<ModelPane>()
 	private var scaledown = ArrayList<SVGGraphicsElement>()
-	private val treeCtrlDiv: HTMLElement
-	private val treeDiv: HTMLElement
-	private val objviewDiv: HTMLElement
+	private lateinit var treeCtrlDiv: HTMLElement
+	private lateinit var treeDiv: HTMLElement
+	private lateinit var objviewDiv: HTMLElement
 
 	val model: Model get() = editPane.model
 
@@ -96,9 +96,11 @@ class Editor(
 		for (pd in previewDivs) {
 			previews.add(ModelPane(model, DisplayMode.VIEW, pd))
 		}
-		treeCtrlDiv = HTMLDivElement { className = "treeview" }.appendTo(sidebar)
-		treeDiv = HTMLDivElement { className = "treeview" }.appendTo(sidebar)
-		objviewDiv = HTMLDivElement { className = "objview" }.appendTo(sidebar)
+		sidebar.build {
+			treeCtrlDiv = +div { it.className="treeview" }
+			treeDiv = +div { it.className = "treeview" }
+			objviewDiv = +div { it.className = "objview" }
+		}
 	}
 
 	private fun recreateView(model: Model) {
@@ -118,7 +120,6 @@ class Editor(
 				if (id[0] == "ModelPart") select(editPane.ctx.parts[id[1].toInt()])
 			}).withPlugins.on("click dblclick", { _, _: Any? ->
 				// console.log(e, this.tree.jstree().get_node(e.target))
-
 			})
 			Unit
 		}
@@ -191,21 +192,20 @@ class Editor(
 		objviewDiv.innerHTML = ""
 		treeCtrlDiv.innerHTML = ""
 		if (ele != null) {
-			objviewDiv.appendAll(
-					HTMLDivElement {
-						className = "partValues"
-						val editor = editorFor(ele)
-						ele.editor = editor
-						if (editor != null) append(editor.container)
-					},
-					HTMLDivElement {
-						className = "partReplace"
-						for (v in Context.loadersFor(ele.category)) {
-							appendChild(HTMLDivElement {
-								textContent = v.name
-							})
-						}
-					})
+			objviewDiv.build {
+				+div {
+					it.className = "partValues"
+					val editor = editorFor(ele)
+					ele.editor = editor
+					+editor?.container
+				}
+				+div {
+					it.className = "partReplace"
+					for (v in Context.loadersFor(ele.category)) {
+						+div { it.textContent = v.name }
+					}
+				}
+			}
 		}
 
 	}

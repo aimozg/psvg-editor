@@ -26,8 +26,6 @@ compileKotlin2Js {
 }
 
 dependencies {
-    def kotlinx_html_version = "0.6.2"
-    compile "org.jetbrains.kotlinx:kotlinx-html-js:${kotlinx_html_version}"
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
 }
 
